@@ -57,7 +57,9 @@ function add_vite_assets() {
 				'currentYear' => date( 'Y' ),
 				'menuItems' => $menu_items,
 				'footerWidgets' => get_footer_widgets_data(),
-				'socialLinks' => get_social_links_data()
+				'socialLinks' => get_social_links_data(),
+				'restUrl' => esc_url_raw( rest_url() ),
+				'nonce' => wp_create_nonce( 'wp_rest' )
 			);
 			wp_localize_script( $handle, 'wpReactData', $react_vars );
 		} else {
@@ -78,6 +80,14 @@ function add_vite_assets() {
 
 		wp_enqueue_style( $handle, $css_uri, null, null );
 	}
+
+	// Enqueue servicne-informacije CSS separately (not processed by Vite)
+	wp_enqueue_style( 
+		'servicne-informacije', 
+		get_template_directory_uri() . '/assets/src/css/servicne-informacije.css', 
+		null, 
+		filemtime( get_template_directory() . '/assets/src/css/servicne-informacije.css' )
+	);
 }
 
 add_action( 'wp_enqueue_scripts', 'add_vite_assets', 100 );

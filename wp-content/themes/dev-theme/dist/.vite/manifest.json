@@ -1,7 +1,7 @@
 {
-  "_Footer.js": {
-    "file": "Footer.js",
-    "name": "Footer",
+  "_api.js": {
+    "file": "api.js",
+    "name": "api",
     "imports": [
       "_index.js"
     ]
@@ -22,7 +22,7 @@
     "src": "assets/src/react/app/index.tsx",
     "isEntry": true,
     "imports": [
-      "_Footer.js",
+      "_api.js",
       "_index.js"
     ]
   },
@@ -41,7 +41,7 @@
     "src": "assets/src/react/components/index.tsx",
     "isEntry": true,
     "imports": [
-      "_Footer.js",
+      "_api.js",
       "_index.js"
     ]
   },
