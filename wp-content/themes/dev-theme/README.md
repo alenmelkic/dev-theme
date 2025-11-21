@@ -26,7 +26,7 @@ A modern WordPress theme built with Vite.js, featuring optimized development wor
 
 ## Requirements
 
-- **[Node.js](https://nodejs.org/)** (v16 or higher)
+- **[Node.js](https://nodejs.org/)** (v22 or higher)
 - **WordPress** (v5.0 or higher)
 - **PHP** (v7.4 or higher)
 

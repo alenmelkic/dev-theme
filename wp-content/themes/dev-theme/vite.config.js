@@ -10,6 +10,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import { glob } from 'glob';
 import PurgeCSS from 'vite-plugin-purgecss';
+import react from '@vitejs/plugin-react';
 
 // Get the relative path of the vite.config.js file for the alias
 const fullPath = import.meta.url.slice(0, import.meta.url.lastIndexOf('/'));
@@ -26,6 +27,7 @@ export default defineConfig({
 	},
 
 	plugins: [
+		react(),
 		{
 			handleHotUpdate({ file, server }) {
 				if (file.endsWith('.php')) {
@@ -37,6 +39,7 @@ export default defineConfig({
 			content: [
 				'./**/*.php',
 				'./assets/src/js/**/*.js',
+				'./assets/src/react/**/*.{js,jsx,ts,tsx}',
 				'./assets/src/**/*.scss',
 			],
 			safelist: {
@@ -84,6 +87,10 @@ export default defineConfig({
 
 	css: {
 		devSourcemap: true,
+		modules: {
+			// Enable CSS modules for .module.scss files
+			generateScopedName: '[name]__[local]___[hash:base64:5]',
+		},
 		preprocessorOptions: {
 			scss: {
 				quietDeps: true,
@@ -96,7 +103,7 @@ export default defineConfig({
 		// emit manifest so PHP can find the hashed files
 		manifest: true,
 
-		outDir: resolve(__dirname, 'assets/dist/'),
+		outDir: resolve(__dirname, 'dist/'),
 
 		// don't base64 images
 		assetsInlineLimit: 0,
@@ -104,17 +111,15 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				'js/main': resolve(`${__dirname}/assets/src/js/main.js`),
-				...(() =>
-					glob
-						.sync(resolve(__dirname, 'assets/src/scss/[!_]*.scss'))
-						.reduce((entries, filename) => {
-							const [, name] = filename.match(/([^/]+)\.scss$/);
-							return { ...entries, [name]: filename };
-						}, {}))(),
+				'js/blocks': resolve(`${__dirname}/assets/src/react/blocks/index.tsx`),
+				'js/components': resolve(`${__dirname}/assets/src/react/components/index.tsx`),
+				'js/app': resolve(`${__dirname}/assets/src/react/app/index.tsx`),
+				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
+				'react-components': resolve(`${__dirname}/assets/src/scss/react-components.scss`),
 			},
 			output: {
-				entryFileNames: '[name]-[hash].js',
-				chunkFileNames: '[name]-[hash].js',
+				entryFileNames: '[name].js',
+				chunkFileNames: '[name].js',
 				assetFileNames: (assetInfo) => {
 					const extType = assetInfo.name.split('.');
 
@@ -124,7 +129,7 @@ export default defineConfig({
 						extType[1] === 'woff2' ||
 						extType[1] === 'ttf'
 					) {
-						return 'fonts/[name]-[hash].[ext]';
+						return 'fonts/[name].[ext]';
 					}
 
 					// group images in a folder
@@ -134,10 +139,15 @@ export default defineConfig({
 						extType[1] === 'jpeg' ||
 						extType[1] === 'png'
 					) {
-						return 'img/[name]-[hash].[ext]';
+						return 'img/[name].[ext]';
 					}
 
-					return '[ext]/[name]-[hash].[ext]';
+					// CSS files go directly in css folder
+					if (extType[1] === 'css') {
+						return 'css/[name].[ext]';
+					}
+
+					return '[ext]/[name].[ext]';
 				},
 			},
 		},

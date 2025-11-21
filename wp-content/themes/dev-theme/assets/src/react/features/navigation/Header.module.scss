@@ -1,11 +1,10 @@
-
-// React Header Styles
-.site-header {
+// Header Component SCSS Module
+.header {
   background: #fff;
   border-bottom: 1px solid #dee2e6;
   padding: 1rem 0;
 
-  .site-title {
+  .siteTitle {
     a {
       text-decoration: none;
       color: #212529;
@@ -18,16 +17,15 @@
     }
   }
 
-  .site-description {
+  .siteDescription {
     color: #6c757d;
     font-size: 0.875rem;
     margin: 0;
   }
 }
 
-// Navigation styles
-.main-navigation {
-  .navbar-toggler-icon {
+.navigation {
+  .togglerIcon {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -57,7 +55,7 @@
       gap: 0;
     }
 
-    .menu-item {
+    .menuItem {
       position: relative;
 
       > a {
@@ -74,18 +72,20 @@
         }
       }
 
-      &.current-menu-item > a {
-        background-color: #0d6efd;
-        color: #fff;
+      &.current {
+        > a {
+          background-color: #0d6efd;
+          color: #fff;
 
-        &:hover {
-          background-color: #0b5ed7;
+          &:hover {
+            background-color: #0b5ed7;
+          }
         }
       }
 
       // Dropdown styles
-      &.menu-item-has-children {
-        .sub-menu {
+      &.hasChildren {
+        .subMenu {
           position: absolute;
           top: 100%;
           left: 0;
@@ -114,14 +114,14 @@
             margin-left: 1rem;
           }
 
-          &.is-open {
+          &.isOpen {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
           }
         }
 
-        &:hover .sub-menu {
+        &:hover .subMenu {
           @media (min-width: 992px) {
             opacity: 1;
             visibility: visible;
@@ -130,7 +130,7 @@
         }
       }
 
-      .dropdown-toggle {
+      .dropdownToggle {
         margin-left: auto;
         font-weight: bold;
         font-size: 1.2rem;
@@ -140,7 +140,7 @@
 
   // Mobile menu styles
   @media (max-width: 991.98px) {
-    .menu-wrapper {
+    .menuWrapper {
       background: #fff;
       border: 1px solid #dee2e6;
       border-radius: 0.375rem;

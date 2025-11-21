@@ -35,9 +35,18 @@ npm run typecheck    # [Not configured yet - add if needed]
 - `style.css` - WordPress theme metadata
 
 ### Asset Directories
-- `assets/src/js/` - Source JavaScript files
+- `assets/src/js/` - Source JavaScript files (vanilla JS)
+- `assets/src/react/` - React components and Gutenberg blocks
+  - `assets/src/react/components/` - Reusable React components (Header, Footer, etc.)
+  - `assets/src/react/app/` - Full page React application entry point
+  - `assets/src/react/blocks/` - Custom Gutenberg blocks
+  - `assets/src/react/hooks/` - Custom React hooks
+  - `assets/src/react/utils/` - React utility functions
 - `assets/src/scss/` - Source SCSS files
-- `assets/dist/` - Compiled assets (auto-generated)
+  - `main.scss` - Main stylesheet (Bootstrap + base)
+  - `react-components.scss` - React component-specific styles
+  - `*.module.scss` - CSS modules for scoped component styles
+- `dist/` - Compiled assets (auto-generated)
 - `tests/` - Vitest test files
 
 ## Technologies Used
@@ -49,8 +58,11 @@ npm run typecheck    # [Not configured yet - add if needed]
 - **SASS** - CSS preprocessor
 
 ### Frontend
+- **React 18** - Component-based UI library
+- **WordPress Gutenberg** - Block editor integration
 - **Bootstrap 5** - CSS framework
 - **ES6+** - Modern JavaScript
+- **JSX** - React syntax extension
 - **JSDOM** - DOM testing environment
 
 ### WordPress Integration
@@ -61,11 +73,13 @@ npm run typecheck    # [Not configured yet - add if needed]
 ## Configuration Details
 
 ### Vite Configuration Features
-- Hot Module Replacement (HMR) for PHP, JS, SCSS
-- PurgeCSS with WordPress and Bootstrap safelist
+- Hot Module Replacement (HMR) for PHP, JS, JSX, SCSS
+- React plugin for JSX transformation and fast refresh
+- PurgeCSS with WordPress, Bootstrap, and React component safelist
 - SASS deprecation warnings silenced
 - Asset optimization (images, fonts, etc.)
 - Development server on port 5173
+- Separate entry points for React components and Gutenberg blocks
 
 ### PurgeCSS Safelist
 Preserves these classes in production:
@@ -79,12 +93,61 @@ Preserves these classes in production:
 - Automatic DOM cleanup between tests
 - Setup file: `tests/setup.js`
 
+## React/Gutenberg Development
+
+### React Components Structure
+The theme uses React for modern, interactive frontend components:
+
+- **Header Component** (`assets/src/react/components/Header.jsx`)
+  - Dynamic navigation menu
+  - Responsive mobile menu
+  - Site branding integration
+  - WordPress data integration
+
+- **Footer Component** (`assets/src/react/components/Footer.jsx`)
+  - Dynamic widget areas
+  - Social media links
+  - Copyright information
+  - Multi-column layout support
+
+### WordPress Data Integration
+React components receive data from WordPress via `wp_localize_script()`:
+
+```javascript
+// Available in React components as window.wpReactData
+{
+  siteName: 'Site Name',
+  tagline: 'Site Description',
+  homeUrl: '/',
+  isHome: true/false,
+  currentYear: 2024,
+  menuItems: [...], // Navigation menu items
+  footerWidgets: [...], // Footer widget data
+  socialLinks: [...] // Social media links
+}
+```
+
+### Gutenberg Block Development
+Custom blocks are located in `assets/src/react/blocks/`:
+
+- Entry point: `assets/src/react/blocks/index.jsx`
+- Each block should be in its own subfolder
+- Use WordPress block API with React components
+- Register blocks with `registerBlockType()`
+
+### Progressive Enhancement
+- React components enhance existing PHP templates
+- Fallback PHP templates work when JavaScript is disabled
+- SEO-friendly server-side rendering for critical content
+- Client-side React takes over for interactive features
+
 ## Development Workflow
 
 1. **Start Development**: `npm run dev`
-2. **Make Changes**: Edit PHP, SCSS, or JS files
-3. **Test**: `npm run test` (optional but recommended)
-4. **Build**: `npm run build` for production
+2. **Make Changes**: Edit PHP, SCSS, JS, or JSX files
+3. **React Development**: Components auto-reload with fast refresh
+4. **Test**: `npm run test` (optional but recommended)
+5. **Build**: `npm run build` for production
 
 ## Common Tasks
 
@@ -108,6 +171,23 @@ npm install --save-dev [package]    # Development dependency
 - Main entry: `assets/src/js/main.js`
 - ES6+ features supported
 - Hot reload enabled during development
+
+### React Development
+- Components entry: `assets/src/react/components/index.jsx`
+- Blocks entry: `assets/src/react/blocks/index.jsx`
+- JSX transformation with fast refresh
+- WordPress data available via `window.wpReactData`
+
+### Creating New React Components
+1. Create component file in `assets/src/react/components/`
+2. Export component from `index.jsx`
+3. Add container element to PHP template
+4. Initialize component in `index.jsx`
+
+### Creating New Gutenberg Blocks
+1. Create block folder in `assets/src/react/blocks/`
+2. Register block in `assets/src/react/blocks/index.jsx`
+3. Use WordPress block API with React components
 
 ## Troubleshooting
 
@@ -136,20 +216,70 @@ npm install --save-dev [package]    # Development dependency
 The development server watches these file types:
 - `**/*.php` - WordPress template files
 - `assets/src/**/*.js` - JavaScript source files
+- `assets/src/react/**/*.{js,jsx}` - React component files
 - `assets/src/**/*.scss` - SCSS source files
 
 ## Build Output
 
 Production build creates:
-- Hashed JS/CSS files in `assets/dist/`
+- JS/CSS files in `dist/` (without hashes for easy integration)
+  - `dist/js/main.js` - Main JavaScript
+  - `dist/js/components.js` - React components bundle
+  - `dist/js/app.js` - Full page React app bundle
+  - `dist/js/blocks.js` - Gutenberg blocks bundle
+  - `dist/css/main.css` - Main stylesheet (Bootstrap + base)
+  - `dist/css/react-components.css` - React component styles
 - Manifest file for WordPress asset loading
-- Optimized images and fonts
+- Optimized images and fonts in respective folders
 - Purged CSS (unused styles removed)
+- React components with fast refresh in development
 
 ## Notes for Claude Code
 
 - Always run tests before committing changes
 - Use `npm run build` to verify production build works
-- PurgeCSS configuration may need adjustment for new CSS classes
+- PurgeCSS configuration may need adjustment for new CSS classes or React components
 - WordPress-specific functionality requires local WordPress installation
 - Hot reload works for all file types during development
+- React components use progressive enhancement - PHP fallbacks ensure accessibility
+- Gutenberg blocks should follow WordPress block development best practices
+- WordPress data is passed to React via `wp_localize_script()` in `configure/js-css.php`
+- New React components need container elements in PHP templates
+- Build outputs separate bundles for components and blocks for optimal loading
+
+## React Development Approaches
+
+This theme supports multiple React integration patterns:
+
+### 1. Progressive Enhancement (Current Default)
+- **Files**: `assets/src/react/components/index.jsx`
+- **Usage**: Individual React components enhance existing PHP templates
+- **Styles**: Global CSS classes + `react-components.css`
+- **Best For**: Traditional WordPress sites with interactive elements
+
+### 2. CSS Modules with React
+- **Files**: `*.module.scss` files alongside components
+- **Usage**: Scoped styles imported as objects (`styles.className`)
+- **Benefits**: Style encapsulation, better maintainability
+- **Example**: `HeaderWithModules.jsx` + `Header.module.scss`
+
+### 3. Full Page React App
+- **Files**: `assets/src/react/app/index.jsx`
+- **Usage**: Entire page rendered by React via special template
+- **Template**: `page-react.php` (assign to pages in WordPress admin)
+- **Features**: WordPress REST API integration, client-side routing
+
+### Quick Start Examples
+
+**CSS Modules Component:**
+```jsx
+import styles from './Component.module.scss';
+<div className={styles.wrapper}>Content</div>
+```
+
+**Full Page App:**
+1. Create page in WordPress admin
+2. Assign "React Full Page" template
+3. Page renders entirely via React
+
+See `REACT-APPROACHES.md` for detailed documentation.

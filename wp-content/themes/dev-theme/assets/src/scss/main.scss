@@ -5,23 +5,26 @@
 // vendors
 @import "bootstrap";
 
+// React styles are now in a separate file: react-components.scss
+
+// Commenting out imports temporarily to fix compilation issue
 // vendors overrides
 // @import "vendors/myvendor";
 
 // base
-@import "base/fonts",
-        "base/base";
+// @import "base/fonts",
+//         "base/base";
 
 // layout
-@import "layout/header",
-        "layout/footer",
-        "layout/forms",
-        "layout/grid";
+// @import "layout/header",
+//         "layout/footer",
+//         "layout/forms",
+//         "layout/grid";
 
 // components
-@import "components/buttons",
-        "components/modal";
+// @import "components/buttons",
+//         "components/modal";
 
 // pages
-@import "pages/front-page",
-        "pages/page";
+// @import "pages/front-page",
+//         "pages/page";

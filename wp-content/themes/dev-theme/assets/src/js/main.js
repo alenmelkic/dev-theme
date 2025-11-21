@@ -1,4 +1,6 @@
 import General from './_general';
+// Import Bootstrap JavaScript for navbar functionality
+import 'bootstrap/js/dist/collapse';
 
 const App = {
 	/**

@@ -1,0 +1,64 @@
+{
+  "_Footer.js": {
+    "file": "Footer.js",
+    "name": "Footer",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_index.js": {
+    "file": "index.js",
+    "name": "index"
+  },
+  "assets/src/js/main.js": {
+    "file": "js/main.js",
+    "name": "js/main",
+    "src": "assets/src/js/main.js",
+    "isEntry": true
+  },
+  "assets/src/react/app/index.tsx": {
+    "file": "js/app.js",
+    "name": "js/app",
+    "src": "assets/src/react/app/index.tsx",
+    "isEntry": true,
+    "imports": [
+      "_Footer.js",
+      "_index.js"
+    ]
+  },
+  "assets/src/react/blocks/index.tsx": {
+    "file": "js/blocks.js",
+    "name": "js/blocks",
+    "src": "assets/src/react/blocks/index.tsx",
+    "isEntry": true,
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "assets/src/react/components/index.tsx": {
+    "file": "js/components.js",
+    "name": "js/components",
+    "src": "assets/src/react/components/index.tsx",
+    "isEntry": true,
+    "imports": [
+      "_Footer.js",
+      "_index.js"
+    ]
+  },
+  "assets/src/scss/main.scss": {
+    "file": "css/main.css",
+    "src": "assets/src/scss/main.scss",
+    "isEntry": true,
+    "names": [
+      "main.css"
+    ]
+  },
+  "assets/src/scss/react-components.scss": {
+    "file": "css/react-components.css",
+    "src": "assets/src/scss/react-components.scss",
+    "isEntry": true,
+    "names": [
+      "react-components.css"
+    ]
+  }
+}
