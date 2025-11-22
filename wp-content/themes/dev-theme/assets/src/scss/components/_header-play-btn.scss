@@ -1,0 +1,47 @@
+/* Header Play Button */
+.header-play-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 20px;
+
+    &:hover {
+        background: #333;
+        transform: translateY(-1px);
+    }
+
+    &.is-playing {
+        background: #ff0000;
+
+        .icon-play {
+            animation: pulse 2s infinite;
+        }
+    }
+
+    .icon-play {
+        font-size: 12px;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

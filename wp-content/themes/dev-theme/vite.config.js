@@ -124,6 +124,7 @@ export default defineConfig({
 				'components/post-date': resolve(`${__dirname}/components/post-date/post-date.scss`),
 				'components/author': resolve(`${__dirname}/components/author/author.scss`),
 				'components/post-terms': resolve(`${__dirname}/components/post-terms/post-terms.scss`),
+				'components/radio-player': resolve(`${__dirname}/components/radio-player/radio-player.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',

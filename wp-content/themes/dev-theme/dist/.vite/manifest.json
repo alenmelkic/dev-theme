@@ -64,5 +64,13 @@
     "names": [
       "components/post-title.css"
     ]
+  },
+  "components/radio-player/radio-player.scss": {
+    "file": "css/components/radio-player.css",
+    "src": "components/radio-player/radio-player.scss",
+    "isEntry": true,
+    "names": [
+      "components/radio-player.css"
+    ]
   }
 }

@@ -9,6 +9,7 @@
   </footer>
 
 </div><!-- #page -->
+</div><!-- #swup -->
 
 <?php wp_footer(); ?>
 

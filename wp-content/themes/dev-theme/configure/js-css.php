@@ -20,7 +20,8 @@ function add_vite_assets() {
 
 	// add your custom scss files here
 	$scss_files = [
-		'main' => 'assets/src/scss/main.scss'
+		'main' => 'assets/src/scss/main.scss',
+		'radio-player' => 'components/radio-player/radio-player.scss'
 	];
 
 	if ( VITE_BUILD ) {
@@ -76,6 +77,8 @@ function vite_client_head_hook() {
 }
 
 add_action( 'wp_head', 'vite_client_head_hook' );
+
+
 
 function cleaning_wordpress() {
     // force all scripts to load in footer
