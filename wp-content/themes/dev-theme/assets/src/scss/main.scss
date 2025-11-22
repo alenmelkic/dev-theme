@@ -1,30 +1,32 @@
+/**
+ * Main CSS Bundle
+ * Loaded on all pages - includes header, footer, base styles
+ */
 
-// abstracts
-@import "abstracts/variables";
+// 1. Settings (variables, mixins, functions)
+@import "settings/variables";
+@import "settings/mixins";
+@import "settings/functions";
 
-// vendors
-@import "bootstrap";
+// 2. Vendors (Bootstrap and overrides)
+@import "vendors/bootstrap";
+@import "vendors/bootstrap-overrides";
 
-// React styles are now in a separate file: react-components.scss
+// 3. Base (reset, typography, utilities)
+@import "base/reset";
+@import "base/typography";
+@import "base/utilities";
 
-// Commenting out imports temporarily to fix compilation issue
-// vendors overrides
-// @import "vendors/myvendor";
+// 4. Layout (header, footer, navigation)
+@import "layout/header";
+@import "layout/footer";
+@import "layout/navigation";
+@import "layout/grid";
 
-// base
-// @import "base/fonts",
-//         "base/base";
+// 5. Global Components (buttons, forms, cards)
+@import "components/buttons";
+@import "components/modal";
 
-// layout
-// @import "layout/header",
-//         "layout/footer",
-//         "layout/forms",
-//         "layout/grid";
-
-// components
-// @import "components/buttons",
-//         "components/modal";
-
-// pages
-// @import "pages/front-page",
-//         "pages/page";
+// 6. Pages (if needed for specific pages)
+// @import "pages/front-page";
+// @import "pages/page";

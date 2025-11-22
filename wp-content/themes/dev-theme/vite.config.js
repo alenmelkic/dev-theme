@@ -110,12 +110,20 @@ export default defineConfig({
 
 		rollupOptions: {
 			input: {
+				// JavaScript
 				'js/main': resolve(`${__dirname}/assets/src/js/main.js`),
-				'js/blocks': resolve(`${__dirname}/assets/src/react/blocks/index.tsx`),
-				'js/components': resolve(`${__dirname}/assets/src/react/components/index.tsx`),
-				'js/app': resolve(`${__dirname}/assets/src/react/app/index.tsx`),
+				'js/navigation': resolve(`${__dirname}/assets/src/js/navigation.js`),
+				'js/servicne-informacije': resolve(`${__dirname}/assets/src/js/servicne-informacije.js`),
+
+				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
-				'react-components': resolve(`${__dirname}/assets/src/scss/react-components.scss`),
+
+				// Component CSS (loaded conditionally)
+				'components/featured-image': resolve(`${__dirname}/components/featured-image/featured-image.scss`),
+				'components/post-title': resolve(`${__dirname}/components/post-title/post-title.scss`),
+				'components/post-date': resolve(`${__dirname}/components/post-date/post-date.scss`),
+				'components/author': resolve(`${__dirname}/components/author/author.scss`),
+				'components/post-terms': resolve(`${__dirname}/components/post-terms/post-terms.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',

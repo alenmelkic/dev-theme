@@ -5,20 +5,33 @@
 
 get_header();
 
-// Get the current post slug
-global $post;
-$post_slug = $post->post_name;
+while (have_posts()) : the_post();
 ?>
 
 <main id="main" class="site-main servicna-informacija-single-page">
     <div class="container">
-        <!-- React will mount here -->
-        <div 
-            id="react-servicna-informacija-single" 
-            data-slug="<?php echo esc_attr($post_slug); ?>"
-        ></div>
+        <article <?php post_class(); ?>>
+            <header class="post-header">
+                <?php get_component('post-title', array('tag' => 'h1', 'link' => false)); ?>
+                
+                <div class="post-meta">
+                    <?php get_component('author', array('size' => 'medium')); ?>
+                    <?php get_component('post-date'); ?>
+                </div>
+            </header>
+
+            <?php get_component('featured-image', array('variant' => 'post', 'size' => 'large')); ?>
+
+            <div class="post-content">
+                <?php the_content(); ?>
+            </div>
+
+            <?php get_component('post-terms', array('taxonomy' => 'servicne_tag')); ?>
+        </article>
     </div>
 </main>
 
 <?php
+endwhile;
+
 get_footer();

@@ -1,49 +1,21 @@
 {
-  "_api.js": {
-    "file": "api.js",
-    "name": "api",
-    "imports": [
-      "_index.js"
-    ]
-  },
-  "_index.js": {
-    "file": "index.js",
-    "name": "index"
-  },
   "assets/src/js/main.js": {
     "file": "js/main.js",
     "name": "js/main",
     "src": "assets/src/js/main.js",
     "isEntry": true
   },
-  "assets/src/react/app/index.tsx": {
-    "file": "js/app.js",
-    "name": "js/app",
-    "src": "assets/src/react/app/index.tsx",
-    "isEntry": true,
-    "imports": [
-      "_api.js",
-      "_index.js"
-    ]
+  "assets/src/js/navigation.js": {
+    "file": "js/navigation.js",
+    "name": "js/navigation",
+    "src": "assets/src/js/navigation.js",
+    "isEntry": true
   },
-  "assets/src/react/blocks/index.tsx": {
-    "file": "js/blocks.js",
-    "name": "js/blocks",
-    "src": "assets/src/react/blocks/index.tsx",
-    "isEntry": true,
-    "imports": [
-      "_index.js"
-    ]
-  },
-  "assets/src/react/components/index.tsx": {
-    "file": "js/components.js",
-    "name": "js/components",
-    "src": "assets/src/react/components/index.tsx",
-    "isEntry": true,
-    "imports": [
-      "_api.js",
-      "_index.js"
-    ]
+  "assets/src/js/servicne-informacije.js": {
+    "file": "js/servicne-informacije.js",
+    "name": "js/servicne-informacije",
+    "src": "assets/src/js/servicne-informacije.js",
+    "isEntry": true
   },
   "assets/src/scss/main.scss": {
     "file": "css/main.css",
@@ -53,12 +25,44 @@
       "main.css"
     ]
   },
-  "assets/src/scss/react-components.scss": {
-    "file": "css/react-components.css",
-    "src": "assets/src/scss/react-components.scss",
+  "components/author/author.scss": {
+    "file": "css/components/author.css",
+    "src": "components/author/author.scss",
     "isEntry": true,
     "names": [
-      "react-components.css"
+      "components/author.css"
+    ]
+  },
+  "components/featured-image/featured-image.scss": {
+    "file": "css/components/featured-image.css",
+    "src": "components/featured-image/featured-image.scss",
+    "isEntry": true,
+    "names": [
+      "components/featured-image.css"
+    ]
+  },
+  "components/post-date/post-date.scss": {
+    "file": "css/components/post-date.css",
+    "src": "components/post-date/post-date.scss",
+    "isEntry": true,
+    "names": [
+      "components/post-date.css"
+    ]
+  },
+  "components/post-terms/post-terms.scss": {
+    "file": "css/components/post-terms.css",
+    "src": "components/post-terms/post-terms.scss",
+    "isEntry": true,
+    "names": [
+      "components/post-terms.css"
+    ]
+  },
+  "components/post-title/post-title.scss": {
+    "file": "css/components/post-title.css",
+    "src": "components/post-title/post-title.scss",
+    "isEntry": true,
+    "names": [
+      "components/post-title.css"
     ]
   }
 }

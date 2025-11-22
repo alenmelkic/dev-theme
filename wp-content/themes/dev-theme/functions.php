@@ -16,6 +16,14 @@ include( 'configure/configure.php' );
 
 include( 'configure/js-css.php' );
 
+// COMPONENTS
+
+include( 'configure/components.php' );
+
+// BOOTSTRAP NAV WALKER
+
+include( 'configure/class-bootstrap-nav-walker.php' );
+
 // SHORTCODES
 
 include( 'configure/shortcodes.php' );

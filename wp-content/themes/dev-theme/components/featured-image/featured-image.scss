@@ -1,0 +1,28 @@
+@import "../../assets/src/scss/settings/variables";
+@import "../../assets/src/scss/settings/mixins";
+
+.post-featured-image,
+.card-featured-image {
+    overflow: hidden;
+    border-radius: 4px;
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover img {
+        transform: scale(1.05);
+    }
+}
+
+.card-featured-image {
+    @include aspect-ratio(16, 9);
+
+    img {
+        object-fit: cover;
+        height: 100%;
+    }
+}

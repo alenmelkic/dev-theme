@@ -1,4 +1,12 @@
 <?php
+/**
+ * Custom Post Types and Taxonomies
+ */
+
+// Security: Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 /**
  * Register Custom Post Type: Servicne informacije

@@ -1,0 +1,32 @@
+@import "../../assets/src/scss/settings/variables";
+
+.post-terms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+
+    .term-link {
+        color: $primary-color;
+        text-decoration: none;
+        padding: 0.25rem 0.75rem;
+        background: rgba($primary-color, 0.1);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: $primary-color;
+            color: #fff;
+        }
+    }
+
+    .term-name {
+        padding: 0.25rem 0.75rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
+
+    .term-separator {
+        display: none;
+    }
+}

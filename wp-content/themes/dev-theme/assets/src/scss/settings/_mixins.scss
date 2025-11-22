@@ -1,0 +1,65 @@
+// Responsive breakpoints
+@mixin respond-to($breakpoint) {
+    @if $breakpoint =='sm' {
+        @media (min-width: $breakpoint-sm) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =='md' {
+        @media (min-width: $breakpoint-md) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =='lg' {
+        @media (min-width: $breakpoint-lg) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =='xl' {
+        @media (min-width: $breakpoint-xl) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =='xxl' {
+        @media (min-width: $breakpoint-xxl) {
+            @content;
+        }
+    }
+}
+
+// Flexbox center
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// Truncate text
+@mixin truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// Aspect ratio
+@mixin aspect-ratio($width, $height) {
+    aspect-ratio: $width / $height;
+
+    @supports not (aspect-ratio: 1 / 1) {
+        &::before {
+            content: '';
+            float: left;
+            padding-top: ($height / $width) * 100%;
+        }
+
+        &::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    }
+}

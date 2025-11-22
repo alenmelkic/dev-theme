@@ -1,11 +1,19 @@
 <?php
+/**
+ * Theme Configuration
+ */
+
+// Security: Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 // MENUS
 function _custom_theme_register_menu() {
     register_nav_menus(
         array(
-            'menu-main' => __( 'Menu principal' ),
-            //'menu-footer' => __( 'Menu footer' ),
+            'menu-desktop' => __( 'Desktop Menu' ),
+            'menu-mobile'  => __( 'Mobile Menu' ),
         )
     );
 }
