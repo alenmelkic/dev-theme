@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dev-theme/soundcloud",
+    "version": "1.0.0",
+    "title": "SoundCloud Player",
+    "category": "embed",
+    "icon": "format-audio",
+    "description": "Embed a SoundCloud track or playlist.",
+    "attributes": {
+        "url": {
+            "type": "string"
+        },
+        "height": {
+            "type": "string",
+            "default": "166"
+        },
+        "visual": {
+            "type": "boolean",
+            "default": false
+        }
+    },
+    "render": "file:./render.php"
+}

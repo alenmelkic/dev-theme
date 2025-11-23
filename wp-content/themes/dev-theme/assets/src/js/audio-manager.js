@@ -10,6 +10,8 @@ const player = {
     playBtn: null,
     volumeInput: null,
     isPlaying: false,
+    wasPlayingBeforeInterruption: false,
+    hideTimer: null,
 
     init() {
         this.audio = document.getElementById('radio-audio');
@@ -22,6 +24,7 @@ const player = {
 
         this.loadState();
         this.bindEvents();
+        this.restoreSessionState();
     },
 
     reinitHeader() {
@@ -64,6 +67,9 @@ const player = {
         } else {
             this.audio.pause();
         }
+
+        // Clear hide timer when toggling
+        this.clearHideTimer();
     },
 
     setVolume(value) {
@@ -104,6 +110,16 @@ const player = {
                 this.headerPlayBtn.classList.remove('is-playing');
             }
         }
+
+        // Save session state
+        this.saveSessionState();
+
+        // Handle auto-hide
+        if (!isPlaying) {
+            this.startHideTimer();
+        } else {
+            this.clearHideTimer();
+        }
     },
 
     loadState() {
@@ -113,8 +129,66 @@ const player = {
             this.audio.volume = savedVolume;
             if (this.volumeInput) this.volumeInput.value = savedVolume;
         }
+    },
+
+    saveSessionState() {
+        // Use sessionStorage (clears on tab/browser close)
+        sessionStorage.setItem('radio_isPlaying', this.isPlaying);
+    },
+
+    restoreSessionState() {
+        // Restore playing state from session
+        const wasPlaying = sessionStorage.getItem('radio_isPlaying') === 'true';
+        if (wasPlaying) {
+            // Show player bar immediately
+            if (this.playerBar) {
+                this.playerBar.classList.add('is-visible');
+                document.body.classList.add('has-player');
+            }
+
+            // Try to auto-resume (may be blocked by browser)
+            setTimeout(() => {
+                this.audio.play()
+                    .catch(() => {
+                        // Update UI to show paused state since autoplay was blocked
+                        this.updateUI(false);
+                    });
+            }, 500); // Small delay to ensure everything is loaded
+        }
+    },
+
+    startHideTimer() {
+        this.clearHideTimer();
+        this.hideTimer = setTimeout(() => {
+            if (!this.isPlaying && this.playerBar) {
+                this.playerBar.classList.remove('is-visible');
+                document.body.classList.remove('has-player');
+            }
+        }, 8000); // 8 seconds
+    },
+
+    clearHideTimer() {
+        if (this.hideTimer) {
+            clearTimeout(this.hideTimer);
+            this.hideTimer = null;
+        }
+    },
+
+    pause() {
+        if (this.isPlaying) {
+            this.togglePlay();
+        }
+    },
+
+    resume() {
+        if (!this.isPlaying) {
+            this.togglePlay();
+        }
     }
 };
+
+// Expose player globally for other scripts (like SoundCloud player)
+window.radioPlayer = player;
 
 export default function initAudioManager() {
     player.init();

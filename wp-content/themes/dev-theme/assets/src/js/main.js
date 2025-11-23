@@ -3,6 +3,7 @@ import General from './_general';
 import 'bootstrap/js/dist/collapse';
 import initSwup from './swup-init';
 import initAudioManager from './audio-manager';
+import { initSoundCloudPlayers, cleanupSoundCloudPlayers } from './soundcloud-custom-player';
 
 const App = {
 	/**
@@ -18,13 +19,23 @@ const App = {
 		// Init Audio Player
 		const player = initAudioManager();
 
+		// Init SoundCloud Players
+		initSoundCloudPlayers();
+
 		// Init Swup (PJAX)
 		const swup = initSwup();
 
+		// Expose Swup globally for other scripts
+		window.swup = swup;
+
 		// Re-init header button on navigation
-		if (swup && player) {
+		if (swup) {
 			swup.hooks.on('content:replace', () => {
-				player.reinitHeader();
+				if (player) {
+					player.reinitHeader();
+				}
+				cleanupSoundCloudPlayers();
+				initSoundCloudPlayers();
 			});
 		}
 	},

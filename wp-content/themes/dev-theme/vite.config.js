@@ -41,6 +41,7 @@ export default defineConfig({
 				'./assets/src/js/**/*.js',
 				'./assets/src/react/**/*.{js,jsx,ts,tsx}',
 				'./assets/src/**/*.scss',
+				'./blocks/**/*.{js,jsx,ts,tsx}',
 			],
 			safelist: {
 				standard: [
@@ -114,6 +115,7 @@ export default defineConfig({
 				'js/main': resolve(`${__dirname}/assets/src/js/main.js`),
 				'js/navigation': resolve(`${__dirname}/assets/src/js/navigation.js`),
 				'js/servicne-informacije': resolve(`${__dirname}/assets/src/js/servicne-informacije.js`),
+				'js/soundcloud-custom-player': resolve(`${__dirname}/assets/src/js/soundcloud-custom-player.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -125,6 +127,7 @@ export default defineConfig({
 				'components/author': resolve(`${__dirname}/components/author/author.scss`),
 				'components/post-terms': resolve(`${__dirname}/components/post-terms/post-terms.scss`),
 				'components/radio-player': resolve(`${__dirname}/components/radio-player/radio-player.scss`),
+				'components/soundcloud-custom-player': resolve(`${__dirname}/components/soundcloud-custom-player/soundcloud-custom-player.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',

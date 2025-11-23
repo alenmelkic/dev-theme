@@ -3,7 +3,10 @@
     "file": "js/main.js",
     "name": "js/main",
     "src": "assets/src/js/main.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "assets/src/js/soundcloud-custom-player.js"
+    ]
   },
   "assets/src/js/navigation.js": {
     "file": "js/navigation.js",
@@ -15,6 +18,12 @@
     "file": "js/servicne-informacije.js",
     "name": "js/servicne-informacije",
     "src": "assets/src/js/servicne-informacije.js",
+    "isEntry": true
+  },
+  "assets/src/js/soundcloud-custom-player.js": {
+    "file": "js/soundcloud-custom-player.js",
+    "name": "js/soundcloud-custom-player",
+    "src": "assets/src/js/soundcloud-custom-player.js",
     "isEntry": true
   },
   "assets/src/scss/main.scss": {
@@ -71,6 +80,14 @@
     "isEntry": true,
     "names": [
       "components/radio-player.css"
+    ]
+  },
+  "components/soundcloud-custom-player/soundcloud-custom-player.scss": {
+    "file": "css/components/soundcloud-custom-player.css",
+    "src": "components/soundcloud-custom-player/soundcloud-custom-player.scss",
+    "isEntry": true,
+    "names": [
+      "components/soundcloud-custom-player.css"
     ]
   }
 }

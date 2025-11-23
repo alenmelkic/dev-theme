@@ -54,8 +54,20 @@ function add_vite_assets() {
 		wp_enqueue_style( $handle, $css_uri, null, null );
 	}
 }
-
 add_action( 'wp_enqueue_scripts', 'add_vite_assets', 100 );
+
+// Add type="module" to our scripts to prevent redeclaration errors
+function add_module_type_attribute( $tag, $handle, $src ) {
+	// List of scripts that should be loaded as modules
+	$module_scripts = [ 'main', 'navigation', 'servicne-informacije' ];
+	
+	if ( in_array( $handle, $module_scripts, true ) ) {
+		$tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+	}
+	
+	return $tag;
+}
+add_filter( 'script_loader_tag', 'add_module_type_attribute', 10, 3 );
 
 // Enqueue Bootstrap JavaScript for dropdown functionality
 function enqueue_bootstrap_js() {
@@ -90,6 +102,7 @@ function cleaning_wordpress() {
 	wp_dequeue_style('wp-block-library');
 	wp_dequeue_style('wp-block-library-theme');
 	wp_dequeue_style('wc-block-style');
+	wp_dequeue_style('wp-block-library');
 	wp_dequeue_style('global-styles');
 	wp_dequeue_style('classic-theme-styles');
 }

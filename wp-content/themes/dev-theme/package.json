@@ -5,7 +5,9 @@
 	"type": "module",
 	"scripts": {
 		"dev": "rimraf ./assets/dist && vite",
-		"build": "vite build",
+		"build:vite": "vite build",
+		"build:blocks": "wp-scripts build blocks/soundcloud/index.jsx --output-path=dist/blocks/soundcloud",
+		"build": "npm run build:vite && npm run build:blocks",
 		"preview": "vite preview",
 		"test": "vitest",
 		"test:ui": "vitest --ui",
