@@ -62,7 +62,11 @@ function add_module_type_attribute( $tag, $handle, $src ) {
 	$module_scripts = [ 'main', 'navigation', 'servicne-informacije' ];
 	
 	if ( in_array( $handle, $module_scripts, true ) ) {
-		$tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+		if ( $handle === 'main' ) {
+			$tag = '<script type="module" data-swup-ignore-script src="' . esc_url( $src ) . '"></script>';
+		} else {
+			$tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+		}
 	}
 	
 	return $tag;

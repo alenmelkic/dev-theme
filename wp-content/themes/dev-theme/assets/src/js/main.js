@@ -42,5 +42,9 @@ const App = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+	if (window.devThemeAppInitialized) {
+		return;
+	}
+	window.devThemeAppInitialized = true;
 	App.init();
 });

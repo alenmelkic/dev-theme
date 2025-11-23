@@ -5,44 +5,53 @@
 
 const player = {
     audio: null,
-    headerPlayBtn: null,
     playerBar: null,
-    playBtn: null,
     volumeInput: null,
     isPlaying: false,
     wasPlayingBeforeInterruption: false,
     hideTimer: null,
+    eventsInitialized: false,
 
     init() {
+        // Get persistent elements (outside Swup container)
         this.audio = document.getElementById('radio-audio');
-        this.playBtn = document.getElementById('radio-play-btn');
-        this.headerPlayBtn = document.getElementById('header-play-btn');
-        this.volumeInput = document.getElementById('radio-volume');
         this.playerBar = document.getElementById('radio-player-bar');
+        this.volumeInput = document.getElementById('radio-volume');
 
-        if (!this.audio || !this.playBtn) return;
+        if (!this.audio) return;
 
         this.loadState();
         this.bindEvents();
-        this.restoreSessionState();
+        // this.restoreSessionState(); // Disabled to prevent browser autoplay blocking
     },
 
     reinitHeader() {
-        this.headerPlayBtn = document.getElementById('header-play-btn');
-        if (this.headerPlayBtn) {
-            this.headerPlayBtn.addEventListener('click', () => this.togglePlay());
-            this.updateUI(this.isPlaying);
-        }
+        // Just update the UI state for the new button
+        this.updateUI(this.isPlaying);
     },
 
     bindEvents() {
-        // Play/Pause (Bottom Bar)
-        this.playBtn.addEventListener('click', () => this.togglePlay());
-
-        // Play/Pause (Header)
-        if (this.headerPlayBtn) {
-            this.headerPlayBtn.addEventListener('click', () => this.togglePlay());
+        // Prevent duplicate event binding
+        if (this.eventsInitialized) {
+            return;
         }
+        this.eventsInitialized = true;
+
+        // Play/Pause (Bottom Bar) - Delegated Event
+        document.body.addEventListener('click', (e) => {
+            const btn = e.target.closest('#radio-play-btn');
+            if (btn) {
+                this.togglePlay();
+            }
+        });
+
+        // Play/Pause (Header) - Delegated Event
+        document.body.addEventListener('click', (e) => {
+            const btn = e.target.closest('#header-play-btn');
+            if (btn) {
+                this.togglePlay();
+            }
+        });
 
         // Volume
         this.volumeInput?.addEventListener('input', (e) => {
@@ -80,34 +89,38 @@ const player = {
     updateUI(isPlaying) {
         this.isPlaying = isPlaying;
 
-        // Update Bottom Player UI
-        const playIcon = this.playBtn.querySelector('.icon-play');
-        const pauseIcon = this.playBtn.querySelector('.icon-pause');
-        const indicator = document.querySelector('.live-indicator');
-
-        if (isPlaying) {
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'inline';
-            indicator.style.opacity = '1';
-        } else {
-            playIcon.style.display = 'inline';
-            pauseIcon.style.display = 'none';
-            indicator.style.opacity = '0.5';
-        }
-
-        // Update Header Button UI
-        if (this.headerPlayBtn) {
-            const headerText = this.headerPlayBtn.querySelector('.text');
-            const headerIcon = this.headerPlayBtn.querySelector('.icon-play');
+        // Update Bottom Player UI - Dynamic Lookup
+        const playBtn = document.getElementById('radio-play-btn');
+        if (playBtn) {
+            const playIcon = playBtn.querySelector('.icon-play');
+            const pauseIcon = playBtn.querySelector('.icon-pause');
+            const indicator = document.querySelector('.live-indicator');
 
             if (isPlaying) {
-                headerText.textContent = 'Playing Live';
-                headerIcon.textContent = '⏸'; // Simple text icon for now
-                this.headerPlayBtn.classList.add('is-playing');
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'inline';
+                if (indicator) indicator.style.opacity = '1';
             } else {
-                headerText.textContent = 'Listen Live';
-                headerIcon.textContent = '▶';
-                this.headerPlayBtn.classList.remove('is-playing');
+                playIcon.style.display = 'inline';
+                pauseIcon.style.display = 'none';
+                if (indicator) indicator.style.opacity = '0.5';
+            }
+        }
+
+        // Update Header Button UI - Dynamic Lookup
+        const headerBtn = document.getElementById('header-play-btn');
+        if (headerBtn) {
+            const headerText = headerBtn.querySelector('.text');
+            const headerIcon = headerBtn.querySelector('.icon-play');
+
+            if (isPlaying) {
+                if (headerText) headerText.textContent = 'Playing Live';
+                if (headerIcon) headerIcon.textContent = '⏸';
+                headerBtn.classList.add('is-playing');
+            } else {
+                if (headerText) headerText.textContent = 'Listen Live';
+                if (headerIcon) headerIcon.textContent = '▶';
+                headerBtn.classList.remove('is-playing');
             }
         }
 
