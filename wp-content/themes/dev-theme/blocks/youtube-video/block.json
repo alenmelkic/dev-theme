@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dev-theme/youtube-video",
+    "title": "YouTube Video",
+    "category": "media",
+    "icon": "video-alt3",
+    "description": "Embed YouTube videos with optimal performance using lite-youtube approach.",
+    "keywords": [
+        "youtube",
+        "video",
+        "embed"
+    ],
+    "version": "1.0.0",
+    "textdomain": "dev-theme",
+    "attributes": {
+        "videoUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "videoId": {
+            "type": "string",
+            "default": ""
+        },
+        "alignment": {
+            "type": "string",
+            "default": "center"
+        },
+        "caption": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": false,
+        "anchor": true
+    },
+    "editorScript": "file:./index.jsx",
+    "render": "file:./render.php"
+}

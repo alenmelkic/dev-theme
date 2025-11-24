@@ -12,7 +12,8 @@
     "isEntry": true,
     "imports": [
       "assets/src/js/soundcloud-custom-player.js",
-      "assets/src/js/facebook-video-player.js"
+      "assets/src/js/facebook-video-player.js",
+      "assets/src/js/youtube-video-player.js"
     ]
   },
   "assets/src/js/navigation.js": {
@@ -31,6 +32,12 @@
     "file": "js/soundcloud-custom-player.js",
     "name": "js/soundcloud-custom-player",
     "src": "assets/src/js/soundcloud-custom-player.js",
+    "isEntry": true
+  },
+  "assets/src/js/youtube-video-player.js": {
+    "file": "js/youtube-video-player.js",
+    "name": "js/youtube-video-player",
+    "src": "assets/src/js/youtube-video-player.js",
     "isEntry": true
   },
   "assets/src/scss/main.scss": {
@@ -103,6 +110,14 @@
     "isEntry": true,
     "names": [
       "components/soundcloud-custom-player.css"
+    ]
+  },
+  "components/youtube-video-player/youtube-video-player.scss": {
+    "file": "css/components/youtube-video-player.css",
+    "src": "components/youtube-video-player/youtube-video-player.scss",
+    "isEntry": true,
+    "names": [
+      "components/youtube-video-player.css"
     ]
   }
 }

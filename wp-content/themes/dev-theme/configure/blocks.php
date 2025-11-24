@@ -11,6 +11,7 @@ function dev_theme_register_blocks() {
     // Register Block Server-Side (for rendering)
     register_block_type( get_template_directory() . '/blocks/soundcloud/block.json' );
     register_block_type( get_template_directory() . '/blocks/facebook-video/block.json' );
+    register_block_type( get_template_directory() . '/blocks/youtube-video/block.json' );
 }
 add_action( 'init', 'dev_theme_register_blocks' );
 
@@ -47,6 +48,22 @@ function dev_theme_enqueue_block_editor_assets() {
         );
     }
 
+    // YouTube Video Block
+    $yt_script_handle = 'dev-theme-youtube-video-block-editor';
+    $yt_asset_file = get_template_directory() . '/dist/blocks/youtube-video/index.jsx.asset.php';
+    
+    if ( file_exists( $yt_asset_file ) ) {
+        $asset = require( $yt_asset_file );
+        
+        wp_enqueue_script(
+            $yt_script_handle,
+            get_template_directory_uri() . '/dist/blocks/youtube-video/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
     // Enqueue styles for the editor
     wp_enqueue_style(
         'soundcloud-custom-player-editor',
@@ -58,6 +75,13 @@ function dev_theme_enqueue_block_editor_assets() {
     wp_enqueue_style(
         'facebook-video-player-editor',
         get_template_directory_uri() . '/dist/css/components/facebook-video-player.css',
+        [],
+        null
+    );
+    
+    wp_enqueue_style(
+        'youtube-video-player-editor',
+        get_template_directory_uri() . '/dist/css/components/youtube-video-player.css',
         [],
         null
     );

@@ -1,0 +1,132 @@
+/**
+ * YouTube Video Player Styles
+ * Lite-youtube approach with click-to-load
+ * Matches Facebook video block styling
+ */
+
+.yt-video-player {
+    margin: 2rem auto;
+    max-width: 640px;
+    width: 100%;
+
+    &.align-left {
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    &.align-center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    &.align-right {
+        margin-left: auto;
+        margin-right: 0;
+    }
+}
+
+/* Facade - Thumbnail with play button */
+.yt-video-facade {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+
+        .yt-video-play-btn {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+    }
+
+    &:focus {
+        outline: 2px solid #ff0000;
+        outline-offset: 4px;
+    }
+}
+
+/* Thumbnail image */
+.yt-video-thumbnail {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+/* Play button */
+.yt-video-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+    transition: transform 0.3s ease;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.yt-play-icon {
+    width: 68px;
+    height: 48px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Video embed container */
+.yt-video-embed {
+    display: none;
+    width: 100%;
+
+    iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: none;
+        border-radius: 12px;
+    }
+}
+
+/* Caption */
+.yt-video-caption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .yt-video-player {
+        margin: 1.5rem auto;
+
+        &.align-left,
+        &.align-right {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    .yt-play-icon {
+        width: 48px;
+        height: 34px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .yt-video-caption {
+        color: #aaa;
+    }
+}

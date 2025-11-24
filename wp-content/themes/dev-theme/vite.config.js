@@ -117,6 +117,7 @@ export default defineConfig({
 				'js/servicne-informacije': resolve(`${__dirname}/assets/src/js/servicne-informacije.js`),
 				'js/soundcloud-custom-player': resolve(`${__dirname}/assets/src/js/soundcloud-custom-player.js`),
 				'js/facebook-video-player': resolve(`${__dirname}/assets/src/js/facebook-video-player.js`),
+				'js/youtube-video-player': resolve(`${__dirname}/assets/src/js/youtube-video-player.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -130,6 +131,7 @@ export default defineConfig({
 				'components/radio-player': resolve(`${__dirname}/components/radio-player/radio-player.scss`),
 				'components/soundcloud-custom-player': resolve(`${__dirname}/components/soundcloud-custom-player/soundcloud-custom-player.scss`),
 				'components/facebook-video-player': resolve(`${__dirname}/components/facebook-video-player/facebook-video-player.scss`),
+				'components/youtube-video-player': resolve(`${__dirname}/components/youtube-video-player/youtube-video-player.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',

@@ -5,6 +5,7 @@ import initSwup from './swup-init';
 import initAudioManager from './audio-manager';
 import { initSoundCloudPlayers, cleanupSoundCloudPlayers } from './soundcloud-custom-player';
 import { initFacebookVideoPlayers, cleanupFacebookVideoPlayers } from './facebook-video-player';
+import { initYouTubeVideoPlayers, cleanupYouTubeVideoPlayers } from './youtube-video-player';
 
 const App = {
 	/**
@@ -26,6 +27,9 @@ const App = {
 		// Init Facebook Video Players
 		initFacebookVideoPlayers();
 
+		// Init YouTube Video Players
+		initYouTubeVideoPlayers();
+
 		// Init Swup (PJAX)
 		const swup = initSwup();
 
@@ -42,6 +46,8 @@ const App = {
 				initSoundCloudPlayers();
 				cleanupFacebookVideoPlayers();
 				initFacebookVideoPlayers();
+				cleanupYouTubeVideoPlayers();
+				initYouTubeVideoPlayers();
 			});
 		}
 	},
