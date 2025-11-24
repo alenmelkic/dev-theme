@@ -113,4 +113,5 @@ add_action('wp_enqueue_scripts', function() {
     register_component_assets('post-date', true, false);
     register_component_assets('post-terms', true, false);
     register_component_assets('author', true, false);
+    register_component_assets('facebook-video-player', true, false);
 }, 5);

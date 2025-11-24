@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dev-theme/facebook-video",
+    "version": "1.0.2",
+    "title": "Facebook Video",
+    "category": "embed",
+    "icon": "video-alt2",
+    "description": "Embed a Facebook video with lazy loading for optimal performance.",
+    "attributes": {
+        "videoUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "videoId": {
+            "type": "string",
+            "default": ""
+        },
+        "thumbnailUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "alignment": {
+            "type": "string",
+            "default": "center"
+        },
+        "caption": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "supports": {
+        "align": [
+            "left",
+            "center",
+            "right",
+            "wide",
+            "full"
+        ],
+        "html": false
+    },
+    "render": "file:./render.php"
+}

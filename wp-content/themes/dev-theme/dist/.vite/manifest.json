@@ -1,11 +1,18 @@
 {
+  "assets/src/js/facebook-video-player.js": {
+    "file": "js/facebook-video-player.js",
+    "name": "js/facebook-video-player",
+    "src": "assets/src/js/facebook-video-player.js",
+    "isEntry": true
+  },
   "assets/src/js/main.js": {
     "file": "js/main.js",
     "name": "js/main",
     "src": "assets/src/js/main.js",
     "isEntry": true,
     "imports": [
-      "assets/src/js/soundcloud-custom-player.js"
+      "assets/src/js/soundcloud-custom-player.js",
+      "assets/src/js/facebook-video-player.js"
     ]
   },
   "assets/src/js/navigation.js": {
@@ -40,6 +47,14 @@
     "isEntry": true,
     "names": [
       "components/author.css"
+    ]
+  },
+  "components/facebook-video-player/facebook-video-player.scss": {
+    "file": "css/components/facebook-video-player.css",
+    "src": "components/facebook-video-player/facebook-video-player.scss",
+    "isEntry": true,
+    "names": [
+      "components/facebook-video-player.css"
     ]
   },
   "components/featured-image/featured-image.scss": {

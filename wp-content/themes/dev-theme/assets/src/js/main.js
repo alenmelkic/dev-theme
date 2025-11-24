@@ -4,6 +4,7 @@ import 'bootstrap/js/dist/collapse';
 import initSwup from './swup-init';
 import initAudioManager from './audio-manager';
 import { initSoundCloudPlayers, cleanupSoundCloudPlayers } from './soundcloud-custom-player';
+import { initFacebookVideoPlayers, cleanupFacebookVideoPlayers } from './facebook-video-player';
 
 const App = {
 	/**
@@ -22,6 +23,9 @@ const App = {
 		// Init SoundCloud Players
 		initSoundCloudPlayers();
 
+		// Init Facebook Video Players
+		initFacebookVideoPlayers();
+
 		// Init Swup (PJAX)
 		const swup = initSwup();
 
@@ -36,6 +40,8 @@ const App = {
 				}
 				cleanupSoundCloudPlayers();
 				initSoundCloudPlayers();
+				cleanupFacebookVideoPlayers();
+				initFacebookVideoPlayers();
 			});
 		}
 	},

@@ -1,0 +1,117 @@
+/**
+ * Facebook Video Player Styles
+ * Lazy loading with Intersection Observer
+ */
+
+.fb-video-player {
+    margin: 2rem auto;
+    max-width: 100%;
+
+    &.align-left {
+        margin-left: 0;
+        margin-right: auto;
+        max-width: 640px;
+    }
+
+    &.align-center {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 640px;
+    }
+
+    &.align-right {
+        margin-left: auto;
+        margin-right: 0;
+        max-width: 640px;
+    }
+}
+
+/* Lazy loading placeholder */
+.fb-video-placeholder-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    /* 16:9 aspect ratio */
+    background: #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.fb-video-loading-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.fb-loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e0e0e0;
+    border-top-color: #1877F2;
+    border-radius: 50%;
+    animation: fb-spin 0.8s linear infinite;
+}
+
+@keyframes fb-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fb-loading-text {
+    margin-top: 1rem;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Video embed container */
+.fb-video-embed {
+    display: none;
+
+    .fb-video {
+        width: 100%;
+    }
+}
+
+/* Caption */
+.fb-video-caption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .fb-video-player {
+        margin: 1.5rem auto;
+
+        &.align-left,
+        &.align-right {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .fb-video-placeholder-container {
+        background: #2a2a2a;
+    }
+
+    .fb-loading-text {
+        color: #ccc;
+    }
+
+    .fb-video-caption {
+        color: #aaa;
+    }
+}
