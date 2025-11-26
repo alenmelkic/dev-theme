@@ -56,7 +56,7 @@ define('DEV_THEME_SUPPORTED_FORMATS', [
  */
 // Disabled AVIF on localhost due to ImageMagick JPEG delegate issues
 // Enable this on production server with proper Imagick configuration
-define('DEV_THEME_ENABLE_AVIF', false);          // Enable AVIF generation
+define('DEV_THEME_ENABLE_AVIF', true);          // Enable AVIF generation
 define('DEV_THEME_ENABLE_OPTIMIZATION', true);   // Enable image optimization
 define('DEV_THEME_ENABLE_LAZY_LOAD', true);      // Enable lazy loading by default
 
@@ -83,12 +83,3 @@ function dev_theme_jpeg_quality($quality, $context) {
 add_filter('jpeg_quality', 'dev_theme_jpeg_quality', 10, 2);
 add_filter('wp_editor_set_quality', 'dev_theme_jpeg_quality', 10, 2);
 
-/**
- * Force WordPress to use GD library instead of Imagick
- * This is necessary on XAMPP where Imagick can't read JPEG files
- */
-function dev_theme_force_gd_editor($editors) {
-    // Remove Imagick, keep only GD
-    return array('WP_Image_Editor_GD');
-}
-add_filter('wp_image_editors', 'dev_theme_force_gd_editor');
