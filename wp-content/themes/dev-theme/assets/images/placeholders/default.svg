@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f5f5f5"/>
+  <g transform="translate(400, 300)">
+    <!-- Image icon -->
+    <rect x="-80" y="-60" width="160" height="120" rx="8" fill="none" stroke="#ccc" stroke-width="3"/>
+    <circle cx="-40" cy="-20" r="15" fill="#ccc"/>
+    <path d="M -80 40 L -40 0 L 0 40 L 40 0 L 80 40 L 80 60 L -80 60 Z" fill="#ccc"/>
+  </g>
+  <text x="400" y="420" font-family="Arial, sans-serif" font-size="20" fill="#aaa" text-anchor="middle">
+    Image Placeholder
+  </text>
+</svg>

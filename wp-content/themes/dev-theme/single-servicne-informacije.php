@@ -14,13 +14,13 @@ while (have_posts()) : the_post();
             <header class="post-header">
                 <?php get_component('post-title', array('tag' => 'h1', 'link' => false)); ?>
                 
+                <?php get_component('featured-image', array('variant' => 'post', 'size' => 'large', 'loading' => 'eager')); ?>
+                
                 <div class="post-meta">
                     <?php get_component('author', array('size' => 'medium')); ?>
                     <?php get_component('post-date'); ?>
                 </div>
             </header>
-
-            <?php get_component('featured-image', array('variant' => 'post', 'size' => 'large')); ?>
 
             <div class="post-content">
                 <?php the_content(); ?>

@@ -21,6 +21,12 @@ include( 'configure/class-bootstrap-nav-walker.php' );
 // BLOCKS
 include( 'configure/blocks.php' );
 
+// IMAGE OPTIMIZATION
+include( 'configure/images.php' );
+include( 'inc/image-processor.php' );
+include( 'inc/image-helper.php' );
+include( 'inc/image-fallbacks.php' );
+
 // ACF
 include( 'configure/acf.php' );
 
