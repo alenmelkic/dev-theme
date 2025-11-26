@@ -1,0 +1,17 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/antsnet/public_html/rvknovi2025/wp-content/themes/dev-theme/
+    - /bin/rm -rf node_modules
+    - /bin/rm -rf .git
+    - /bin/rm -rf .github
+    - /bin/rm -rf .gitignore
+    - /bin/rm -rf .claude
+    - /bin/rm -f package.json
+    - /bin/rm -f package-lock.json
+    - /bin/rm -f composer.json
+    - /bin/rm -f composer.lock
+    - /bin/rm -f README.md
+    - /bin/rm -f .env
+    - /bin/rm -f .DS_Store
+    - /bin/cp -R * $DEPLOYPATH
