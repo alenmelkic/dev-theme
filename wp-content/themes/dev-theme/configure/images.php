@@ -58,6 +58,7 @@ define('DEV_THEME_SUPPORTED_FORMATS', [
 define('DEV_THEME_ENABLE_WEBP', true);           // Enable WebP generation
 define('DEV_THEME_ENABLE_OPTIMIZATION', true);   // Enable image optimization
 define('DEV_THEME_ENABLE_LAZY_LOAD', true);      // Enable lazy loading by default
+define('DEV_THEME_DEBUG_LOGGING', false);        // Enable debug logging (disable in production)
 
 /**
  * Add custom image sizes to the media library size dropdown
