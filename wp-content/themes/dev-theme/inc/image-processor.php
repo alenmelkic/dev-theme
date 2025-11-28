@@ -94,6 +94,12 @@ class Dev_Theme_Image_Processor {
                     $this->log("Generating WebP for full size...");
                     $result = $this->generate_webp_version($file, $mime_type);
                     $this->log("Full size result: " . ($result ? 'Success' : 'Failed'));
+
+                    // Delete original JPG/PNG after successful conversion
+                    if ($result) {
+                        @unlink($file);
+                        $this->log("Deleted original full size image: $file");
+                    }
                 } else {
                     $this->log("Error: Full size file not found at $file");
                 }
@@ -108,7 +114,13 @@ class Dev_Theme_Image_Processor {
 
                         if (file_exists($size_file)) {
                             $this->log("Generating WebP for size: $size_name");
-                            $this->generate_webp_version($size_file, $mime_type);
+                            $result = $this->generate_webp_version($size_file, $mime_type);
+
+                            // Delete original JPG/PNG after successful conversion
+                            if ($result) {
+                                @unlink($size_file);
+                                $this->log("Deleted original $size_name image: $size_file");
+                            }
                         }
                     }
                 }
@@ -121,37 +133,31 @@ class Dev_Theme_Image_Processor {
             $this->log("WebP generation disabled.");
         }
         
-        // Delete original full-size image to save space
-        // The largest size (1440px) will be used as the "full" size
-        if (file_exists($file) && isset($metadata['sizes']['desktop'])) {
-            $this->log("Deleting original full-size image to save space...");
-            
-            // Get the desktop (1440px) file info
-            $desktop_file = dirname($file) . '/' . $metadata['sizes']['desktop']['file'];
-            
-            if (@unlink($file)) {
-                $this->log("Original image deleted successfully.");
-                
-                // Update metadata to point to desktop size as the new "full" size
-                // This is critical for WordPress to find the image
+        // Update metadata to use WebP version and desktop size as full size
+        if (isset($metadata['sizes']['desktop'])) {
+            $this->log("Updating metadata to use WebP desktop as full size...");
+
+            // Get the desktop WebP file path
+            $desktop_webp_file = dirname($file) . '/' . preg_replace('/\.(jpe?g|png)$/i', '.webp', $metadata['sizes']['desktop']['file']);
+
+            if (file_exists($desktop_webp_file)) {
+                // Update metadata to point to desktop WebP as the new "full" size
                 $metadata['width'] = $metadata['sizes']['desktop']['width'];
                 $metadata['height'] = $metadata['sizes']['desktop']['height'];
-                $metadata['file'] = str_replace(basename($file), $metadata['sizes']['desktop']['file'], $metadata['file']);
-                
-                // Update filesize to reflect the actual file size
-                if (file_exists($desktop_file)) {
-                    $metadata['filesize'] = filesize($desktop_file);
-                }
-                
+                $metadata['file'] = str_replace(basename($file), basename($desktop_webp_file), $metadata['file']);
+
+                // Update filesize to reflect the WebP file size
+                $metadata['filesize'] = filesize($desktop_webp_file);
+
                 // Remove desktop from sizes array since it's now the "full" size
                 unset($metadata['sizes']['desktop']);
-                
-                // Update the attached file path in WordPress
-                update_attached_file($attachment_id, $desktop_file);
-                
-                $this->log("Metadata updated to use desktop size as full size.");
+
+                // Update the attached file path in WordPress to point to WebP
+                update_attached_file($attachment_id, $desktop_webp_file);
+
+                $this->log("Metadata updated to use desktop WebP as full size.");
             } else {
-                $this->log("Failed to delete original image.");
+                $this->log("Warning: Desktop WebP file not found at $desktop_webp_file");
             }
         }
         
