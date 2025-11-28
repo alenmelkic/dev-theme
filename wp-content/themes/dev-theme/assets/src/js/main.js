@@ -1,4 +1,5 @@
 import General from './_general';
+import '../scss/main.scss'; // Import SCSS for Vite HMR
 // Import Bootstrap JavaScript for navbar functionality
 import 'bootstrap/js/dist/collapse';
 import initSwup from './swup-init';

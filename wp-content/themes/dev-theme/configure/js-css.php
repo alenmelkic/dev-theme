@@ -15,7 +15,8 @@ function add_vite_assets() {
 	$js_files = [
 		'main' => 'assets/src/js/main.js',
 		'navigation' => 'assets/src/js/navigation.js',
-		'servicne-informacije' => 'assets/src/js/servicne-informacije.js'
+		'servicne-informacije' => 'assets/src/js/servicne-informacije.js',
+		'bootstrap-components' => 'assets/src/js/bootstrap-components.js'
 	];
 
 	// add your custom scss files here
@@ -46,6 +47,12 @@ function add_vite_assets() {
 	}
 
 	foreach ( $scss_files as $handle => $file ) {
+		// In development, main.scss is imported by main.js to enable HMR
+		// So we skip enqueuing it separately to avoid double loading and HMR issues
+		if ( ! VITE_BUILD && $handle === 'main' ) {
+			continue;
+		}
+
 		$css_uri = VITE_SERVER . '/' . $file;
 		if ( VITE_BUILD ) {
 			$css_uri = DIST_URI . '/' . $manifest[ $file ]['file'];
@@ -59,7 +66,7 @@ add_action( 'wp_enqueue_scripts', 'add_vite_assets', 100 );
 // Add type="module" to our scripts to prevent redeclaration errors
 function add_module_type_attribute( $tag, $handle, $src ) {
 	// List of scripts that should be loaded as modules
-	$module_scripts = [ 'main', 'navigation', 'servicne-informacije' ];
+	$module_scripts = [ 'main', 'navigation', 'servicne-informacije', 'bootstrap-components' ];
 	
 	if ( in_array( $handle, $module_scripts, true ) ) {
 		if ( $handle === 'main' ) {
@@ -73,18 +80,8 @@ function add_module_type_attribute( $tag, $handle, $src ) {
 }
 add_filter( 'script_loader_tag', 'add_module_type_attribute', 10, 3 );
 
-// Enqueue Bootstrap JavaScript for dropdown functionality
-function enqueue_bootstrap_js() {
-	// Only enqueue Bootstrap JS components we need (Dropdown)
-	wp_enqueue_script(
-		'bootstrap-dropdown',
-		'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
-		array(),
-		'5.3.0',
-		true
-	);
-}
-add_action( 'wp_enqueue_scripts', 'enqueue_bootstrap_js', 101 );
+// Bootstrap components are now bundled via Vite in bootstrap-components.js
+// No separate enqueue needed - it's included in the $js_files array above
 
 function vite_client_head_hook() {
 	if ( ! VITE_BUILD ) {

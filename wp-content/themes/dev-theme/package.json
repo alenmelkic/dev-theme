@@ -4,7 +4,7 @@
 	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "rimraf ./assets/dist && vite",
+		"dev": "rimraf ./dist && vite",
 		"build:vite": "vite build",
 		"build:blocks": "wp-scripts build blocks/soundcloud/index.jsx --output-path=dist/blocks/soundcloud && wp-scripts build blocks/facebook-video/index.jsx --output-path=dist/blocks/facebook-video && wp-scripts build blocks/youtube-video/index.jsx --output-path=dist/blocks/youtube-video",
 		"build": "npm run build:vite && npm run build:blocks",

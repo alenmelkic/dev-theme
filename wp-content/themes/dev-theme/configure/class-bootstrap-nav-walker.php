@@ -64,6 +64,7 @@ class Bootstrap_Nav_Walker extends Walker_Nav_Menu {
         if ( $args->walker->has_children && $depth === 0 ) {
             $atts['class'] .= ' dropdown-toggle';
             $atts['data-bs-toggle'] = 'dropdown';
+            $atts['data-bs-auto-close'] = 'true';
             $atts['aria-expanded'] = 'false';
             $atts['role'] = 'button';
         }
