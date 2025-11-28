@@ -1,10 +1,9 @@
 // Mobile menu
 
-const hamburger = document.querySelector(".hamburger");
-const navMenu = document.querySelector(".menu-nav-mobile");
 const focusableSelectors = 'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])';
 
 let focusableElements, firstFocusableElement, lastFocusableElement;
+let navMenu, hamburger;
 
 const updateFocusableElements = () => {
     focusableElements = navMenu?.querySelectorAll(focusableSelectors);
@@ -54,9 +53,7 @@ const closeOnEscape = (event) => {
     }
 };
 
-// Main hamburger functionality
-
-hamburger?.addEventListener("click", () => {
+const toggleMenu = () => {
     // Close external elements
     document.querySelector("[data-lp-point='close']")?.click();
     document.querySelector('.LPMslider [aria-expanded="true"]')?.click();
@@ -79,4 +76,19 @@ hamburger?.addEventListener("click", () => {
         document.removeEventListener("keydown", closeOnEscape);
         hamburger.focus();
     }
-});
+};
+
+// Main hamburger functionality
+export const initNavigation = () => {
+    // Re-select elements on each init
+    hamburger = document.querySelector(".hamburger");
+    navMenu = document.querySelector(".menu-nav-mobile");
+
+    if (hamburger) {
+        // Remove existing listener to prevent duplicates if init is called multiple times
+        hamburger.removeEventListener("click", toggleMenu);
+        hamburger.addEventListener("click", toggleMenu);
+    }
+};
+
+export default initNavigation;

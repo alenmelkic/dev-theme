@@ -7,6 +7,7 @@ import initAudioManager from './audio-manager';
 import { initSoundCloudPlayers, cleanupSoundCloudPlayers } from './soundcloud-custom-player';
 import { initFacebookVideoPlayers, cleanupFacebookVideoPlayers } from './facebook-video-player';
 import { initYouTubeVideoPlayers, cleanupYouTubeVideoPlayers } from './youtube-video-player';
+import { initNavigation } from './navigation';
 
 const App = {
 	/**
@@ -18,6 +19,10 @@ const App = {
 			return new General();
 		}
 		initGeneral();
+
+		// Init Navigation
+		initNavigation();
+		window.initNavigation = initNavigation;
 
 		// Init Audio Player
 		const player = initAudioManager();
