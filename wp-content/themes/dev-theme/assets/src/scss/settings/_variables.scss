@@ -43,3 +43,30 @@ $z-index-radio-player: 1080;
 $radio-player-height: 60px;
 $radio-player-bg: #1a1a1a;
 $radio-player-color: #ffffff;
+
+$theme-colors: (
+  "primary": $primary-color,
+  "secondary": $secondary-color,
+  "black": $black-color,
+  "white": $white-color,
+  "gray": $gray-color
+);
+
+$container-max-widths: (
+	sm: 576px,
+	md: 768px,
+	lg: 992px,
+	xl: 1300px,
+	xxl: 1580px
+);
+
+// Override the default breakpoints
+$grid-breakpoints: (
+	xs: 0,
+	sm: 576px,
+	md: 768px,
+	lg: 992px,
+	xl: 1199px,
+	xxl: 1448px,
+	xxxl: 1600px,
+);

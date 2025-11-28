@@ -17,9 +17,9 @@
 <div id="swup" class="transition-fade">
 <div id="page" class="site">
 
-  <header id="masthead" class="site-header" role="banner">
+  <header id="masthead" role="banner">
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
-      <div class="container">
+      <div class="container floating-header">
         <!-- Site Branding -->
         <div class="navbar-brand">
           <?php if ( is_front_page() || is_home() ) : ?>
@@ -78,7 +78,7 @@
         <div class="button-container d-flex align-items-center">
 
             <!-- Header Play Button -->
-            <button id="header-play-btn" class="header-play-btn d-lg-flex align-items-center" aria-label="Listen Live">
+            <button id="header-play-btn" class="header-play-btn mx-0 d-lg-flex align-items-center" aria-label="Listen Live">
                 <span class="icon-play me-2">▶</span>
                 <span class="text">RVK Uživo</span>
             </button>
