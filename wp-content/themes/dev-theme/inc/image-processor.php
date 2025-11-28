@@ -1,13 +1,13 @@
 <?php
 /**
  * Image Processor
- * 
+ *
  * Handles automatic image optimization on upload:
- * - Generates AVIF format for modern browsers
+ * - Generates WebP format for modern browsers
  * - Creates optimized JPEG/PNG fallbacks at 80% quality
  * - Generates 5 responsive sizes
  * - Only processes JPEG and PNG (excludes SVG, GIF, WebP, etc.)
- * 
+ *
  * @package Dev_Theme
  */
 
@@ -58,8 +58,8 @@ class Dev_Theme_Image_Processor {
 
     /**
      * Process uploaded image
-     * Generate AVIF and optimized fallbacks for all sizes
-     * 
+     * Generate WebP and optimized fallbacks for all sizes
+     *
      * @param array $metadata Attachment metadata
      * @param int $attachment_id Attachment ID
      * @return array Modified metadata
@@ -86,43 +86,39 @@ class Dev_Theme_Image_Processor {
             return $metadata;
         }
         
-        // AVIF generation (optional - only if enabled and Imagick available)
-        if (DEV_THEME_ENABLE_AVIF && extension_loaded('imagick')) {
+        // WebP generation (optional - only if enabled)
+        if (DEV_THEME_ENABLE_WEBP) {
             try {
                 // Process full size image
                 if (file_exists($file)) {
-                    $this->log("Generating AVIF for full size...");
-                    $result = $this->generate_avif_version($file, $mime_type);
+                    $this->log("Generating WebP for full size...");
+                    $result = $this->generate_webp_version($file, $mime_type);
                     $this->log("Full size result: " . ($result ? 'Success' : 'Failed'));
                 } else {
                     $this->log("Error: Full size file not found at $file");
                 }
-                
+
                 // Process all generated sizes
                 if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
                     $upload_dir = wp_upload_dir();
                     $base_dir = dirname($file);
-                    
+
                     foreach ($metadata['sizes'] as $size_name => $size_data) {
                         $size_file = $base_dir . '/' . $size_data['file'];
-                        
+
                         if (file_exists($size_file)) {
-                            $this->log("Generating AVIF for size: $size_name");
-                            $this->generate_avif_version($size_file, $mime_type);
+                            $this->log("Generating WebP for size: $size_name");
+                            $this->generate_webp_version($size_file, $mime_type);
                         }
                     }
                 }
-                
+
             } catch (Exception $e) {
                 $this->log("Exception: " . $e->getMessage());
                 error_log('Dev Theme Image Optimization Error: ' . $e->getMessage());
             }
         } else {
-            if (!DEV_THEME_ENABLE_AVIF) {
-                $this->log("AVIF generation disabled.");
-            } else {
-                $this->log("Imagick not available - skipping AVIF generation.");
-            }
+            $this->log("WebP generation disabled.");
         }
         
         // Delete original full-size image to save space
@@ -164,38 +160,48 @@ class Dev_Theme_Image_Processor {
     }
     
     /**
-     * Generate AVIF version of an image
-     * 
+     * Generate WebP version of an image using GD library
+     *
      * @param string $file_path Path to source image file
      * @param string $mime_type Source image MIME type
      * @return bool True on success, false on failure
      */
-    public function generate_avif_version($file_path, $mime_type) {
-        // Check if AVIF generation is enabled
-        if (!DEV_THEME_ENABLE_AVIF) {
+    public function generate_webp_version($file_path, $mime_type) {
+        // Check if WebP generation is enabled
+        if (!DEV_THEME_ENABLE_WEBP) {
             return false;
         }
-        
+
         try {
-            $imagick = new Imagick($file_path);
-            
-            // Set AVIF quality
-            $imagick->setImageFormat('avif');
-            $imagick->setImageCompressionQuality(DEV_THEME_AVIF_QUALITY);
-            
-            // Generate AVIF filename
-            $avif_path = preg_replace('/\.(jpe?g|png)$/i', '.avif', $file_path);
-            
-            // Save AVIF file
-            $imagick->writeImage($avif_path);
-            $imagick->clear();
-            $imagick->destroy();
-            
-            return true;
-            
+            // Load image based on MIME type
+            if ($mime_type === 'image/jpeg') {
+                $image = imagecreatefromjpeg($file_path);
+            } elseif ($mime_type === 'image/png') {
+                $image = imagecreatefrompng($file_path);
+                // Preserve transparency for PNG
+                imagealphablending($image, false);
+                imagesavealpha($image, true);
+            } else {
+                return false;
+            }
+
+            if (!$image) {
+                $this->log("Failed to create image resource from: $file_path");
+                return false;
+            }
+
+            // Generate WebP filename
+            $webp_path = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file_path);
+
+            // Save as WebP
+            $result = imagewebp($image, $webp_path, DEV_THEME_WEBP_QUALITY);
+            imagedestroy($image);
+
+            return $result;
+
         } catch (Exception $e) {
-            $this->log("AVIF Generation Error: " . $e->getMessage());
-            error_log('AVIF Generation Error for ' . $file_path . ': ' . $e->getMessage());
+            $this->log("WebP Generation Error: " . $e->getMessage());
+            error_log('WebP Generation Error for ' . $file_path . ': ' . $e->getMessage());
             return false;
         }
     }
