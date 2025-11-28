@@ -160,7 +160,24 @@ class Dev_Theme_Image_Processor {
                 $this->log("Warning: Desktop WebP file not found at $desktop_webp_file");
             }
         }
-        
+
+        // Update all size filenames in metadata to .webp extension
+        if (isset($metadata['sizes']) && is_array($metadata['sizes'])) {
+            foreach ($metadata['sizes'] as $size_name => &$size_data) {
+                $size_data['file'] = preg_replace('/\.(jpe?g|png)$/i', '.webp', $size_data['file']);
+                $size_data['mime-type'] = 'image/webp';
+            }
+            unset($size_data);
+        }
+
+        // Update post MIME type to WebP
+        wp_update_post([
+            'ID' => $attachment_id,
+            'post_mime_type' => 'image/webp'
+        ]);
+
+        $this->log("Updated all metadata and MIME type to WebP.");
+
         // IMPORTANT: Always return metadata so WordPress can continue processing
         return $metadata;
     }
