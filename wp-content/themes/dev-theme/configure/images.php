@@ -1,10 +1,11 @@
 <?php
 /**
  * Image Optimization Configuration
- * 
+ *
  * Registers custom image sizes and configures image optimization settings.
- * Only processes JPEG and PNG images (excludes SVG, GIF, WebP, etc.)
- * 
+ * Only processes JPEG and PNG images (excludes SVG, GIF, etc.)
+ * Converts to WebP format for better compression.
+ *
  * @package Dev_Theme
  */
 
@@ -37,7 +38,7 @@ add_action('after_setup_theme', 'dev_theme_register_image_sizes');
 /**
  * Image optimization quality settings
  */
-define('DEV_THEME_AVIF_QUALITY', 85);      // AVIF quality (85 is good balance)
+define('DEV_THEME_WEBP_QUALITY', 85);      // WebP quality (85 is good balance)
 define('DEV_THEME_JPEG_QUALITY', 80);      // JPEG fallback quality
 define('DEV_THEME_PNG_QUALITY', 80);       // PNG fallback quality
 
@@ -54,11 +55,10 @@ define('DEV_THEME_SUPPORTED_FORMATS', [
 /**
  * Enable/disable features
  */
-// Disabled AVIF on localhost due to ImageMagick JPEG delegate issues
-// Enable this on production server with proper Imagick configuration
-define('DEV_THEME_ENABLE_AVIF', true);          // Enable AVIF generation
+define('DEV_THEME_ENABLE_WEBP', true);           // Enable WebP generation
 define('DEV_THEME_ENABLE_OPTIMIZATION', true);   // Enable image optimization
 define('DEV_THEME_ENABLE_LAZY_LOAD', true);      // Enable lazy loading by default
+define('DEV_THEME_DEBUG_LOGGING', false);        // Enable debug logging (disable in production)
 
 /**
  * Add custom image sizes to the media library size dropdown

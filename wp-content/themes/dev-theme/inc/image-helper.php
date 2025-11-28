@@ -1,14 +1,14 @@
 <?php
 /**
  * Image Helper Functions
- * 
+ *
  * Provides accessible responsive image delivery with WCAG 2.1 AA compliance:
- * - Generates <picture> elements with AVIF and fallback sources
+ * - Generates <picture> elements with WebP and fallback sources
  * - Enforces alt text requirement
  * - Supports decorative images
  * - Adds width/height to prevent layout shift
  * - Lazy loading with fetchpriority support
- * 
+ *
  * @package Dev_Theme
  */
 
@@ -85,17 +85,17 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
     $file_url = $image_src[0];
     
     // Build srcset for different formats
-    $avif_srcset = dev_theme_build_srcset($attachment_id, $size, 'avif');
+    $webp_srcset = dev_theme_build_srcset($attachment_id, $size, 'webp');
     $original_srcset = dev_theme_build_srcset($attachment_id, $size, 'original');
-    
+
     // Build picture element
     $html = '<picture>';
-    
-    // AVIF source (modern browsers)
-    if (!empty($avif_srcset) && DEV_THEME_ENABLE_AVIF) {
+
+    // WebP source (modern browsers)
+    if (!empty($webp_srcset) && DEV_THEME_ENABLE_WEBP) {
         $html .= sprintf(
-            '<source type="image/avif" srcset="%s" sizes="%s">',
-            esc_attr($avif_srcset),
+            '<source type="image/webp" srcset="%s" sizes="%s">',
+            esc_attr($webp_srcset),
             esc_attr($args['sizes'])
         );
     }
@@ -142,10 +142,10 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
 
 /**
  * Build srcset for responsive images
- * 
+ *
  * @param int $attachment_id Attachment ID
  * @param string $size Base image size
- * @param string $format Format (avif or original)
+ * @param string $format Format (webp or original)
  * @return string Srcset string
  */
 function dev_theme_build_srcset($attachment_id, $size, $format = 'original') {
@@ -153,31 +153,31 @@ function dev_theme_build_srcset($attachment_id, $size, $format = 'original') {
     $file_path = get_attached_file($attachment_id);
     $upload_dir = wp_upload_dir();
     $base_url = dirname(wp_get_attachment_url($attachment_id));
-    
+
     // Get all available sizes
     $sizes = ['thumb', 'mobile-small', 'mobile', 'tablet', 'desktop', 'full'];
     $image_meta = wp_get_attachment_metadata($attachment_id);
-    
+
     foreach ($sizes as $size_name) {
         $image_src = wp_get_attachment_image_src($attachment_id, $size_name);
-        
+
         if ($image_src) {
             $width = $image_src[1];
             $file_url = $image_src[0];
-            
-            // Check if AVIF version exists
-            if ($format === 'avif') {
-                $avif_url = preg_replace('/\.(jpe?g|png)$/i', '.avif', $file_url);
-                $avif_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $avif_url);
-                
-                if (file_exists($avif_path)) {
-                    $srcset[] = $avif_url . ' ' . $width . 'w';
+
+            // Check if WebP version exists
+            if ($format === 'webp') {
+                $webp_url = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file_url);
+                $webp_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $webp_url);
+
+                if (file_exists($webp_path)) {
+                    $srcset[] = $webp_url . ' ' . $width . 'w';
                 }
             } else {
                 $srcset[] = $file_url . ' ' . $width . 'w';
             }
         }
     }
-    
+
     return !empty($srcset) ? implode(', ', $srcset) : '';
 }
