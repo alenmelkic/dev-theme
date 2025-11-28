@@ -22,24 +22,34 @@
       <div class="container floating-header">
         <!-- Site Branding -->
         <div class="navbar-brand">
-          <?php if ( is_front_page() || is_home() ) : ?>
-            <h1 class="site-title mb-0">
-              <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
-                <?php bloginfo( 'name' ); ?>
-              </a>
-            </h1>
-          <?php else : ?>
-            <div class="site-title mb-0">
-              <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
-                <?php bloginfo( 'name' ); ?>
-              </a>
-            </div>
-          <?php endif; ?>
-
           <?php
-          $description = get_bloginfo( 'description', 'display' );
-          if ( $description || is_customize_preview() ) : ?>
-            <p class="site-description mb-0 text-muted small"><?php echo $description; ?></p>
+          $logo_id = get_option('dev_theme_logo');
+          $logo_url = $logo_id ? wp_get_attachment_url($logo_id) : '';
+
+          if ( $logo_url ) : ?>
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+              <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo( 'name' ); ?>" class="site-logo">
+            </a>
+          <?php else : ?>
+            <?php if ( is_front_page() || is_home() ) : ?>
+              <h1 class="site-title mb-0">
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
+                  <?php bloginfo( 'name' ); ?>
+                </a>
+              </h1>
+            <?php else : ?>
+              <div class="site-title mb-0">
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
+                  <?php bloginfo( 'name' ); ?>
+                </a>
+              </div>
+            <?php endif; ?>
+
+            <?php
+            $description = get_bloginfo( 'description', 'display' );
+            if ( $description || is_customize_preview() ) : ?>
+              <p class="site-description mb-0 text-muted small"><?php echo $description; ?></p>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
 
