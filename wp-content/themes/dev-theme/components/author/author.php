@@ -23,33 +23,34 @@ $avatar_sizes = array(
 );
 $avatar_size = $avatar_sizes[$size] ?? 32;
 
-$author_name = get_the_author_meta('display_name', $author_id);
+// Get first and last name
+$first_name = get_the_author_meta('first_name', $author_id);
+$last_name = get_the_author_meta('last_name', $author_id);
+
+// Build author name: "First Last" or fallback to display_name
+if ($first_name && $last_name) {
+    $author_name = trim($first_name . ' ' . $last_name);
+} elseif ($first_name) {
+    $author_name = $first_name;
+} elseif ($last_name) {
+    $author_name = $last_name;
+} else {
+    $author_name = get_the_author_meta('display_name', $author_id);
+}
 $author_url = get_author_posts_url($author_id);
 $avatar = get_avatar($author_id, $avatar_size);
 ?>
 
 <div class="post-author author-<?php echo esc_attr($size); ?>">
     <?php if ($show_avatar) : ?>
-        <?php if ($link) : ?>
-            <a href="<?php echo esc_url($author_url); ?>" class="author-avatar">
-                <?php echo $avatar; ?>
-            </a>
-        <?php else : ?>
-            <div class="author-avatar">
-                <?php echo $avatar; ?>
-            </div>
-        <?php endif; ?>
+        <div class="author-avatar">
+            <?php echo $avatar; ?>
+        </div>
     <?php endif; ?>
     
     <div class="author-info">
-        <?php if ($link) : ?>
-            <a href="<?php echo esc_url($author_url); ?>" class="author-name">
-                <?php echo esc_html($author_name); ?>
-            </a>
-        <?php else : ?>
-            <span class="author-name">
-                <?php echo esc_html($author_name); ?>
-            </span>
-        <?php endif; ?>
+        <span class="author-name">
+            <?php echo esc_html($author_name); ?>
+        </span>
     </div>
 </div>

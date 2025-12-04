@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for single Servicna informacija
+ * Template for single Obavijest o Smrti
  */
 
 get_header();
@@ -8,7 +8,7 @@ get_header();
 while (have_posts()) : the_post();
 ?>
 
-<main id="main" class="site-main servicna-informacija-single-page">
+<main id="main" class="site-main obavijest-o-smrti-single-page">
     <div class="container">
         <div class="col-xl-10 mx-auto">
             <article <?php post_class(); ?>>

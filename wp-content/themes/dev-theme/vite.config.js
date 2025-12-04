@@ -114,7 +114,7 @@ export default defineConfig({
 				// JavaScript
 				'js/main': resolve(`${__dirname}/assets/src/js/main.js`),
 				'js/navigation': resolve(`${__dirname}/assets/src/js/navigation.js`),
-				'js/servicne-informacije': resolve(`${__dirname}/assets/src/js/servicne-informacije.js`),
+
 				'js/bootstrap-components': resolve(`${__dirname}/assets/src/js/bootstrap-components.js`),
 				'js/soundcloud-custom-player': resolve(`${__dirname}/assets/src/js/soundcloud-custom-player.js`),
 				'js/facebook-video-player': resolve(`${__dirname}/assets/src/js/facebook-video-player.js`),

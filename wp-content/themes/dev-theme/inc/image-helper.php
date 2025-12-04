@@ -84,8 +84,12 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
     $file_path = get_attached_file($attachment_id);
     $file_url = $image_src[0];
     
+    // Get mime type
+    $mime_type = get_post_mime_type($attachment_id);
+
     // Build srcset for different formats
-    $webp_srcset = dev_theme_build_srcset($attachment_id, $size, 'webp');
+    // Only generate WebP srcset if the original is NOT WebP
+    $webp_srcset = ($mime_type !== 'image/webp') ? dev_theme_build_srcset($attachment_id, $size, 'webp') : '';
     $original_srcset = dev_theme_build_srcset($attachment_id, $size, 'original');
 
     // Build picture element
@@ -155,7 +159,7 @@ function dev_theme_build_srcset($attachment_id, $size, $format = 'original') {
     $base_url = dirname(wp_get_attachment_url($attachment_id));
 
     // Get all available sizes
-    $sizes = ['thumb', 'mobile-small', 'mobile', 'tablet', 'desktop', 'full'];
+    $sizes = ['mobile-small', 'mobile', 'tablet', 'desktop', 'full'];
     $image_meta = wp_get_attachment_metadata($attachment_id);
 
     foreach ($sizes as $size_name) {

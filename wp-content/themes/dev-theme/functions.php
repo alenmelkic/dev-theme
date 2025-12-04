@@ -2,6 +2,7 @@
 
 // CPT TAXONOMY
 include( 'configure/cpt-taxonomy.php' );
+include( 'configure/cpt-obavijesti-o-smrti.php' );
 
 // Utilities
 include( 'configure/utilities.php' );
@@ -29,6 +30,9 @@ include( 'inc/image-fallbacks.php' );
 
 // ACF
 include( 'configure/acf.php' );
+
+// USER PROFILE
+include( 'configure/user-profile.php' );
 
 // HOOKS ADMIN
 if(is_admin()) {

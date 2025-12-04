@@ -40,12 +40,6 @@
     "src": "assets/src/js/navigation.js",
     "isEntry": true
   },
-  "assets/src/js/servicne-informacije.js": {
-    "file": "js/servicne-informacije.js",
-    "name": "js/servicne-informacije",
-    "src": "assets/src/js/servicne-informacije.js",
-    "isEntry": true
-  },
   "assets/src/js/soundcloud-custom-player.js": {
     "file": "js/soundcloud-custom-player.js",
     "name": "js/soundcloud-custom-player",
