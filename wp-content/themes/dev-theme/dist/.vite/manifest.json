@@ -1,4 +1,17 @@
 {
+  "_collapse.js": {
+    "file": "collapse.js",
+    "name": "collapse"
+  },
+  "assets/src/js/bootstrap-components.js": {
+    "file": "js/bootstrap-components.js",
+    "name": "js/bootstrap-components",
+    "src": "assets/src/js/bootstrap-components.js",
+    "isEntry": true,
+    "imports": [
+      "_collapse.js"
+    ]
+  },
   "assets/src/js/facebook-video-player.js": {
     "file": "js/facebook-video-player.js",
     "name": "js/facebook-video-player",
@@ -11,9 +24,14 @@
     "src": "assets/src/js/main.js",
     "isEntry": true,
     "imports": [
+      "_collapse.js",
       "assets/src/js/soundcloud-custom-player.js",
       "assets/src/js/facebook-video-player.js",
-      "assets/src/js/youtube-video-player.js"
+      "assets/src/js/youtube-video-player.js",
+      "assets/src/js/navigation.js"
+    ],
+    "css": [
+      "css/main.css"
     ]
   },
   "assets/src/js/navigation.js": {

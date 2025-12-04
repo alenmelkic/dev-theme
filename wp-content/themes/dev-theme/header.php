@@ -17,42 +17,43 @@
 <div id="swup" class="transition-fade">
 <div id="page" class="site">
 
-  <header id="masthead" class="site-header" role="banner">
+  <header id="masthead" role="banner">
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
-      <div class="container">
+      <div class="container floating-header">
         <!-- Site Branding -->
         <div class="navbar-brand">
-          <?php if ( is_front_page() || is_home() ) : ?>
-            <h1 class="site-title">
-              <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-                <?php bloginfo( 'name' ); ?>
-              </a>
-            </h1>
-          <?php else : ?>
-            <div class="site-title">
-              <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-                <?php bloginfo( 'name' ); ?>
-              </a>
-            </div>
-          <?php endif; ?>
-
           <?php
-          $description = get_bloginfo( 'description', 'display' );
-          if ( $description || is_customize_preview() ) : ?>
-            <p class="site-description"><?php echo $description; ?></p>
+          $logo_id = get_option('dev_theme_logo');
+          $logo_url = $logo_id ? wp_get_attachment_url($logo_id) : '';
+
+          if ( $logo_url ) : ?>
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+              <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo( 'name' ); ?>" class="site-logo">
+            </a>
+          <?php else : ?>
+            <?php if ( is_front_page() || is_home() ) : ?>
+              <h1 class="site-title mb-0">
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
+                  <?php bloginfo( 'name' ); ?>
+                </a>
+              </h1>
+            <?php else : ?>
+              <div class="site-title mb-0">
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
+                  <?php bloginfo( 'name' ); ?>
+                </a>
+              </div>
+            <?php endif; ?>
+
+            <?php
+            $description = get_bloginfo( 'description', 'display' );
+            if ( $description || is_customize_preview() ) : ?>
+              <p class="site-description mb-0 text-muted small"><?php echo $description; ?></p>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
 
-        <!-- Mobile Menu Toggle -->
-        <button class="navbar-toggler d-lg-none" type="button" data-toggle="mobile-menu" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Header Play Button -->
-        <button id="header-play-btn" class="header-play-btn d-none d-lg-flex" aria-label="Listen Live">
-            <span class="icon-play">▶</span>
-            <span class="text">RVK Uživo</span>
-        </button>
+        
 
         <!-- Desktop Navigation (hidden on mobile) -->
         <div class="desktop-menu d-none d-lg-block">
@@ -69,17 +70,40 @@
         </div>
 
         <!-- Mobile Navigation (hidden on desktop) -->
-        <div class="mobile-menu collapse navbar-collapse d-lg-none" id="mobileNav">
-          <?php
-          wp_nav_menu( array(
-            'theme_location' => 'menu-mobile',
-            'menu_id'        => 'mobile-menu',
-            'menu_class'     => 'navbar-nav',
-            'container'      => false,
-            'fallback_cb'    => false,
-            'walker'         => new Bootstrap_Nav_Walker()
-          ) );
-          ?>
+        <div class="d-lg-none">
+          <div class="menu-nav-mobile" id="mobileNav">
+            <?php
+            wp_nav_menu( array(
+              'theme_location' => 'menu-mobile',
+              'menu_id'        => 'mobile-menu',
+              'menu_class'     => 'navbar-nav',
+              'container'      => false,
+              'fallback_cb'    => false,
+              'walker'         => new Bootstrap_Nav_Walker()
+            ) );
+            ?>
+          </div>
+        </div>
+
+        <div class="button-container d-flex align-items-center">
+
+            <!-- Header Play Button -->
+            <button id="header-play-btn" class="header-play-btn mx-0 d-lg-flex align-items-center" aria-label="Listen Live">
+                <span class="icon-play me-2">▶</span>
+                <span class="text">RVK Uživo</span>
+            </button>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="navbar-toggler hamburger" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
+                aria-label="Toggle navigation">
+
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+
+            </button>
+
         </div>
       </div>
     </nav>

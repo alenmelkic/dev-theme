@@ -1,122 +1,94 @@
-/**
- * Navigation Menu - Vanilla JavaScript
- * Handles mobile menu toggle and dropdown menus
- * No dependencies, pure vanilla JS
- */
+// Mobile menu
 
-(function () {
-    'use strict';
+const focusableSelectors = 'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])';
 
-    // Wait for DOM to be ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+let focusableElements, firstFocusableElement, lastFocusableElement;
+let navMenu, hamburger;
 
-    function init() {
-        initMobileMenu();
-        initDropdowns();
-    }
+const updateFocusableElements = () => {
+    focusableElements = navMenu?.querySelectorAll(focusableSelectors);
+    firstFocusableElement = focusableElements?.[0];
+    lastFocusableElement = focusableElements?.[focusableElements.length - 1];
+};
 
-    /**
-     * Mobile menu toggle functionality
-     */
-    function initMobileMenu() {
-        const mobileMenuToggle = document.querySelector('[data-toggle="mobile-menu"]');
-        const mobileMenu = document.querySelector('.mobile-menu');
+const handleTabKey = (event) => {
+    if (event.key !== "Tab") return;
 
-        if (!mobileMenuToggle || !mobileMenu) {
+    updateFocusableElements();
+    const activeElement = document.activeElement;
+    const activeSecondLevel = document.querySelector('.second-level.active');
+
+    if (activeSecondLevel) {
+        const secondLevelElements = activeSecondLevel.querySelectorAll(focusableSelectors);
+        const lastSecondLevelItem = secondLevelElements[secondLevelElements.length - 1];
+        const backButton = activeSecondLevel.querySelector('.back__menu');
+
+        if (!event.shiftKey && activeElement === lastSecondLevelItem && backButton) {
+            event.preventDefault();
+            backButton.focus();
             return;
         }
-
-        // Toggle mobile menu
-        mobileMenuToggle.addEventListener('click', function (e) {
-            e.stopPropagation();
-            mobileMenu.classList.toggle('show');
-            const isExpanded = mobileMenu.classList.contains('show');
-            mobileMenuToggle.setAttribute('aria-expanded', isExpanded);
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('.navbar') && mobileMenu.classList.contains('show')) {
-                mobileMenu.classList.remove('show');
-                mobileMenuToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        // Close mobile menu when clicking on nav links (not dropdown toggles)
-        const navLinks = mobileMenu.querySelectorAll('.nav-link:not(.dropdown-toggle)');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function () {
-                if (mobileMenu.classList.contains('show')) {
-                    mobileMenu.classList.remove('show');
-                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
-                }
-            });
-        });
     }
 
-    /**
-     * Dropdown menu functionality
-     */
-    function initDropdowns() {
-        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    requestAnimationFrame(() => {
+        if (!event.shiftKey && activeElement === lastFocusableElement) {
+            event.preventDefault();
+            hamburger?.focus();
+        } else if (event.shiftKey && activeElement === hamburger) {
+            event.preventDefault();
+            lastFocusableElement?.focus();
+        }
+    });
+};
 
-        dropdownToggles.forEach(toggle => {
-            const dropdown = toggle.nextElementSibling;
-            const parentLi = toggle.closest('.nav-item');
-
-            if (!dropdown || !parentLi) {
-                return;
-            }
-
-            // Desktop: hover behavior
-            if (window.innerWidth >= 992) {
-                parentLi.addEventListener('mouseenter', function () {
-                    dropdown.classList.add('show');
-                    toggle.setAttribute('aria-expanded', 'true');
-                });
-
-                parentLi.addEventListener('mouseleave', function () {
-                    dropdown.classList.remove('show');
-                    toggle.setAttribute('aria-expanded', 'false');
-                });
-            }
-
-            // Mobile: click behavior
-            toggle.addEventListener('click', function (e) {
-                if (window.innerWidth < 992) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    // Close other dropdowns
-                    const allDropdowns = document.querySelectorAll('.dropdown-menu.show');
-                    allDropdowns.forEach(dd => {
-                        if (dd !== dropdown) {
-                            dd.classList.remove('show');
-                        }
-                    });
-
-                    // Toggle this dropdown
-                    dropdown.classList.toggle('show');
-                    const isExpanded = dropdown.classList.contains('show');
-                    toggle.setAttribute('aria-expanded', isExpanded);
-                }
-            });
-        });
-
-        // Handle window resize
-        let resizeTimer;
-        window.addEventListener('resize', function () {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function () {
-                // Re-initialize dropdowns on resize
-                const allDropdowns = document.querySelectorAll('.dropdown-menu.show');
-                allDropdowns.forEach(dd => dd.classList.remove('show'));
-            }, 250);
-        });
+const closeOnEscape = (event) => {
+    if (event.key === "Escape") {
+        navMenu?.classList.remove("active");
+        hamburger?.classList.remove("active");
+        hamburger?.setAttribute("aria-expanded", "false");
+        navMenu?.setAttribute('aria-hidden', 'true');
+        document.removeEventListener("keydown", handleTabKey);
+        document.removeEventListener("keydown", closeOnEscape);
+        hamburger?.focus();
     }
+};
 
-})();
+const toggleMenu = () => {
+    // Close external elements
+    document.querySelector("[data-lp-point='close']")?.click();
+    document.querySelector('.LPMslider [aria-expanded="true"]')?.click();
+
+    // Toggle menu
+    hamburger.classList.toggle("active");
+    navMenu.classList.toggle("active");
+
+    const menuOpen = navMenu.classList.contains("active");
+    hamburger.setAttribute("aria-expanded", menuOpen);
+    navMenu.setAttribute('aria-hidden', !menuOpen);
+
+    if (menuOpen) {
+        updateFocusableElements();
+        firstFocusableElement?.focus();
+        document.addEventListener("keydown", handleTabKey);
+        document.addEventListener("keydown", closeOnEscape);
+    } else {
+        document.removeEventListener("keydown", handleTabKey);
+        document.removeEventListener("keydown", closeOnEscape);
+        hamburger.focus();
+    }
+};
+
+// Main hamburger functionality
+export const initNavigation = () => {
+    // Re-select elements on each init
+    hamburger = document.querySelector(".hamburger");
+    navMenu = document.querySelector(".menu-nav-mobile");
+
+    if (hamburger) {
+        // Remove existing listener to prevent duplicates if init is called multiple times
+        hamburger.removeEventListener("click", toggleMenu);
+        hamburger.addEventListener("click", toggleMenu);
+    }
+};
+
+export default initNavigation;
