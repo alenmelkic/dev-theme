@@ -20,7 +20,7 @@ function register_servicne_informacije_cpt() {
         'singular_name'         => _x('Servicna informacija', 'Post Type Singular Name', 'dev-theme'),
         'menu_name'             => __('Servicne informacije', 'dev-theme'),
         'name_admin_bar'        => __('Servicna informacija', 'dev-theme'),
-        'archives'              => __('Arhiva informacija', 'dev-theme'),
+        'archives'              => __('Servisne informacije', 'dev-theme'),
         'attributes'            => __('Atributi', 'dev-theme'),
         'parent_item_colon'     => __('Nadređena informacija:', 'dev-theme'),
         'all_items'             => __('Sve informacije', 'dev-theme'),
