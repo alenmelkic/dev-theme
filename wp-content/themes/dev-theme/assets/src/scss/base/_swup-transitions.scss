@@ -1,17 +1,52 @@
-/**
- * Swup Transitions
- * CSS animations for page transitions
- */
+// /**
+//  * Swup Transitions
+//  * Overlay animation for page transitions
+//  */
 
-.transition-fade {
-    transition: opacity 0.3s ease-in-out;
-    opacity: 1;
-}
+// // Main content transition
+// .transition-fade {
+//     transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+//     opacity: 1;
+//     transform: scale(1);
+// }
 
-html.is-changing .transition-fade {
-    opacity: 0;
-}
+// html.is-changing .transition-fade {
+//     opacity: 0;
+//     transform: scale(0.98);
+// }
 
-html.is-animating .transition-fade {
-    opacity: 0;
-}
+// html.is-animating .transition-fade {
+//     opacity: 0;
+//     transform: scale(0.98);
+// }
+
+// // Overlay animation
+// .swup-overlay {
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     height: 100%;
+//     background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+//     z-index: 9999;
+//     pointer-events: none;
+//     opacity: 0;
+//     transform: translateY(-100%);
+//     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+//         opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+// }
+
+// html.is-changing .swup-overlay {
+//     opacity: 1;
+//     transform: translateY(0);
+// }
+
+// html.is-animating .swup-overlay {
+//     opacity: 1;
+//     transform: translateY(0);
+// }
+
+// html.is-rendering .swup-overlay {
+//     opacity: 0;
+//     transform: translateY(100%);
+// }

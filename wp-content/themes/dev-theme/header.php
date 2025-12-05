@@ -8,8 +8,12 @@
   <?php wp_head(); ?>
 </head>
 
+
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+
+<!-- Swup Overlay for Page Transitions -->
+<div class="swup-overlay"></div>
 
 <!-- Persistent Radio Player -->
 <?php get_template_part('components/radio-player/radio-player'); ?>
