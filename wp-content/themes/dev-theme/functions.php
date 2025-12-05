@@ -28,9 +28,6 @@ include( 'inc/image-processor.php' );
 include( 'inc/image-helper.php' );
 include( 'inc/image-fallbacks.php' );
 
-// ACF
-include( 'configure/acf.php' );
-
 // USER PROFILE
 include( 'configure/user-profile.php' );
 
