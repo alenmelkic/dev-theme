@@ -15,7 +15,7 @@ function add_vite_assets() {
 	$js_files = [
 		'main' => 'assets/src/js/main.js',
 		'navigation' => 'assets/src/js/navigation.js',
-		'servicne-informacije' => 'assets/src/js/servicne-informacije.js',
+
 		'bootstrap-components' => 'assets/src/js/bootstrap-components.js'
 	];
 
@@ -66,7 +66,7 @@ add_action( 'wp_enqueue_scripts', 'add_vite_assets', 100 );
 // Add type="module" to our scripts to prevent redeclaration errors
 function add_module_type_attribute( $tag, $handle, $src ) {
 	// List of scripts that should be loaded as modules
-	$module_scripts = [ 'main', 'navigation', 'servicne-informacije', 'bootstrap-components' ];
+	$module_scripts = [ 'main', 'navigation', 'bootstrap-components' ];
 	
 	if ( in_array( $handle, $module_scripts, true ) ) {
 		if ( $handle === 'main' ) {

@@ -4,7 +4,7 @@
     "name": "dev-theme/soundcloud",
     "version": "1.0.0",
     "title": "SoundCloud Player",
-    "category": "embed",
+    "category": "media",
     "icon": "format-audio",
     "description": "Embed a SoundCloud track or playlist.",
     "attributes": {

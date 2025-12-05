@@ -2,6 +2,7 @@
 
 // CPT TAXONOMY
 include( 'configure/cpt-taxonomy.php' );
+include( 'configure/cpt-obavijesti-o-smrti.php' );
 
 // Utilities
 include( 'configure/utilities.php' );
@@ -27,8 +28,13 @@ include( 'inc/image-processor.php' );
 include( 'inc/image-helper.php' );
 include( 'inc/image-fallbacks.php' );
 
-// ACF
-include( 'configure/acf.php' );
+// USER PROFILE
+include( 'configure/user-profile.php' );
+
+// AI CONTENT GENERATION
+include( 'configure/ai-content-generator.php' );
+include( 'configure/ai-settings.php' );
+include( 'configure/ai-enqueue.php' );
 
 // HOOKS ADMIN
 if(is_admin()) {

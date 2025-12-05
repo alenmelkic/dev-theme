@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for Servicne informacije archive
+ * Template for Obavijesti o Smrti archive
  */
 
 get_header();
@@ -12,7 +12,7 @@ $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
 // Build query args
 $args = array(
-    'post_type' => 'servicne-informacije',
+    'post_type' => 'obavijesti-o-smrti',
     'posts_per_page' => 12,
     'paged' => $paged,
     'orderby' => 'date',
@@ -28,7 +28,7 @@ if (!empty($search)) {
 if ($tag_id > 0) {
     $args['tax_query'] = array(
         array(
-            'taxonomy' => 'servicne_tag',
+            'taxonomy' => 'obavijest_tag',
             'field' => 'term_id',
             'terms' => $tag_id
         )
@@ -40,15 +40,15 @@ $query = new WP_Query($args);
 
 // Get all tags for filter
 $tags = get_terms(array(
-    'taxonomy' => 'servicne_tag',
+    'taxonomy' => 'obavijest_tag',
     'hide_empty' => true
 ));
 ?>
 
-<main id="main" class="site-main servicne-informacije-archive">
+<main id="main" class="site-main obavijesti-o-smrti-archive">
     <div class="container">
         <header class="page-header">
-            <h1 class="page-title">Servicne informacije</h1>
+            <h1 class="page-title">Obavijesti o Smrti</h1>
             <?php 
             $archive_description = get_option('dev_theme_archive_description', '');
             if (!empty($archive_description)) : 
@@ -61,9 +61,9 @@ $tags = get_terms(array(
 
         <!-- Posts Grid -->
         <?php if ($query->have_posts()) : ?>
-            <div class="servicne-informacije-grid">
+            <div class="obavijesti-o-smrti-grid">
                 <?php while ($query->have_posts()) : $query->the_post(); ?>
-                    <article class="servicna-informacija-card">
+                    <article class="obavijest-o-smrti-card">
                         <?php get_component('featured-image', array('variant' => 'card')); ?>
                         
                         <div class="card-content">
@@ -80,7 +80,7 @@ $tags = get_terms(array(
                                 <?php get_component('post-date'); ?>
                             </div>
                             
-                            <?php get_component('post-terms', array('taxonomy' => 'servicne_tag')); ?>
+                            <?php get_component('post-terms', array('taxonomy' => 'obavijest_tag')); ?>
                         </div>
                     </article>
                 <?php endwhile; ?>
@@ -103,7 +103,7 @@ $tags = get_terms(array(
             </div>
         <?php else : ?>
             <div class="no-results">
-                <p>Nema pronađenih informacija.</p>
+                <p>Nema pronađenih obavijesti.</p>
             </div>
         <?php endif; ?>
 

@@ -1,6 +1,7 @@
 <?php
 /**
- * Custom Post Types and Taxonomies
+ * Custom Post Type: Obavijesti o Smrti
+ * Auto-deletes posts after 42 days at 02:00 AM
  */
 
 // Security: Prevent direct access
@@ -8,55 +9,50 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-/**
- * Register Custom Post Type: Servicne informacije
- * Auto-deletes posts after 15 days
- */
-
 // Register Custom Post Type
-function register_servicne_informacije_cpt() {
+function register_obavijesti_o_smrti_cpt() {
     $labels = array(
-        'name'                  => _x('Servicne informacije', 'Post Type General Name', 'dev-theme'),
-        'singular_name'         => _x('Servicna informacija', 'Post Type Singular Name', 'dev-theme'),
-        'menu_name'             => __('Servicne informacije', 'dev-theme'),
-        'name_admin_bar'        => __('Servicna informacija', 'dev-theme'),
-        'archives'              => __('Servisne informacije', 'dev-theme'),
+        'name'                  => _x('Obavijesti o Smrti', 'Post Type General Name', 'dev-theme'),
+        'singular_name'         => _x('Obavijest o Smrti', 'Post Type Singular Name', 'dev-theme'),
+        'menu_name'             => __('Obavijesti o Smrti', 'dev-theme'),
+        'name_admin_bar'        => __('Obavijest o Smrti', 'dev-theme'),
+        'archives'              => __('Obavijesti o Smrti', 'dev-theme'),
         'attributes'            => __('Atributi', 'dev-theme'),
-        'parent_item_colon'     => __('Nadređena informacija:', 'dev-theme'),
-        'all_items'             => __('Sve informacije', 'dev-theme'),
-        'add_new_item'          => __('Dodaj novu informaciju', 'dev-theme'),
+        'parent_item_colon'     => __('Nadređena obavijest:', 'dev-theme'),
+        'all_items'             => __('Sve obavijesti', 'dev-theme'),
+        'add_new_item'          => __('Dodaj novu obavijest', 'dev-theme'),
         'add_new'               => __('Dodaj novu', 'dev-theme'),
-        'new_item'              => __('Nova informacija', 'dev-theme'),
-        'edit_item'             => __('Uredi informaciju', 'dev-theme'),
-        'update_item'           => __('Ažuriraj informaciju', 'dev-theme'),
-        'view_item'             => __('Pogledaj informaciju', 'dev-theme'),
-        'view_items'            => __('Pogledaj informacije', 'dev-theme'),
-        'search_items'          => __('Pretraži informacije', 'dev-theme'),
+        'new_item'              => __('Nova obavijest', 'dev-theme'),
+        'edit_item'             => __('Uredi obavijest', 'dev-theme'),
+        'update_item'           => __('Ažuriraj obavijest', 'dev-theme'),
+        'view_item'             => __('Pogledaj obavijest', 'dev-theme'),
+        'view_items'            => __('Pogledaj obavijesti', 'dev-theme'),
+        'search_items'          => __('Pretraži obavijesti', 'dev-theme'),
         'not_found'             => __('Nije pronađeno', 'dev-theme'),
         'not_found_in_trash'    => __('Nije pronađeno u smeću', 'dev-theme'),
         'featured_image'        => __('Istaknuta slika', 'dev-theme'),
         'set_featured_image'    => __('Postavi istaknutu sliku', 'dev-theme'),
         'remove_featured_image' => __('Ukloni istaknutu sliku', 'dev-theme'),
         'use_featured_image'    => __('Koristi kao istaknutu sliku', 'dev-theme'),
-        'insert_into_item'      => __('Umetni u informaciju', 'dev-theme'),
-        'uploaded_to_this_item' => __('Učitano u ovu informaciju', 'dev-theme'),
-        'items_list'            => __('Lista informacija', 'dev-theme'),
-        'items_list_navigation' => __('Navigacija liste informacija', 'dev-theme'),
-        'filter_items_list'     => __('Filtriraj listu informacija', 'dev-theme'),
+        'insert_into_item'      => __('Umetni u obavijest', 'dev-theme'),
+        'uploaded_to_this_item' => __('Učitano u ovu obavijest', 'dev-theme'),
+        'items_list'            => __('Lista obavijesti', 'dev-theme'),
+        'items_list_navigation' => __('Navigacija liste obavijesti', 'dev-theme'),
+        'filter_items_list'     => __('Filtriraj listu obavijesti', 'dev-theme'),
     );
 
     $args = array(
-        'label'                 => __('Servicna informacija', 'dev-theme'),
-        'description'           => __('Servicne informacije koje se automatski brišu nakon 15 dana', 'dev-theme'),
+        'label'                 => __('Obavijest o Smrti', 'dev-theme'),
+        'description'           => __('Obavijesti o smrti koje se automatski brišu nakon 42 dana', 'dev-theme'),
         'labels'                => $labels,
         'supports'              => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'revisions'),
-        'taxonomies'            => array('servicne_tag'),
+        'taxonomies'            => array('obavijest_tag'),
         'hierarchical'          => false,
         'public'                => true,
         'show_ui'               => true,
         'show_in_menu'          => true,
-        'menu_position'         => 5,
-        'menu_icon'             => 'dashicons-info',
+        'menu_position'         => 6,
+        'menu_icon'             => 'dashicons-rest-api',
         'show_in_admin_bar'     => true,
         'show_in_nav_menus'     => true,
         'can_export'            => true,
@@ -65,20 +61,20 @@ function register_servicne_informacije_cpt() {
         'publicly_queryable'    => true,
         'capability_type'       => 'post',
         'show_in_rest'          => true,
-        'rest_base'             => 'servicne-informacije',
+        'rest_base'             => 'obavijesti-o-smrti',
         'rest_controller_class' => 'WP_REST_Posts_Controller',
         'rewrite'               => array(
-            'slug'       => 'servicne-informacije',
+            'slug'       => 'obavijesti-o-smrti',
             'with_front' => false,
         ),
     );
 
-    register_post_type('servicne-informacije', $args);
+    register_post_type('obavijesti-o-smrti', $args);
 }
-add_action('init', 'register_servicne_informacije_cpt', 0);
+add_action('init', 'register_obavijesti_o_smrti_cpt', 0);
 
-// Register Custom Taxonomy: Tags
-function register_servicne_tag_taxonomy() {
+// Register Custom Taxonomy: Tags for Obavijesti
+function register_obavijest_tag_taxonomy() {
     $labels = array(
         'name'                       => _x('Oznake', 'Taxonomy General Name', 'dev-theme'),
         'singular_name'              => _x('Oznaka', 'Taxonomy Singular Name', 'dev-theme'),
@@ -111,38 +107,52 @@ function register_servicne_tag_taxonomy() {
         'show_in_nav_menus'          => true,
         'show_tagcloud'              => true,
         'show_in_rest'               => true,
-        'rest_base'                  => 'servicne-oznake',
+        'rest_base'                  => 'obavijest-oznake',
         'rest_controller_class'      => 'WP_REST_Terms_Controller',
         'rewrite'                    => array(
-            'slug' => 'servicne-oznaka',
+            'slug' => 'obavijest-oznaka',
         ),
     );
 
-    register_taxonomy('servicne_tag', array('servicne-informacije'), $args);
+    register_taxonomy('obavijest_tag', array('obavijesti-o-smrti'), $args);
 }
-add_action('init', 'register_servicne_tag_taxonomy', 0);
+add_action('init', 'register_obavijest_tag_taxonomy', 0);
 
-/**
- * Auto-delete posts after 15 days
- */
-
-// Schedule the cron event
-function schedule_servicne_informacije_cleanup() {
-    if (!wp_next_scheduled('servicne_informacije_daily_cleanup')) {
-        wp_schedule_event(time(), 'daily', 'servicne_informacije_daily_cleanup');
+// Flush rewrite rules on theme activation (only once)
+function obavijesti_o_smrti_flush_rewrites() {
+    // Check if we've already flushed for this CPT
+    if (get_option('obavijesti_o_smrti_flush_rewrite_rules') !== 'done') {
+        register_obavijesti_o_smrti_cpt();
+        register_obavijest_tag_taxonomy();
+        flush_rewrite_rules();
+        update_option('obavijesti_o_smrti_flush_rewrite_rules', 'done');
     }
 }
-add_action('wp', 'schedule_servicne_informacije_cleanup');
+add_action('after_switch_theme', 'obavijesti_o_smrti_flush_rewrites');
+
+/**
+ * Auto-delete posts after 42 days at 02:00 AM
+ */
+
+// Schedule the cron event at 02:00 AM
+function schedule_obavijesti_cleanup() {
+    if (!wp_next_scheduled('obavijesti_daily_cleanup')) {
+        // Schedule for 02:00 AM daily
+        $timestamp = strtotime('tomorrow 02:00:00');
+        wp_schedule_event($timestamp, 'daily', 'obavijesti_daily_cleanup');
+    }
+}
+add_action('wp', 'schedule_obavijesti_cleanup');
 
 // The cleanup function
-function delete_old_servicne_informacije() {
+function delete_old_obavijesti() {
     $args = array(
-        'post_type'      => 'servicne-informacije',
+        'post_type'      => 'obavijesti-o-smrti',
         'posts_per_page' => -1,
         'post_status'    => 'publish',
         'date_query'     => array(
             array(
-                'before' => '15 days ago',
+                'before' => '42 days ago',
                 'inclusive' => false,
             ),
         ),
@@ -156,7 +166,7 @@ function delete_old_servicne_informacije() {
         
         // Log the deletion (optional, for debugging)
         error_log(sprintf(
-            'Auto-deleted Servicna informacija: ID=%d, Title=%s, Published=%s',
+            'Auto-deleted Obavijest o Smrti: ID=%d, Title=%s, Published=%s',
             $post->ID,
             $post->post_title,
             $post->post_date
@@ -166,19 +176,19 @@ function delete_old_servicne_informacije() {
     // Return count for testing purposes
     return count($old_posts);
 }
-add_action('servicne_informacije_daily_cleanup', 'delete_old_servicne_informacije');
+add_action('obavijesti_daily_cleanup', 'delete_old_obavijesti');
 
-// Add custom REST API field for days remaining
-function add_days_remaining_to_rest_api() {
+// Add custom REST API fields for days remaining
+function add_obavijesti_days_remaining_to_rest_api() {
     register_rest_field(
-        'servicne-informacije',
+        'obavijesti-o-smrti',
         'days_remaining',
         array(
             'get_callback' => function($post) {
                 $publish_date = strtotime($post['date']);
                 $current_date = time();
                 $days_elapsed = floor(($current_date - $publish_date) / DAY_IN_SECONDS);
-                $days_remaining = 15 - $days_elapsed;
+                $days_remaining = 42 - $days_elapsed;
                 
                 return max(0, $days_remaining);
             },
@@ -190,19 +200,19 @@ function add_days_remaining_to_rest_api() {
     );
 
     register_rest_field(
-        'servicne-informacije',
+        'obavijesti-o-smrti',
         'is_expiring_soon',
         array(
             'get_callback' => function($post) {
                 $publish_date = strtotime($post['date']);
                 $current_date = time();
                 $days_elapsed = floor(($current_date - $publish_date) / DAY_IN_SECONDS);
-                $days_remaining = 15 - $days_elapsed;
+                $days_remaining = 42 - $days_elapsed;
                 
-                return $days_remaining <= 3 && $days_remaining > 0;
+                return $days_remaining <= 7 && $days_remaining > 0;
             },
             'schema' => array(
-                'description' => __('Da li informacija uskoro ističe (3 dana ili manje)', 'dev-theme'),
+                'description' => __('Da li obavijest uskoro ističe (7 dana ili manje)', 'dev-theme'),
                 'type'        => 'boolean',
             ),
         )
@@ -210,7 +220,7 @@ function add_days_remaining_to_rest_api() {
 
     // Add author name
     register_rest_field(
-        'servicne-informacije',
+        'obavijesti-o-smrti',
         'author_name',
         array(
             'get_callback' => function($post) {
@@ -252,7 +262,7 @@ function add_days_remaining_to_rest_api() {
 
     // Add author avatar
     register_rest_field(
-        'servicne-informacije',
+        'obavijesti-o-smrti',
         'author_avatar',
         array(
             'get_callback' => function($post) {
@@ -266,4 +276,4 @@ function add_days_remaining_to_rest_api() {
         )
     );
 }
-add_action('rest_api_init', 'add_days_remaining_to_rest_api');
+add_action('rest_api_init', 'add_obavijesti_days_remaining_to_rest_api');

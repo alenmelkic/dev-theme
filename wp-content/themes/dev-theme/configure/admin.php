@@ -36,6 +36,7 @@ function dev_theme_add_admin_menu() {
 add_action('admin_init', 'dev_theme_register_settings');
 function dev_theme_register_settings() {
     register_setting('dev_theme_brand_settings', 'dev_theme_logo');
+    register_setting('dev_theme_brand_settings', 'dev_theme_archive_description');
 }
 
 // Brand settings page
@@ -43,6 +44,7 @@ function dev_theme_brand_page() {
     // Handle form submission
     if (isset($_POST['dev_theme_save_logo']) && check_admin_referer('dev_theme_brand_settings')) {
         update_option('dev_theme_logo', sanitize_text_field($_POST['dev_theme_logo']));
+        update_option('dev_theme_archive_description', wp_kses_post($_POST['dev_theme_archive_description']));
         echo '<div class="notice notice-success is-dismissible"><p>Podešavanja su sačuvana!</p></div>';
     }
 
@@ -167,6 +169,19 @@ function dev_theme_brand_page() {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="dev-theme-card">
+                    <h2>Opis Arhive Servicnih Informacija</h2>
+                    <p>Unesite opis koji će se prikazivati na vrhu arhive servicnih informacija.</p>
+                    
+                    <textarea 
+                        name="dev_theme_archive_description" 
+                        id="dev_theme_archive_description" 
+                        rows="3" 
+                        class="large-text" 
+                        placeholder="Važne informacije koje su dostupne 15 dana od objave..."
+                    ><?php echo esc_textarea(get_option('dev_theme_archive_description', '')); ?></textarea>
                 </div>
 
                 <?php submit_button('Sačuvaj podešavanja', 'primary', 'dev_theme_save_logo', false); ?>

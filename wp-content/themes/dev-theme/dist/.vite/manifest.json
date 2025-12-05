@@ -3,6 +3,12 @@
     "file": "collapse.js",
     "name": "collapse"
   },
+  "assets/src/js/ai-content-helper.js": {
+    "file": "js/ai-content-helper.js",
+    "name": "js/ai-content-helper",
+    "src": "assets/src/js/ai-content-helper.js",
+    "isEntry": true
+  },
   "assets/src/js/bootstrap-components.js": {
     "file": "js/bootstrap-components.js",
     "name": "js/bootstrap-components",
@@ -40,12 +46,6 @@
     "src": "assets/src/js/navigation.js",
     "isEntry": true
   },
-  "assets/src/js/servicne-informacije.js": {
-    "file": "js/servicne-informacije.js",
-    "name": "js/servicne-informacije",
-    "src": "assets/src/js/servicne-informacije.js",
-    "isEntry": true
-  },
   "assets/src/js/soundcloud-custom-player.js": {
     "file": "js/soundcloud-custom-player.js",
     "name": "js/soundcloud-custom-player",
@@ -57,6 +57,14 @@
     "name": "js/youtube-video-player",
     "src": "assets/src/js/youtube-video-player.js",
     "isEntry": true
+  },
+  "assets/src/scss/components/ai-content-helper.scss": {
+    "file": "css/components/ai-content-helper.css",
+    "src": "assets/src/scss/components/ai-content-helper.scss",
+    "isEntry": true,
+    "names": [
+      "components/ai-content-helper.css"
+    ]
   },
   "assets/src/scss/main.scss": {
     "file": "css/main.css",

@@ -25,7 +25,7 @@ class YouTubeVideoPlayer {
             return;
         }
 
-        console.log('YouTube Player: Initialized for video', this.videoId);
+
 
         // Click handler
         this.ui.facade.addEventListener('click', () => this.loadVideo());
@@ -44,7 +44,7 @@ class YouTubeVideoPlayer {
 
         this.isLoaded = true;
 
-        console.log('YouTube Player: Loading video', this.videoId);
+
 
         // Pause radio if playing
         this.pauseRadio();
@@ -115,18 +115,18 @@ const playerInstances = new Map();
 export function initYouTubeVideoPlayers() {
     const players = document.querySelectorAll('.yt-video-player');
 
-    console.log('YouTube Player Init: Found', players.length, 'players');
+
 
     players.forEach(player => {
         const playerId = player.id;
 
         // Skip if already initialized
         if (playerInstances.has(playerId)) {
-            console.log('YouTube Player: Skipping already initialized', playerId);
+
             return;
         }
 
-        console.log('YouTube Player: Initializing', playerId);
+
 
         // Create new instance and store it
         const instance = new YouTubeVideoPlayer(player);
