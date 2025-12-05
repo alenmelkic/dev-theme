@@ -119,6 +119,7 @@ export default defineConfig({
 				'js/soundcloud-custom-player': resolve(`${__dirname}/assets/src/js/soundcloud-custom-player.js`),
 				'js/facebook-video-player': resolve(`${__dirname}/assets/src/js/facebook-video-player.js`),
 				'js/youtube-video-player': resolve(`${__dirname}/assets/src/js/youtube-video-player.js`),
+				'js/ai-content-helper': resolve(`${__dirname}/assets/src/js/ai-content-helper.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -133,6 +134,7 @@ export default defineConfig({
 				'components/soundcloud-custom-player': resolve(`${__dirname}/components/soundcloud-custom-player/soundcloud-custom-player.scss`),
 				'components/facebook-video-player': resolve(`${__dirname}/components/facebook-video-player/facebook-video-player.scss`),
 				'components/youtube-video-player': resolve(`${__dirname}/components/youtube-video-player/youtube-video-player.scss`),
+				'components/ai-content-helper': resolve(`${__dirname}/assets/src/scss/components/ai-content-helper.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',

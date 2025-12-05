@@ -34,6 +34,11 @@ include( 'configure/acf.php' );
 // USER PROFILE
 include( 'configure/user-profile.php' );
 
+// AI CONTENT GENERATION
+include( 'configure/ai-content-generator.php' );
+include( 'configure/ai-settings.php' );
+include( 'configure/ai-enqueue.php' );
+
 // HOOKS ADMIN
 if(is_admin()) {
 	include( 'configure/admin.php' );
