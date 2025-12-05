@@ -111,3 +111,150 @@ add_action('upload_mimes', 'add_file_types_to_uploads', 1, 1);
 //disable update emails
 add_filter( 'auto_plugin_update_send_email', '__return_false' );
 add_filter( 'auto_theme_update_send_email', '__return_false' );
+
+// Disable specific blocks
+function custom_allowed_block_types( $allowed_blocks, $editor_context ) {
+    // List of blocks - set to false to disable, true to enable
+    $disabled_blocks = array(
+        // === EMBED BLOCKS ===
+        'core/embed' => false,
+        
+        // === WIDGET BLOCKS ===
+        'core/legacy-widget' => false,
+        'core/widget-group' => false,
+        'core/archives' => false,
+        'core/calendar' => false,
+        'core/categories' => false,
+        'core/html' => true,  // Custom HTML
+        'core/latest-comments' => false,
+        'core/latest-posts' => false,
+        'core/page-list' => false,
+        'core/page-list-item' => false,
+        'core/rss' => false,
+        'core/search' => false,
+        'core/shortcode' => false,
+        'core/social-link' => false,
+        'core/social-links' => false,
+        'core/tag-cloud' => false,
+        
+        // === DESIGN BLOCKS ===
+        'core/accordion' => false,
+        'core/accordion-item' => false,
+        'core/accordion-heading' => false,
+        'core/accordion-panel' => false,
+        'core/button' => false,
+        'core/buttons' => false,
+        'core/column' => true,
+        'core/columns' => true,
+        'core/comment-template' => false,
+        'core/group' => false,
+        'core/home-link' => false,
+        'core/more' => false,
+        'core/navigation-link' => false,
+        'core/navigation-submenu' => false,
+        'core/nextpage' => false,
+        'core/separator' => true,
+        'core/spacer' => true,
+        'core/text-columns' => false,
+        
+        // === THEME BLOCKS ===
+        'core/avatar' => false,
+        'core/comment-author-name' => false,
+        'core/comment-content' => false,
+        'core/comment-date' => false,
+        'core/comment-edit-link' => false,
+        'core/comment-reply-link' => false,
+        'core/comments' => false,
+        'core/comments-pagination' => false,
+        'core/comments-pagination-next' => false,
+        'core/comments-pagination-numbers' => false,
+        'core/comments-pagination-previous' => false,
+        'core/comments-title' => false,
+        'core/loginout' => false,
+        'core/navigation' => false,
+        'core/pattern' => false,
+        'core/post-author' => false,
+        'core/post-author-biography' => false,
+        'core/post-author-name' => false,
+        'core/post-comments' => false,
+        'core/post-comments-count' => false,
+        'core/post-comments-form' => false,
+        'core/post-comments-link' => false,
+        'core/post-content' => false,
+        'core/post-date' => false,
+        'core/post-excerpt' => false,
+        'core/post-featured-image' => false,
+        'core/post-navigation-link' => false,
+        'core/post-template' => false,
+        'core/post-terms' => false,
+        'core/post-time-to-read' => false,
+        'core/post-title' => false,
+        'core/query' => false,
+        'core/query-no-results' => false,
+        'core/query-pagination' => false,
+        'core/query-pagination-next' => false,
+        'core/query-pagination-numbers' => false,
+        'core/query-pagination-previous' => false,
+        'core/query-title' => false,
+        'core/query-total' => false,
+        'core/read-more' => false,
+        'core/site-logo' => false,
+        'core/site-tagline' => false,
+        'core/site-title' => false,
+        'core/template-part' => false,
+        'core/term-count' => false,
+        'core/term-description' => false,
+        'core/term-name' => false,
+        'core/term-template' => false,
+        'core/terms-query' => false,
+        
+        // === MEDIA BLOCKS ===
+        'core/audio' => false,
+        'core/cover' => false,
+        'core/file' => false,
+        'core/gallery' => false,
+        'core/image' => true,
+        'core/media-text' => false,
+        'core/video' => false,
+        
+        // Custom Media Blocks - RVK
+        'dev-theme/soundcloud' => true,
+        'dev-theme/facebook-video' => true,
+        'dev-theme/youtube-video' => true,
+        
+        // === TEXT BLOCKS ===
+        'core/code' => false,
+        'core/details' => true,
+        'core/footnotes' => false,
+        'core/freeform' => false,  // Classic block
+        'core/heading' => true,
+        'core/list' => false,
+        'core/list-item' => false,
+        'core/math' => false,
+        'core/missing' => false,
+        'core/paragraph' => true,
+        'core/preformatted' => false,
+        'core/pullquote' => true,
+        'core/quote' => true,
+        'core/table' => true,
+        'core/verse' => false,
+        
+        // === REUSABLE BLOCKS ===
+        'core/block' => true,  // Pattern/Reusable blocks
+    );
+    
+    // Get all registered blocks
+    $registered_blocks = WP_Block_Type_Registry::get_instance()->get_all_registered();
+    $allowed = array();
+    
+    // Loop through all registered blocks
+    foreach ( $registered_blocks as $block_name => $block_type ) {
+        // Only allow blocks that are explicitly set to true
+        if ( isset( $disabled_blocks[ $block_name ] ) && $disabled_blocks[ $block_name ] === true ) {
+            $allowed[] = $block_name;
+        }
+    }
+    
+    return $allowed;
+}
+add_filter( 'allowed_block_types_all', 'custom_allowed_block_types', 10, 2 );

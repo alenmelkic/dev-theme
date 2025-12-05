@@ -4,7 +4,7 @@
     "name": "dev-theme/facebook-video",
     "version": "1.0.2",
     "title": "Facebook Video",
-    "category": "embed",
+    "category": "media",
     "icon": "video-alt2",
     "description": "Embed a Facebook video with lazy loading for optimal performance.",
     "attributes": {
