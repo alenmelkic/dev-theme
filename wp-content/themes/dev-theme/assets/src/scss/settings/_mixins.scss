@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Responsive breakpoints
 @mixin respond-to($breakpoint) {
     @if $breakpoint =='sm' {
@@ -47,13 +49,13 @@
 
 // Aspect ratio
 @mixin aspect-ratio($width, $height) {
-    aspect-ratio: $width / $height;
+    aspect-ratio: math.div($width, $height);
 
     @supports not (aspect-ratio: 1 / 1) {
         &::before {
             content: '';
             float: left;
-            padding-top: ($height / $width) * 100%;
+            padding-top: math.div($height, $width) * 100%;
         }
 
         &::after {

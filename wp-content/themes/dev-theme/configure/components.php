@@ -77,7 +77,7 @@ function use_component($component_name) {
 
 /**
  * Get and render a component
- * 
+ *
  * @param string $component_name Component name
  * @param array $args Arguments to pass to component
  * @return void
@@ -85,13 +85,16 @@ function use_component($component_name) {
 function get_component($component_name, $args = array()) {
     // Mark component as used
     use_component($component_name);
-    
-    // Extract args to variables
-    extract($args);
-    
+
+    // Make args available to component template
+    // Components can access $args array directly instead of extract()
+    // Example: $args['post_id'] instead of $post_id
+    // For backward compatibility, we'll use a safer approach
+    $component_args = $args;
+
     // Include component template
     $component_file = get_template_directory() . '/components/' . $component_name . '/' . $component_name . '.php';
-    
+
     if (file_exists($component_file)) {
         include $component_file;
     } else {

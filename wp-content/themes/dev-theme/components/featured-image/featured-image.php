@@ -14,10 +14,11 @@
  * @param string $loading Loading attribute (default: 'lazy')
  */
 
-$post_id = $post_id ?? get_the_ID();
-$size = $size ?? 'large';
-$variant = $variant ?? 'post';
-$loading = $loading ?? 'lazy';
+// Get args from component_args (passed by get_component)
+$post_id = $component_args['post_id'] ?? get_the_ID();
+$size = $component_args['size'] ?? 'large';
+$variant = $component_args['variant'] ?? 'post';
+$loading = $component_args['loading'] ?? 'lazy';
 
 // Get attachment ID
 $image_id = get_post_thumbnail_id($post_id);

@@ -27,7 +27,7 @@ function custom_setup() {
     add_theme_support('title-tag');
 
     // Languages
-    load_theme_textdomain('textdomaintomodify', get_template_directory() . '/languages');
+    load_theme_textdomain('dev-theme', get_template_directory() . '/languages');
 
     // HTML 5 - Example : deletes type="*" in scripts and style tags
     add_theme_support( 'html5', [ 'script', 'style' ] );
