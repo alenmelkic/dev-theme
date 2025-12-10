@@ -38,13 +38,14 @@ get_header();
                         <?php if (has_post_thumbnail()) : ?>
                             <div class="post-card-image">
                                 <a href="<?php the_permalink(); ?>">
-                                    <?php 
+                                    <?php
                                     get_component('featured-image', array(
                                         'variant' => 'card',
                                         'size' => 'medium',
                                         'loading' => 'lazy'
-                                    )); 
+                                    ));
                                     ?>
+                                    <?php get_component('article-type-overlay'); ?>
                                 </a>
                             </div>
                         <?php endif; ?>
@@ -52,7 +53,12 @@ get_header();
                         <div class="post-card-content">
                             <header class="post-card-header">
                                 <?php get_component('post-title', array('tag' => 'h2', 'link' => true)); ?>
-                                
+
+                                <?php
+                                // Sponsored badge
+                                get_component('sponsored-badge');
+                                ?>
+
                                 <div class="post-card-meta">
                                     <?php get_component('post-date'); ?>
                                     <?php get_component('author', array('size' => 'small')); ?>

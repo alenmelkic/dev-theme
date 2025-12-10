@@ -118,4 +118,10 @@ add_action('wp_enqueue_scripts', function() {
     register_component_assets('author', true, false);
     register_component_assets('facebook-video-player', true, false);
     register_component_assets('youtube-video-player', true, false);
+
+    // Article type components
+    register_component_assets('article-type-badge', true, false);
+    register_component_assets('article-type-overlay', true, false);
+    register_component_assets('sponsored-disclaimer', true, false);
+    register_component_assets('sponsored-badge', true, false);
 }, 5);

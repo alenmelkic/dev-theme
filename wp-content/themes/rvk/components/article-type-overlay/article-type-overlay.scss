@@ -1,0 +1,41 @@
+.article-type-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 10;
+
+    .dashicons {
+        width: 2rem;
+        height: 2rem;
+        font-size: 2rem;
+        color: white;
+    }
+
+    &--video .dashicons {
+        color: #DC2626;
+    }
+
+    &--audio .dashicons {
+        color: #9333EA;
+    }
+
+    &--galerija .dashicons {
+        color: #2563EB;
+    }
+}
+
+// Parent hover effect
+.post-card:hover .article-type-overlay {
+    transform: translate(-50%, -50%) scale(1.1);
+    background-color: rgba(0, 0, 0, 0.85);
+}

@@ -9,6 +9,12 @@
     "src": "assets/src/js/ai-content-helper.js",
     "isEntry": true
   },
+  "assets/src/js/article-type-panel.js": {
+    "file": "js/article-type-panel.js",
+    "name": "js/article-type-panel",
+    "src": "assets/src/js/article-type-panel.js",
+    "isEntry": true
+  },
   "assets/src/js/bootstrap-components.js": {
     "file": "js/bootstrap-components.js",
     "name": "js/bootstrap-components",
@@ -58,6 +64,14 @@
     "src": "assets/src/js/youtube-video-player.js",
     "isEntry": true
   },
+  "assets/src/scss/admin/sponsored-meta-box.scss": {
+    "file": "css/admin/sponsored-meta-box.css",
+    "src": "assets/src/scss/admin/sponsored-meta-box.scss",
+    "isEntry": true,
+    "names": [
+      "admin/sponsored-meta-box.css"
+    ]
+  },
   "assets/src/scss/components/ai-content-helper.scss": {
     "file": "css/components/ai-content-helper.css",
     "src": "assets/src/scss/components/ai-content-helper.scss",
@@ -72,6 +86,22 @@
     "isEntry": true,
     "names": [
       "main.css"
+    ]
+  },
+  "components/article-type-badge/article-type-badge.scss": {
+    "file": "css/components/article-type-badge.css",
+    "src": "components/article-type-badge/article-type-badge.scss",
+    "isEntry": true,
+    "names": [
+      "components/article-type-badge.css"
+    ]
+  },
+  "components/article-type-overlay/article-type-overlay.scss": {
+    "file": "css/components/article-type-overlay.css",
+    "src": "components/article-type-overlay/article-type-overlay.scss",
+    "isEntry": true,
+    "names": [
+      "components/article-type-overlay.css"
     ]
   },
   "components/author/author.scss": {
@@ -136,6 +166,22 @@
     "isEntry": true,
     "names": [
       "components/soundcloud-custom-player.css"
+    ]
+  },
+  "components/sponsored-badge/sponsored-badge.scss": {
+    "file": "css/components/sponsored-badge.css",
+    "src": "components/sponsored-badge/sponsored-badge.scss",
+    "isEntry": true,
+    "names": [
+      "components/sponsored-badge.css"
+    ]
+  },
+  "components/sponsored-disclaimer/sponsored-disclaimer.scss": {
+    "file": "css/components/sponsored-disclaimer.css",
+    "src": "components/sponsored-disclaimer/sponsored-disclaimer.scss",
+    "isEntry": true,
+    "names": [
+      "components/sponsored-disclaimer.css"
     ]
   },
   "components/youtube-video-player/youtube-video-player.scss": {
