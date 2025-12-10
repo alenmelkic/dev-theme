@@ -12,6 +12,7 @@ function dev_theme_register_blocks() {
     register_block_type( get_template_directory() . '/blocks/soundcloud/block.json' );
     register_block_type( get_template_directory() . '/blocks/facebook-video/block.json' );
     register_block_type( get_template_directory() . '/blocks/youtube-video/block.json' );
+    register_block_type( get_template_directory() . '/blocks/category-articles/block.json' );
 }
 add_action( 'init', 'dev_theme_register_blocks' );
 
@@ -58,6 +59,22 @@ function dev_theme_enqueue_block_editor_assets() {
         wp_enqueue_script(
             $yt_script_handle,
             get_template_directory_uri() . '/dist/blocks/youtube-video/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    // Category Articles Block
+    $ca_script_handle = 'dev-theme-category-articles-block-editor';
+    $ca_asset_file = get_template_directory() . '/dist/blocks/category-articles/index.jsx.asset.php';
+    
+    if ( file_exists( $ca_asset_file ) ) {
+        $asset = require( $ca_asset_file );
+        
+        wp_enqueue_script(
+            $ca_script_handle,
+            get_template_directory_uri() . '/dist/blocks/category-articles/index.jsx.js',
             $asset['dependencies'],
             $asset['version'],
             true

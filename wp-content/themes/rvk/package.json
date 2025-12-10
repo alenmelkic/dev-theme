@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "rimraf ./dist && vite",
 		"build:vite": "vite build",
-		"build:blocks": "wp-scripts build blocks/soundcloud/index.jsx --output-path=dist/blocks/soundcloud && wp-scripts build blocks/facebook-video/index.jsx --output-path=dist/blocks/facebook-video && wp-scripts build blocks/youtube-video/index.jsx --output-path=dist/blocks/youtube-video",
+		"build:blocks": "wp-scripts build blocks/soundcloud/index.jsx --output-path=dist/blocks/soundcloud && wp-scripts build blocks/facebook-video/index.jsx --output-path=dist/blocks/facebook-video && wp-scripts build blocks/youtube-video/index.jsx --output-path=dist/blocks/youtube-video && wp-scripts build blocks/category-articles/index.jsx --output-path=dist/blocks/category-articles",
 		"build": "npm run build:vite && npm run build:blocks",
 		"preview": "vite preview",
 		"test": "vitest",
