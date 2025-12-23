@@ -9,6 +9,7 @@ include( 'configure/utilities.php' );
 
 // CONFIG
 include( 'configure/configure.php' );
+include( 'configure/page-options.php' );
 
 // JAVASCRIPT & CSS
 include( 'configure/js-css.php' );

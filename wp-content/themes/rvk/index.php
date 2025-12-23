@@ -4,13 +4,17 @@ get_header();
 
   <div id="primary" class="content-area">
     <main id="main" class="site-main c">
-      <div class="container">
+      
       <?php
       while(have_posts()) : the_post();
       ?>
 
         <section>
-          <?php the_title('<h1>', '</h1>'); ?>
+          <?php 
+          $hide_title = get_post_meta(get_the_ID(), '_hide_page_title', true);
+          $title_class = $hide_title ? ' class="visually-hidden"' : '';
+          the_title('<h1' . $title_class . '>', '</h1>'); 
+          ?>
 
           <?php
           the_content();
@@ -20,7 +24,7 @@ get_header();
       <?php
       endwhile; // End of the loop.
       ?>
-      </div><!-- .container -->
+      
     </main><!-- #main -->
   </div><!-- #primary -->
 
