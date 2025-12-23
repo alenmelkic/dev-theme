@@ -106,7 +106,17 @@ function rvk_register_article_type_rest_fields() {
         'get_callback' => function($post) {
             return get_article_type_slug($post['id']);
         },
-        'schema' => ['type' => 'string', 'context' => ['view', 'edit']],
+        'update_callback' => function($value, $post) {
+            // Update the taxonomy with the provided slug
+            if (!empty($value)) {
+                wp_set_object_terms($post->ID, $value, 'article-type');
+            }
+        },
+        'schema' => [
+            'type' => 'string', 
+            'context' => ['view', 'edit'],
+            'enum' => ['standard', 'video', 'audio', 'galerija']
+        ],
     ]);
 
     register_rest_field('post', 'article_type_label', [

@@ -13,6 +13,26 @@ function dev_theme_register_blocks() {
     register_block_type( get_template_directory() . '/blocks/facebook-video/block.json' );
     register_block_type( get_template_directory() . '/blocks/youtube-video/block.json' );
     register_block_type( get_template_directory() . '/blocks/category-articles/block.json' );
+
+    // Image Gallery Block with View Script
+    $view_script_handle = 'dev-theme-image-gallery-view';
+    $view_asset_file = get_template_directory() . '/dist/blocks/image-gallery/view.asset.php';
+    
+    if ( file_exists( $view_asset_file ) ) {
+        $asset = require( $view_asset_file );
+        wp_register_script(
+            $view_script_handle,
+            get_template_directory_uri() . '/dist/blocks/image-gallery/view.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    register_block_type( get_template_directory() . '/blocks/image-gallery/block.json', [
+        'editor_script' => 'dev-theme-image-gallery-block-editor',
+        'view_script'   => $view_script_handle
+    ] );
 }
 add_action( 'init', 'dev_theme_register_blocks' );
 
@@ -75,6 +95,22 @@ function dev_theme_enqueue_block_editor_assets() {
         wp_enqueue_script(
             $ca_script_handle,
             get_template_directory_uri() . '/dist/blocks/category-articles/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    // Image Gallery Block
+    $ig_script_handle = 'dev-theme-image-gallery-block-editor';
+    $ig_asset_file = get_template_directory() . '/dist/blocks/image-gallery/index.jsx.asset.php';
+    
+    if ( file_exists( $ig_asset_file ) ) {
+        $asset = require( $ig_asset_file );
+        
+        wp_enqueue_script(
+            $ig_script_handle,
+            get_template_directory_uri() . '/dist/blocks/image-gallery/index.jsx.js',
             $asset['dependencies'],
             $asset['version'],
             true

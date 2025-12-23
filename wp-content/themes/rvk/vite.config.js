@@ -83,6 +83,13 @@ export default defineConfig({
 					/accordion/,
 					/collapse/,
 					/tab/,
+					// PhotoSwipe 5.4 classes
+					/^pswp/,
+					/pswp__/,
+					// Gallery specific
+					/rvk-image-gallery/,
+					/gallery-grid/,
+					/gallery-item/,
 				],
 			},
 			variables: true,

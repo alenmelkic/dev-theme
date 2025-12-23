@@ -3,7 +3,7 @@
  * Tip Članka - Panel za odabir tipa članka
  */
 
-(function(wp) {
+(function (wp) {
     const { registerPlugin } = wp.plugins;
     // Use wp.editor instead of deprecated wp.editPost (WP 6.6+)
     const { PluginDocumentSettingPanel, PluginPrePublishPanel } = wp.editor || wp.editPost;
@@ -19,7 +19,7 @@
 
             return {
                 postId: post.id,
-                articleType: editor.getEditedPostAttribute('article-type') || []
+                articleType: editor.getEditedPostAttribute('article_type_slug') || 'standard'
             };
         });
 
@@ -33,10 +33,8 @@
             { label: '🖼️ Galerija', value: 'galerija' }
         ];
 
-        // Get current selection - default to null (no selection)
-        const currentValue = Array.isArray(articleType) && articleType.length > 0
-            ? articleType[0]
-            : null;
+        // Get current selection
+        const currentValue = articleType;
 
         // Lock/unlock publishing based on article type selection
         useEffect(() => {
@@ -50,7 +48,7 @@
         // Handle change
         const handleChange = (value) => {
             editPost({
-                'article-type': value ? [value] : []
+                'article_type_slug': value
             });
         };
 
@@ -93,13 +91,11 @@
         const { articleType } = useSelect((select) => {
             const editor = select('core/editor');
             return {
-                articleType: editor.getEditedPostAttribute('article-type') || []
+                articleType: editor.getEditedPostAttribute('article_type_slug')
             };
         });
 
-        const currentValue = Array.isArray(articleType) && articleType.length > 0
-            ? articleType[0]
-            : null;
+        const currentValue = articleType;
 
         if (currentValue) {
             return null; // Don't show if article type is selected

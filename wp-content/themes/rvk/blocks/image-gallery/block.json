@@ -1,0 +1,17 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dev-theme/image-gallery",
+    "version": "1.0.0",
+    "title": "Image Gallery",
+    "category": "theme",
+    "description": "Premium PhotoSwipe 5.4 Gallery",
+    "attributes": {
+        "images": {
+            "type": "array",
+            "default": []
+        }
+    },
+    "textdomain": "dev-theme",
+    "render": "file:./render.php"
+}
