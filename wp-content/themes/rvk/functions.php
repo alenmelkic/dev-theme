@@ -4,6 +4,12 @@
 include( 'configure/cpt-taxonomy.php' );
 include( 'configure/cpt-obavijesti-o-smrti.php' );
 
+// ARTICLE TYPES
+include( 'configure/article-types-taxonomy.php' );
+include( 'configure/article-type-helpers.php' );
+include( 'configure/sponsored-meta-box.php' );
+include( 'configure/article-type-auto-detect.php' );
+
 // Utilities
 include( 'configure/utilities.php' );
 

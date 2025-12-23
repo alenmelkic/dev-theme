@@ -182,7 +182,7 @@
             PluginDocumentSettingPanel,
             {
                 name: 'ai-content-panel',
-                title: '✨ AI Sadržaj',
+                title: 'AI Sadržaj',
                 className: 'ai-content-panel'
             },
             el(
@@ -203,7 +203,7 @@
                             onClick: generateTitle,
                             style: { width: '100%', marginBottom: '6px', justifyContent: 'center' }
                         },
-                        '✨ Generiši Naslov'
+                        'Generiši Naslov'
                     ),
                     el(
                         Button,
@@ -212,7 +212,7 @@
                             onClick: optimizeTitle,
                             style: { width: '100%', justifyContent: 'center' }
                         },
-                        '🔧 Optimiziraj Naslov'
+                        'Optimiziraj Naslov'
                     )
                 ),
                 el(
@@ -230,7 +230,7 @@
                             onClick: generateExcerpt,
                             style: { width: '100%', marginBottom: '6px', justifyContent: 'center' }
                         },
-                        '✨ Generiši Sažetak'
+                        'Generiši Sažetak'
                     ),
                     el(
                         Button,
@@ -239,7 +239,7 @@
                             onClick: optimizeExcerpt,
                             style: { width: '100%', justifyContent: 'center' }
                         },
-                        '🔧 Optimiziraj Sažetak'
+                        'Optimiziraj Sažetak'
                     )
                 )
             )

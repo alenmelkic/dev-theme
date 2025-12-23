@@ -64,6 +64,10 @@ export default defineConfig({
 					/^menu-/,
 					/^widget-/,
 					/^admin-bar/,
+					// Article type classes
+					/^post-type-/,
+					/^article-type-/,
+					/^sponsored-/,
 					// Common utility classes
 					/^d-/,
 					/^text-/,
@@ -120,6 +124,7 @@ export default defineConfig({
 				'js/facebook-video-player': resolve(`${__dirname}/assets/src/js/facebook-video-player.js`),
 				'js/youtube-video-player': resolve(`${__dirname}/assets/src/js/youtube-video-player.js`),
 				'js/ai-content-helper': resolve(`${__dirname}/assets/src/js/ai-content-helper.js`),
+				'js/article-type-panel': resolve(`${__dirname}/assets/src/js/article-type-panel.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -135,6 +140,15 @@ export default defineConfig({
 				'components/facebook-video-player': resolve(`${__dirname}/components/facebook-video-player/facebook-video-player.scss`),
 				'components/youtube-video-player': resolve(`${__dirname}/components/youtube-video-player/youtube-video-player.scss`),
 				'components/ai-content-helper': resolve(`${__dirname}/assets/src/scss/components/ai-content-helper.scss`),
+
+				// Article type components
+				'components/article-type-badge': resolve(`${__dirname}/components/article-type-badge/article-type-badge.scss`),
+				'components/article-type-overlay': resolve(`${__dirname}/components/article-type-overlay/article-type-overlay.scss`),
+				'components/sponsored-disclaimer': resolve(`${__dirname}/components/sponsored-disclaimer/sponsored-disclaimer.scss`),
+				'components/sponsored-badge': resolve(`${__dirname}/components/sponsored-badge/sponsored-badge.scss`),
+
+				// Admin CSS
+				'admin/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',

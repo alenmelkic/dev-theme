@@ -12,6 +12,14 @@ while (have_posts()) : the_post();
     <div class="container">
         <article <?php post_class(); ?>>
             <header class="post-header">
+                <?php
+                // Sponsored disclaimer - top
+                get_component('sponsored-disclaimer', ['position' => 'top']);
+
+                // Article type badge
+                get_component('article-type-badge', ['variant' => 'block']);
+                ?>
+
                 <?php get_component('post-title', array('tag' => 'h1', 'link' => false)); ?>
                 
                 <?php if (has_excerpt()) : ?>
@@ -93,6 +101,11 @@ while (have_posts()) : the_post();
                     </div>
                 <?php endif; ?>
             </footer>
+
+            <?php
+            // Sponsored disclaimer - bottom
+            get_component('sponsored-disclaimer', ['position' => 'bottom']);
+            ?>
 
             <?php
             // Post navigation
