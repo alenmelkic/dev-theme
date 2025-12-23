@@ -1,0 +1,81 @@
+.category-articles-block {
+    .z-index-top {
+        z-index: 2;
+        position: relative;
+    }
+
+    .card-title a {
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: var(--bs-primary) !important;
+        }
+    }
+
+    // Featured Article (Left Column)
+    .featured-article {
+        .card-img {
+            min-height: 450px;
+        }
+
+        .overlay-subtle {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .content-box {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            max-width: 100%;
+            color: #333;
+
+            .author-name {
+                font-size: 0.95rem;
+                color: #333;
+            }
+
+            .author-role {
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+    // List Articles (Right Column)
+    .list-article {
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .badge-category {
+            font-size: 0.65rem;
+            letter-spacing: 0.5px;
+        }
+
+        .article-title {
+            font-size: 1rem; // h6 equivalent
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .author-info {
+            .author-name {
+                font-size: 0.75rem;
+            }
+
+            .author-role {
+                font-size: 0.65rem;
+                line-height: 1;
+            }
+        }
+    }
+
+    // Accessibility focus states
+    .focus-ring-dark {
+        --bs-focus-ring-color: rgba(0, 0, 0, .25);
+    }
+
+    .focus-ring-warning {
+        --bs-focus-ring-color: rgba(255, 193, 7, .25);
+    }
+}
