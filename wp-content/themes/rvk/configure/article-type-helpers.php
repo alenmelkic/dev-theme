@@ -85,7 +85,7 @@ function rvk_detect_article_type_from_content($post_id) {
     }
 
     // Check for gallery block
-    if (has_block('core/gallery', $post)) {
+    if (has_block('core/gallery', $post) || has_block('dev-theme/image-gallery', $post)) {
         return 'galerija';
     }
 

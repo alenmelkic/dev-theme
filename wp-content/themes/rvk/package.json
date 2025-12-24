@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "rimraf ./dist && vite",
 		"build:vite": "vite build",
-		"build:blocks": "wp-scripts build blocks/soundcloud/index.jsx --output-path=dist/blocks/soundcloud && wp-scripts build blocks/facebook-video/index.jsx --output-path=dist/blocks/facebook-video && wp-scripts build blocks/youtube-video/index.jsx --output-path=dist/blocks/youtube-video && wp-scripts build blocks/category-articles/index.jsx --output-path=dist/blocks/category-articles",
+		"build:blocks": "wp-scripts build blocks/soundcloud/index.jsx --output-path=dist/blocks/soundcloud && wp-scripts build blocks/facebook-video/index.jsx --output-path=dist/blocks/facebook-video && wp-scripts build blocks/youtube-video/index.jsx --output-path=dist/blocks/youtube-video && wp-scripts build blocks/category-articles/index.jsx --output-path=dist/blocks/category-articles && wp-scripts build blocks/image-gallery/index.jsx blocks/image-gallery/view.js --output-path=dist/blocks/image-gallery",
 		"build": "npm run build:vite && npm run build:blocks",
 		"preview": "vite preview",
 		"test": "vitest",
@@ -45,6 +45,7 @@
 		"@swup/scripts-plugin": "^2.1.0",
 		"@tanstack/react-query": "^5.90.10",
 		"bootstrap": "5.3.7",
+		"photoswipe": "^5.4.4",
 		"swup": "^4.8.2"
 	}
 }

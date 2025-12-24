@@ -222,6 +222,7 @@ function custom_allowed_block_types( $allowed_blocks, $editor_context ) {
         'dev-theme/facebook-video' => true,
         'dev-theme/youtube-video' => true,
         'dev-theme/category-articles' => true,
+        'dev-theme/image-gallery' => true,
         
         // === TEXT BLOCKS ===
         'core/code' => false,
