@@ -3,6 +3,20 @@
     "file": "collapse.js",
     "name": "collapse"
   },
+  "assets/js/marketing-admin.js": {
+    "file": "marketing-admin.js",
+    "name": "marketing-admin",
+    "src": "assets/js/marketing-admin.js",
+    "isEntry": true
+  },
+  "assets/scss/marketing-admin.scss": {
+    "file": "css/admin/marketing.css",
+    "src": "assets/scss/marketing-admin.scss",
+    "isEntry": true,
+    "names": [
+      "admin/marketing.css"
+    ]
+  },
   "assets/src/js/ai-content-helper.js": {
     "file": "js/ai-content-helper.js",
     "name": "js/ai-content-helper",

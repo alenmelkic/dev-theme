@@ -43,6 +43,10 @@ include( 'configure/ai-content-generator.php' );
 include( 'configure/ai-settings.php' );
 include( 'configure/ai-enqueue.php' );
 
+// MARKETING
+include( 'configure/marketing-settings.php' );
+include( 'configure/marketing-helpers.php' );
+
 // HOOKS ADMIN
 if(is_admin()) {
 	include( 'configure/admin.php' );

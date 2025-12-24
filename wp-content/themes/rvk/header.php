@@ -114,3 +114,10 @@
   </header>
 
   <div id="content" class="site-content">
+    <?php
+    // Display top banner if conditions are met
+    if (function_exists('rvk_display_top_banner')) {
+        rvk_display_top_banner();
+    }
+    ?>
+

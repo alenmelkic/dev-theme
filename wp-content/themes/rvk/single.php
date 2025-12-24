@@ -11,7 +11,7 @@ while (have_posts()) : the_post();
 <main id="main" class="site-main single-post-page">
     <div class="container">
         <article <?php post_class(); ?>>
-            <header class="post-header">
+            <header class="post-header col-xl-10 mx-auto">
                 <?php
                 // Sponsored disclaimer - top
                 get_component('sponsored-disclaimer', ['position' => 'top']);
@@ -115,6 +115,15 @@ while (have_posts()) : the_post();
             ));
             ?>
         </article>
+        
+        <?php
+        // Display small banners in sidebar
+        if (function_exists('rvk_display_small_banners')) {
+            echo '<aside class="post-sidebar col-xl-10 mx-auto mt-4">';
+            rvk_display_small_banners();
+            echo '</aside>';
+        }
+        ?>
     </div>
 </main>
 

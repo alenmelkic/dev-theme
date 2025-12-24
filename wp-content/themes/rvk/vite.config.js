@@ -132,6 +132,7 @@ export default defineConfig({
 				'js/youtube-video-player': resolve(`${__dirname}/assets/src/js/youtube-video-player.js`),
 				'js/ai-content-helper': resolve(`${__dirname}/assets/src/js/ai-content-helper.js`),
 				'js/article-type-panel': resolve(`${__dirname}/assets/src/js/article-type-panel.js`),
+				'marketing-admin': resolve(`${__dirname}/assets/js/marketing-admin.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -156,6 +157,7 @@ export default defineConfig({
 
 				// Admin CSS
 				'admin/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
+				'admin/marketing': resolve(`${__dirname}/assets/scss/marketing-admin.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',
