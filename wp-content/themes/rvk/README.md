@@ -50,12 +50,31 @@ npm install
 ### Development
 ```bash
 npm run dev          # Start development server with HMR
-npm run build        # Build for production
-npm run preview      # Preview production build
 ```
 
-### Testing
+### Building
+
+#### Development Build (Fast - Recommended for Daily Development)
 ```bash
+npm run build        # Build without PurgeCSS (~5-15 seconds)
+```
+- **Use for**: Daily development, testing changes
+- **Speed**: ~5-15 seconds (subsequent builds with cache)
+- **CSS Size**: Full Bootstrap (~200KB)
+- **PurgeCSS**: Disabled for faster builds
+
+#### Production Build (Optimized for Deployment)
+```bash
+npm run build:prod   # Build with PurgeCSS optimization (~20-30 seconds)
+```
+- **Use for**: Production deployments, staging environments
+- **Speed**: ~20-30 seconds (includes CSS optimization)
+- **CSS Size**: Optimized, unused classes removed (~50KB)
+- **PurgeCSS**: Enabled to minimize file sizes
+
+### Preview & Testing
+```bash
+npm run preview      # Preview production build
 npm run test         # Run tests in watch mode
 npm run test:ui      # Run tests with visual interface
 npm run test:run     # Run tests once
@@ -111,10 +130,22 @@ The following classes are preserved in production builds:
 
 ## Development Workflow
 
-1. **Start Development**: `npm run dev`
+### Daily Development
+1. **Start Development Server**: `npm run dev`
 2. **Write Code**: Edit PHP, SCSS, or JS files
-3. **Test Changes**: `npm run test`
-4. **Build for Production**: `npm run build`
+3. **Quick Build** (when needed): `npm run build`
+4. **Test Changes**: `npm run test`
+
+### Production Deployment
+1. **Optimize for Production**: `npm run build:prod`
+2. **Test Build**: Verify optimized assets
+3. **Deploy**: Upload theme to production server
+
+### Build Performance Optimizations
+- **Parallel Block Builds**: All WordPress blocks build simultaneously
+- **Dependency Caching**: Vite caches pre-bundled dependencies for faster rebuilds
+- **Conditional PurgeCSS**: Only runs in production builds to save time
+- **Optimized Scanning**: PurgeCSS only scans theme files, not entire WordPress installation
 
 ## WordPress Integration
 

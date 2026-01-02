@@ -221,6 +221,9 @@ function custom_allowed_block_types( $allowed_blocks, $editor_context ) {
         'dev-theme/soundcloud' => true,
         'dev-theme/facebook-video' => true,
         'dev-theme/youtube-video' => true,
+        'dev-theme/category-articles' => true,
+        'dev-theme/image-gallery' => true,
+        'dev-theme/mini-banners' => true,
         
         // === TEXT BLOCKS ===
         'core/code' => false,

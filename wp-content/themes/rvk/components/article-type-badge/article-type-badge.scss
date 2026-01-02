@@ -1,0 +1,38 @@
+.article-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+
+    &--video {
+        background-color: #DC2626;
+        color: white;
+    }
+
+    &--audio {
+        background-color: #9333EA;
+        color: white;
+    }
+
+    &--galerija {
+        background-color: #2563EB;
+        color: white;
+    }
+
+    &--inline {
+        margin-bottom: 0;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.625rem;
+    }
+
+    .dashicons {
+        width: 1rem;
+        height: 1rem;
+        font-size: 1rem;
+        line-height: 1;
+    }
+}

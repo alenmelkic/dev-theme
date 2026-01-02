@@ -4,11 +4,18 @@
 include( 'configure/cpt-taxonomy.php' );
 include( 'configure/cpt-obavijesti-o-smrti.php' );
 
+// ARTICLE TYPES
+include( 'configure/article-types-taxonomy.php' );
+include( 'configure/article-type-helpers.php' );
+include( 'configure/sponsored-meta-box.php' );
+include( 'configure/article-type-auto-detect.php' );
+
 // Utilities
 include( 'configure/utilities.php' );
 
 // CONFIG
 include( 'configure/configure.php' );
+include( 'configure/page-options.php' );
 
 // JAVASCRIPT & CSS
 include( 'configure/js-css.php' );
@@ -35,6 +42,10 @@ include( 'configure/user-profile.php' );
 include( 'configure/ai-content-generator.php' );
 include( 'configure/ai-settings.php' );
 include( 'configure/ai-enqueue.php' );
+
+// MARKETING
+include( 'configure/marketing-settings.php' );
+include( 'configure/marketing-helpers.php' );
 
 // HOOKS ADMIN
 if(is_admin()) {

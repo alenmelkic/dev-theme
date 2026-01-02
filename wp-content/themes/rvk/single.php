@@ -11,7 +11,15 @@ while (have_posts()) : the_post();
 <main id="main" class="site-main single-post-page">
     <div class="container">
         <article <?php post_class(); ?>>
-            <header class="post-header">
+            <header class="post-header col-xl-10 mx-auto">
+                <?php
+                // Sponsored disclaimer - top
+                get_component('sponsored-disclaimer', ['position' => 'top']);
+
+                // Article type badge
+                get_component('article-type-badge', ['variant' => 'block']);
+                ?>
+
                 <?php get_component('post-title', array('tag' => 'h1', 'link' => false)); ?>
                 
                 <?php if (has_excerpt()) : ?>
@@ -95,6 +103,11 @@ while (have_posts()) : the_post();
             </footer>
 
             <?php
+            // Sponsored disclaimer - bottom
+            get_component('sponsored-disclaimer', ['position' => 'bottom']);
+            ?>
+
+            <?php
             // Post navigation
             the_post_navigation(array(
                 'prev_text' => '<span class="nav-subtitle">' . esc_html__('Previous:', 'dev-theme') . '</span> <span class="nav-title">%title</span>',
@@ -102,6 +115,15 @@ while (have_posts()) : the_post();
             ));
             ?>
         </article>
+        
+        <?php
+        // Display small banners in sidebar
+        if (function_exists('rvk_display_small_banners')) {
+            echo '<aside class="post-sidebar col-xl-10 mx-auto mt-4">';
+            rvk_display_small_banners();
+            echo '</aside>';
+        }
+        ?>
     </div>
 </main>
 

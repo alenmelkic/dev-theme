@@ -300,12 +300,16 @@ class Dev_Theme_Image_Processor {
             foreach ($metadata['sizes'] as $size_name => &$size_data) {
                 // Verify WebP file exists before updating metadata
                 $base_dir = dirname($file);
+                $original_filename = $size_data['file'];
                 $webp_file = $base_dir . '/' . preg_replace('/\.(jpe?g|png)$/i', '.webp', $size_data['file']);
 
                 if (file_exists($webp_file)) {
                     $size_data['file'] = preg_replace('/\.(jpe?g|png)$/i', '.webp', $size_data['file']);
                     $size_data['mime-type'] = 'image/webp';
                     $size_data['filesize'] = filesize($webp_file);
+                    $this->log("Updated metadata for $size_name: $original_filename -> {$size_data['file']}");
+                } else {
+                    $this->log("Warning: WebP file not found for $size_name: $webp_file");
                 }
             }
             unset($size_data);
@@ -396,3 +400,92 @@ class Dev_Theme_Image_Processor {
 
 // Initialize the image processor
 new Dev_Theme_Image_Processor();
+
+/**
+ * Helper function to fix broken image attachments
+ * This will scan for WebP files and update metadata if originals are missing
+ *
+ * Usage: Call this function from WordPress admin or via WP-CLI
+ */
+function dev_theme_fix_broken_attachments($attachment_id = null) {
+    $args = array(
+        'post_type' => 'attachment',
+        'post_mime_type' => 'image',
+        'posts_per_page' => -1,
+        'post_status' => 'any',
+    );
+
+    if ($attachment_id) {
+        $args['p'] = $attachment_id;
+    }
+
+    $attachments = get_posts($args);
+    $fixed_count = 0;
+    $issues = array();
+
+    foreach ($attachments as $attachment) {
+        $attachment_id = $attachment->ID;
+        $file = get_attached_file($attachment_id);
+        $metadata = wp_get_attachment_metadata($attachment_id);
+
+        // Check if the main file exists
+        if (!file_exists($file)) {
+            // Try to find WebP version
+            $webp_file = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file);
+
+            if (file_exists($webp_file)) {
+                // Update the attachment file path
+                update_attached_file($attachment_id, $webp_file);
+
+                // Update metadata
+                if (!empty($metadata)) {
+                    $metadata['file'] = str_replace(basename($file), basename($webp_file), $metadata['file']);
+                    wp_update_attachment_metadata($attachment_id, $metadata);
+                }
+
+                // Update MIME type
+                wp_update_post(array(
+                    'ID' => $attachment_id,
+                    'post_mime_type' => 'image/webp'
+                ));
+
+                $fixed_count++;
+            } else {
+                $issues[] = "Attachment ID $attachment_id: File not found - $file";
+            }
+        }
+
+        // Check sizes
+        if (!empty($metadata['sizes'])) {
+            $base_dir = dirname($file);
+            $sizes_updated = false;
+
+            foreach ($metadata['sizes'] as $size_name => &$size_data) {
+                $size_file = $base_dir . '/' . $size_data['file'];
+
+                if (!file_exists($size_file)) {
+                    // Try WebP version
+                    $webp_size_file = preg_replace('/\.(jpe?g|png)$/i', '.webp', $size_file);
+
+                    if (file_exists($webp_size_file)) {
+                        $size_data['file'] = preg_replace('/\.(jpe?g|png)$/i', '.webp', $size_data['file']);
+                        $size_data['mime-type'] = 'image/webp';
+                        $size_data['filesize'] = filesize($webp_size_file);
+                        $sizes_updated = true;
+                    }
+                }
+            }
+            unset($size_data);
+
+            if ($sizes_updated) {
+                wp_update_attachment_metadata($attachment_id, $metadata);
+                $fixed_count++;
+            }
+        }
+    }
+
+    return array(
+        'fixed' => $fixed_count,
+        'issues' => $issues
+    );
+}

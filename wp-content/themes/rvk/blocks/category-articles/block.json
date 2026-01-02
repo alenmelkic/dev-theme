@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dev-theme/category-articles",
+    "version": "1.0.0",
+    "title": "Istaknute vijesti",
+    "category": "media",
+    "icon": "layout",
+    "description": "Displays latest 4 articles from a selected category. Page only.",
+    "attributes": {
+        "categoryId": {
+            "type": "number",
+            "default": 0
+        },
+        "blockTitle": {
+            "type": "string",
+            "default": "Kategorija"
+        }
+    },
+    "supports": {
+        "align": [
+            "wide",
+            "full"
+        ],
+        "html": false
+    },
+    "render": "file:./render.php"
+}

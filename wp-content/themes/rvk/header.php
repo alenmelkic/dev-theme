@@ -22,7 +22,7 @@
 <div id="page" class="site">
 
   <header id="masthead" role="banner">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light">
       <div class="container floating-header">
         <!-- Site Branding -->
         <div class="navbar-brand">
@@ -114,3 +114,10 @@
   </header>
 
   <div id="content" class="site-content">
+    <?php
+    // Display top banner if conditions are met
+    if (function_exists('rvk_display_top_banner')) {
+        rvk_display_top_banner();
+    }
+    ?>
+

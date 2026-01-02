@@ -1,0 +1,32 @@
+.sponsored-disclaimer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: #FEF3C7;
+    border-left: 4px solid #F59E0B;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    color: #92400E;
+    margin: 2rem 0;
+
+    .dashicons {
+        color: #F59E0B;
+        width: 1.25rem;
+        height: 1.25rem;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    &__text {
+        font-weight: 600;
+    }
+
+    &--top {
+        margin-top: 0;
+    }
+
+    &--bottom {
+        margin-bottom: 0;
+    }
+}

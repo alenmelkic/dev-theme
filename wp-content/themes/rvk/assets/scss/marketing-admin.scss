@@ -1,0 +1,129 @@
+/**
+ * Marketing Admin Styles
+ */
+
+.rvk-marketing-section {
+    background: #fff;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+}
+
+.rvk-marketing-section h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Image Upload Styles */
+.rvk-image-upload {
+    margin: 10px 0;
+}
+
+.rvk-image-preview {
+    margin-top: 10px;
+}
+
+.rvk-image-preview img {
+    max-width: 300px;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+    background: #f9f9f9;
+}
+
+/* Small Banners Container */
+#small-banners-container {
+    margin: 20px 0;
+    min-height: 50px;
+}
+
+.small-banner-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    cursor: move;
+    transition: all 0.2s ease;
+}
+
+.small-banner-item:hover {
+    background: #f0f0f0;
+    border-color: #999;
+}
+
+.small-banner-item.dragging {
+    opacity: 0.5;
+}
+
+.small-banner-drag-handle {
+    font-size: 24px;
+    color: #666;
+    cursor: grab;
+    user-select: none;
+    line-height: 1;
+    padding-top: 5px;
+}
+
+.small-banner-drag-handle:active {
+    cursor: grabbing;
+}
+
+.small-banner-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.small-banner-preview img {
+    max-width: 150px !important;
+    height: auto;
+}
+
+.small-banner-link-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.small-banner-link-field label {
+    font-weight: 600;
+    min-width: 40px;
+}
+
+.small-banner-link-field input {
+    flex: 1;
+}
+
+.rvk-remove-small-banner {
+    align-self: flex-start;
+    color: #b32d2e !important;
+}
+
+.rvk-remove-small-banner:hover {
+    color: #dc3232 !important;
+}
+
+/* Add Button */
+#add-small-banner {
+    margin-top: 15px;
+}
+
+/* Visibility Checkboxes */
+fieldset label {
+    display: block;
+    margin: 8px 0;
+}
+
+fieldset strong {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #1d2327;
+}

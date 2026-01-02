@@ -20,10 +20,28 @@ const wpContentPath = fullPath.slice(getWpContentIndex);
 export default defineConfig({
 	base: './',
 
+	// Optimize caching
+	cacheDir: 'node_modules/.vite',
+
 	test: {
 		environment: 'jsdom',
 		globals: true,
 		setupFiles: './tests/setup.js',
+	},
+
+	// Optimize dependency pre-bundling
+	optimizeDeps: {
+		include: [
+			'bootstrap',
+			'photoswipe',
+			'swup',
+			'@swup/a11y-plugin',
+			'@swup/body-class-plugin',
+			'@swup/head-plugin',
+			'@swup/progress-plugin',
+			'@swup/scripts-plugin',
+		],
+		exclude: ['@wordpress/blocks', '@wordpress/components'],
 	},
 
 	plugins: [
@@ -35,13 +53,19 @@ export default defineConfig({
 				}
 			},
 		},
-		PurgeCSS({
+		// Only run PurgeCSS in production builds
+		process.env.NODE_ENV === 'production' && PurgeCSS({
 			content: [
-				'./**/*.php',
+				// Only scan theme PHP files, not all plugins/vendor
+				'./components/**/*.php',
+				'./configure/**/*.php',
+				'./inc/**/*.php',
+				'./*.php',
 				'./assets/src/js/**/*.js',
 				'./assets/src/react/**/*.{js,jsx,ts,tsx}',
 				'./assets/src/**/*.scss',
 				'./blocks/**/*.{js,jsx,ts,tsx}',
+				'./blocks/**/*.php',
 			],
 			safelist: {
 				standard: [
@@ -64,13 +88,16 @@ export default defineConfig({
 					/^menu-/,
 					/^widget-/,
 					/^admin-bar/,
+					// Article type classes
+					/^post-type-/,
+					/^article-type-/,
+					/^sponsored-/,
 					// Common utility classes
 					/^d-/,
 					/^text-/,
 					/^bg-/,
 					/^border-/,
-					/^p-/,
-					/^m-/,
+					/^(p|m)(x|y|t|b|l|r)?-/,
 					/^position-/,
 					/^display-/,
 				],
@@ -79,12 +106,19 @@ export default defineConfig({
 					/accordion/,
 					/collapse/,
 					/tab/,
+					// PhotoSwipe 5.4 classes
+					/^pswp/,
+					/pswp__/,
+					// Gallery specific
+					/rvk-image-gallery/,
+					/gallery-grid/,
+					/gallery-item/,
 				],
 			},
 			variables: true,
 			keyframes: true,
 		}),
-	],
+	].filter(Boolean), // Remove false values (when PurgeCSS is disabled)
 
 	css: {
 		devSourcemap: true,
@@ -109,6 +143,14 @@ export default defineConfig({
 		// don't base64 images
 		assetsInlineLimit: 0,
 
+		// Optimize build performance
+		reportCompressedSize: false, // Skip compression size reporting (faster)
+		chunkSizeWarningLimit: 1000, // Increase limit to reduce warnings
+
+		// Enable better minification in production
+		minify: 'esbuild',
+		target: 'es2015',
+
 		rollupOptions: {
 			input: {
 				// JavaScript
@@ -120,6 +162,8 @@ export default defineConfig({
 				'js/facebook-video-player': resolve(`${__dirname}/assets/src/js/facebook-video-player.js`),
 				'js/youtube-video-player': resolve(`${__dirname}/assets/src/js/youtube-video-player.js`),
 				'js/ai-content-helper': resolve(`${__dirname}/assets/src/js/ai-content-helper.js`),
+				'js/article-type-panel': resolve(`${__dirname}/assets/src/js/article-type-panel.js`),
+				'marketing-admin': resolve(`${__dirname}/assets/js/marketing-admin.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -135,6 +179,19 @@ export default defineConfig({
 				'components/facebook-video-player': resolve(`${__dirname}/components/facebook-video-player/facebook-video-player.scss`),
 				'components/youtube-video-player': resolve(`${__dirname}/components/youtube-video-player/youtube-video-player.scss`),
 				'components/ai-content-helper': resolve(`${__dirname}/assets/src/scss/components/ai-content-helper.scss`),
+
+				// Article type components
+				'components/article-type-badge': resolve(`${__dirname}/components/article-type-badge/article-type-badge.scss`),
+				'components/article-type-overlay': resolve(`${__dirname}/components/article-type-overlay/article-type-overlay.scss`),
+				'components/sponsored-disclaimer': resolve(`${__dirname}/components/sponsored-disclaimer/sponsored-disclaimer.scss`),
+				'components/sponsored-badge': resolve(`${__dirname}/components/sponsored-badge/sponsored-badge.scss`),
+
+				// Mini Banners Carousel
+				'components/mini-banners-carousel': resolve(`${__dirname}/assets/src/scss/components/_mini-banners-carousel.scss`),
+
+				// Admin CSS
+				'admin/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
+				'admin/marketing': resolve(`${__dirname}/assets/scss/marketing-admin.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',

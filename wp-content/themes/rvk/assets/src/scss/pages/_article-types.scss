@@ -1,0 +1,32 @@
+/**
+ * Article Type Specific Styles
+ */
+
+// Post card image container (for overlay positioning)
+.post-card-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+
+    a {
+        display: block;
+    }
+}
+
+// Post type variations
+.post-type-video {
+    // Video specific styles if needed
+}
+
+.post-type-audio {
+    // Audio specific styles if needed
+}
+
+.post-type-galerija {
+    // Gallery specific styles if needed
+}
+
+// Sponsored post styling
+.post-sponsored {
+    // Optional: Add subtle background or border for sponsored posts
+}
