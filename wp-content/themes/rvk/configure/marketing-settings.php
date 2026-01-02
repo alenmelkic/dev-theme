@@ -118,7 +118,8 @@ function rvk_marketing_page() {
     // Save settings
     if (isset($_POST['rvk_marketing_submit'])) {
         check_admin_referer('rvk_marketing_settings');
-        update_option('rvk_marketing_banners', $_POST['rvk_marketing_banners']);
+        $sanitized_data = rvk_sanitize_marketing_settings($_POST['rvk_marketing_banners'] ?? []);
+        update_option('rvk_marketing_banners', $sanitized_data);
         echo '<div class="notice notice-success"><p>Postavke su sačuvane.</p></div>';
     }
     

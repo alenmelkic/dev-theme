@@ -98,18 +98,17 @@ class FacebookVideoPlayer {
 
         // Load Facebook SDK
         loadFacebookSDK(() => {
-            // Create Facebook video embed
-            const embedHtml = `
-                <div class="fb-video" 
-                     data-href="${this.videoUrl}" 
-                     data-width="auto" 
-                     data-allowfullscreen="true"
-                     data-autoplay="false"
-                     data-show-captions="false">
-                </div>
-            `;
+            // Create Facebook video embed element securely
+            const fbVideo = document.createElement('div');
+            fbVideo.className = 'fb-video';
+            fbVideo.dataset.href = this.videoUrl;
+            fbVideo.dataset.width = 'auto';
+            fbVideo.dataset.allowfullscreen = 'true';
+            fbVideo.dataset.autoplay = 'false';
+            fbVideo.dataset.showCaptions = 'false';
 
-            this.ui.embed.innerHTML = embedHtml;
+            this.ui.embed.innerHTML = ''; // Clear container
+            this.ui.embed.appendChild(fbVideo);
             this.ui.embed.style.display = 'block';
 
             // Hide placeholder
