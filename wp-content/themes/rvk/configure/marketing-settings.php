@@ -100,7 +100,21 @@ function rvk_marketing_page() {
     if (!current_user_can('manage_options')) {
         return;
     }
-    
+
+    // Fix broken images
+    if (isset($_POST['rvk_fix_images'])) {
+        check_admin_referer('rvk_marketing_settings');
+        $result = dev_theme_fix_broken_attachments();
+        echo '<div class="notice notice-success"><p>Fixed ' . $result['fixed'] . ' image(s).</p></div>';
+        if (!empty($result['issues'])) {
+            echo '<div class="notice notice-warning"><p>Issues found:</p><ul>';
+            foreach ($result['issues'] as $issue) {
+                echo '<li>' . esc_html($issue) . '</li>';
+            }
+            echo '</ul></div>';
+        }
+    }
+
     // Save settings
     if (isset($_POST['rvk_marketing_submit'])) {
         check_admin_referer('rvk_marketing_settings');
@@ -134,7 +148,16 @@ function rvk_marketing_page() {
     ?>
     <div class="wrap">
         <h1>Marketing - Upravljanje Bannerima</h1>
-        
+
+        <!-- Fix Broken Images Button -->
+        <div class="notice notice-info" style="margin: 20px 0; padding: 15px;">
+            <p><strong>Problemi sa slikama?</strong> Ako vidite prazne slike ili slike koje se ne učitavaju, kliknite dugme ispod da automatski popravite putanje slika.</p>
+            <form method="post" action="" style="display: inline;">
+                <?php wp_nonce_field('rvk_marketing_settings'); ?>
+                <button type="submit" name="rvk_fix_images" class="button button-secondary">Popravi Slike</button>
+            </form>
+        </div>
+
         <form method="post" action="">
             <?php wp_nonce_field('rvk_marketing_settings'); ?>
             

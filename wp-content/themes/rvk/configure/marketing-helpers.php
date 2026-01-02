@@ -217,21 +217,40 @@ function rvk_get_small_banners($limit = null) {
  */
 function rvk_display_small_banners($limit = null) {
     $banners = rvk_get_small_banners($limit);
-    
+
     if (empty($banners)) {
         return;
     }
-    
+
     ?>
     <aside class="small-banners" role="complementary" aria-label="Mali banneri">
         <?php foreach ($banners as $index => $banner): ?>
-            <?php 
-            $image_url = wp_get_attachment_image_url($banner['image'], 'medium');
+            <?php
+            // Get the attachment file path to verify it exists
+            $attachment_id = $banner['image'];
+            $image_url = wp_get_attachment_image_url($attachment_id, 'medium');
+
+            // If image URL is not found, try to get the full size
+            if (!$image_url) {
+                $image_url = wp_get_attachment_image_url($attachment_id, 'full');
+            }
+
+            // Additional check: Verify the file exists
+            if ($image_url) {
+                $upload_dir = wp_upload_dir();
+                $file_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $image_url);
+
+                // If the file doesn't exist, skip this banner
+                if (!file_exists($file_path)) {
+                    $image_url = false;
+                }
+            }
+
             $link = !empty($banner['link']) ? esc_url($banner['link']) : '';
-            
+
             // Use custom alt text if provided, otherwise fallback
             $alt_text = !empty($banner['alt_text']) ? $banner['alt_text'] : 'Mali banner ' . ($index + 1);
-            
+
             if (!$image_url) {
                 continue;
             }
