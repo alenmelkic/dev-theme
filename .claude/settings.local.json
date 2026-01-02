@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npm run build:*)",
-      "Bash(php -r:*)"
+      "Bash(php -r:*)",
+      "Bash(cat:*)",
+      "Bash(php -l:*)",
+      "Bash(\"c:\\xampp\\php\\php.exe\":*)",
+      "Bash(\"c:\\xampp\\php\\php.exe\" -r \"echo file_get_contents(''''c:/xampp/htdocs/dev-theme/wp-content/themes/rvk/dist/blocks/mini-banners/index.jsx.js'''');\")"
     ],
     "deny": [],
     "ask": []

@@ -86,6 +86,14 @@
       "admin/sponsored-meta-box.css"
     ]
   },
+  "assets/src/scss/components/_mini-banners-carousel.scss": {
+    "file": "css/components/mini-banners-carousel.css",
+    "src": "assets/src/scss/components/_mini-banners-carousel.scss",
+    "isEntry": true,
+    "names": [
+      "components/mini-banners-carousel.css"
+    ]
+  },
   "assets/src/scss/components/ai-content-helper.scss": {
     "file": "css/components/ai-content-helper.css",
     "src": "assets/src/scss/components/ai-content-helper.scss",

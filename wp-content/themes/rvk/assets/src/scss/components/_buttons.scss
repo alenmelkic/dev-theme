@@ -1,0 +1,82 @@
+/**
+ * RVK Primary Button
+ * 
+ * A high-performance, animated button that works for both <button> and <a> tags.
+ * Handles background slide and icon injection entirely via CSS.
+ * 
+ * Usage: <a class="rvk-btn-primary shadow-lg">Explore</a>
+ */
+
+.rvk-btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 4.4rem 0.75rem 1.8rem; // Right padding specifically for the absolute icon
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: $black-color !important; // Match themed black
+    text-decoration: none !important;
+    background-color: $secondary-color; // Match themed gray-white
+    backdrop-filter: blur(12px);
+    border: 2px solid $secondary-color;
+    border-radius: 50rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 1;
+    isolation: isolate;
+    cursor: pointer;
+    outline: none;
+    width: fit-content;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        background-color: $black-color; // Emerald-500
+        border-radius: 30%;
+        transform: translateY(-50%);
+        transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: -1;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        right: 0.6rem;
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        width: 2.3rem;
+        height: 2.3rem;
+        border-radius: 50%;
+        border: 1px solid #dee2e6;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 19'%3E%3Cpath fill='%23231f20' d='M7 18C7 18.5523 7.44772 19 8 19C8.55228 19 9 18.5523 9 18H7ZM8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.928932 6.65685C0.538408 7.04738 0.538408 7.68054 0.928932 8.07107C1.31946 8.46159 1.95262 8.46159 2.34315 8.07107L8 2.41421L13.6569 8.07107C14.0474 8.46159 14.6805 8.46159 15.0711 8.07107C15.4616 7.68054 15.4616 7.04738 15.0711 6.65685L8.70711 0.292893ZM9 18L9 1H7L7 18H9Z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 16px;
+        background-color: transparent;
+        transition: all 0.3s ease;
+    }
+
+    &:hover {
+        color: #fff !important;
+        border-color: $secondary-color;
+
+        &::before {
+            left: 0;
+            transform: translateY(-50%) scale(2.8);
+        }
+
+        &::after {
+            transform: translateY(-50%) rotate(90deg);
+            background-color: #fff;
+            border-color: transparent;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 19'%3E%3Cpath fill='%2310b981' d='M7 18C7 18.5523 7.44772 19 8 19C8.55228 19 9 18.5523 9 18H7ZM8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.928932 6.65685C0.538408 7.04738 0.538408 7.68054 0.928932 8.07107C1.31946 8.46159 1.95262 8.46159 2.34315 8.07107L8 2.41421L13.6569 8.07107C14.0474 8.46159 14.6805 8.46159 15.0711 8.07107C15.4616 7.68054 15.4616 7.04738 15.0711 6.65685L8.70711 0.292893ZM9 18L9 1H7L7 18H9Z'/%3E%3C/svg%3E");
+        }
+    }
+}

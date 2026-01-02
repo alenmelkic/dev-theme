@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dev-theme/mini-banners",
+	"version": "1.0.0",
+	"title": "Mini Banners Carousel",
+	"category": "theme",
+	"icon": "slides",
+	"description": "Infinite auto-scrolling carousel for marketing mini banners",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "Vaš brend, naša priča!"
+		},
+		"subtitle": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"editorScript": "dev-theme-mini-banners-block-editor",
+	"viewScript": "dev-theme-mini-banners-view",
+	"render": "file:./render.php"
+}

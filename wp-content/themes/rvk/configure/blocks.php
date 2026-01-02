@@ -17,7 +17,7 @@ function dev_theme_register_blocks() {
     // Image Gallery Block with View Script
     $view_script_handle = 'dev-theme-image-gallery-view';
     $view_asset_file = get_template_directory() . '/dist/blocks/image-gallery/view.asset.php';
-    
+
     if ( file_exists( $view_asset_file ) ) {
         $asset = require( $view_asset_file );
         wp_register_script(
@@ -33,6 +33,38 @@ function dev_theme_register_blocks() {
         'editor_script' => 'dev-theme-image-gallery-block-editor',
         'view_script'   => $view_script_handle
     ] );
+
+    // Mini Banners Block - Register editor script BEFORE block registration
+    $mb_editor_script_handle = 'dev-theme-mini-banners-block-editor';
+    $mb_editor_asset_file = get_template_directory() . '/dist/blocks/mini-banners/index.jsx.asset.php';
+
+    if ( file_exists( $mb_editor_asset_file ) ) {
+        $asset = require( $mb_editor_asset_file );
+        wp_register_script(
+            $mb_editor_script_handle,
+            get_template_directory_uri() . '/dist/blocks/mini-banners/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    // Mini Banners Block with View Script
+    $mb_view_script_handle = 'dev-theme-mini-banners-view';
+    $mb_view_asset_file = get_template_directory() . '/dist/blocks/mini-banners/view.asset.php';
+
+    if ( file_exists( $mb_view_asset_file ) ) {
+        $asset = require( $mb_view_asset_file );
+        wp_register_script(
+            $mb_view_script_handle,
+            get_template_directory_uri() . '/dist/blocks/mini-banners/view.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    register_block_type( get_template_directory() . '/blocks/mini-banners/block.json' );
 }
 add_action( 'init', 'dev_theme_register_blocks' );
 
@@ -104,13 +136,29 @@ function dev_theme_enqueue_block_editor_assets() {
     // Image Gallery Block
     $ig_script_handle = 'dev-theme-image-gallery-block-editor';
     $ig_asset_file = get_template_directory() . '/dist/blocks/image-gallery/index.jsx.asset.php';
-    
+
     if ( file_exists( $ig_asset_file ) ) {
-        $asset = require( $ig_asset_file );
-        
+        $asset = require ( $ig_asset_file );
+
         wp_enqueue_script(
             $ig_script_handle,
             get_template_directory_uri() . '/dist/blocks/image-gallery/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    // Mini Banners Block
+    $mb_script_handle = 'dev-theme-mini-banners-block-editor';
+    $mb_asset_file = get_template_directory() . '/dist/blocks/mini-banners/index.jsx.asset.php';
+
+    if ( file_exists( $mb_asset_file ) ) {
+        $asset = require( $mb_asset_file );
+
+        wp_enqueue_script(
+            $mb_script_handle,
+            get_template_directory_uri() . '/dist/blocks/mini-banners/index.jsx.js',
             $asset['dependencies'],
             $asset['version'],
             true

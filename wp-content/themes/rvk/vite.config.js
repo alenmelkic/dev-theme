@@ -65,6 +65,7 @@ export default defineConfig({
 				'./assets/src/react/**/*.{js,jsx,ts,tsx}',
 				'./assets/src/**/*.scss',
 				'./blocks/**/*.{js,jsx,ts,tsx}',
+				'./blocks/**/*.php',
 			],
 			safelist: {
 				standard: [
@@ -96,8 +97,7 @@ export default defineConfig({
 					/^text-/,
 					/^bg-/,
 					/^border-/,
-					/^p-/,
-					/^m-/,
+					/^(p|m)(x|y|t|b|l|r)?-/,
 					/^position-/,
 					/^display-/,
 				],
@@ -185,6 +185,9 @@ export default defineConfig({
 				'components/article-type-overlay': resolve(`${__dirname}/components/article-type-overlay/article-type-overlay.scss`),
 				'components/sponsored-disclaimer': resolve(`${__dirname}/components/sponsored-disclaimer/sponsored-disclaimer.scss`),
 				'components/sponsored-badge': resolve(`${__dirname}/components/sponsored-badge/sponsored-badge.scss`),
+
+				// Mini Banners Carousel
+				'components/mini-banners-carousel': resolve(`${__dirname}/assets/src/scss/components/_mini-banners-carousel.scss`),
 
 				// Admin CSS
 				'admin/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
