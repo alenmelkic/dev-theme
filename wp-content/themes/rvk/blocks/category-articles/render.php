@@ -69,7 +69,7 @@ $category_link = get_category_link($category_id);
                     <div class="content-box p-4 p-md-5 rounded-4 shadow-sm">
                         <h2 class="card-title h1 fw-bold mb-3">
                             <a href="<?php echo get_permalink($featured_post->ID); ?>" class="text-dark text-decoration-none stretched-link focus-ring focus-ring-dark">
-                                <?php echo get_the_title($featured_post->ID); ?>
+                                <?php echo esc_html(get_the_title($featured_post->ID)); ?>
                             </a>
                         </h2>
                         
@@ -122,7 +122,7 @@ $category_link = get_category_link($category_id);
                                         </a>
                                     </div>
                                     <h3 class="article-title mb-2">
-                                        <a href="<?php echo get_permalink($post->ID); ?>" class="text-dark text-decoration-none stretched-link focus-ring focus-ring-dark"><?php echo wp_trim_words(get_the_title($post->ID), 10); ?></a>
+                                        <a href="<?php echo get_permalink($post->ID); ?>" class="text-dark text-decoration-none stretched-link focus-ring focus-ring-dark"><?php echo esc_html(wp_trim_words(get_the_title($post->ID), 10)); ?></a>
                                     </h3>
                                     
                                     <!-- Author (Name + Image) Small -->

@@ -6,7 +6,15 @@
 class YouTubeVideoPlayer {
     constructor(playerElement) {
         this.player = playerElement;
-        this.videoId = playerElement.dataset.videoId;
+
+        // Sanitize videoId: only allow alphanumeric and hyphens
+        const rawVideoId = playerElement.dataset.videoId || '';
+        this.videoId = rawVideoId.replace(/[^a-zA-Z0-9_-]/g, '');
+
+        if (this.videoId !== rawVideoId) {
+            console.warn('YouTube Player: videoId contained invalid characters and was sanitized.');
+        }
+
         this.isLoaded = false;
         this.wasRadioPlaying = false;
 

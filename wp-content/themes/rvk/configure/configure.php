@@ -100,13 +100,38 @@ function dequeue_jquery_migrate( &$scripts){
 }
 add_filter( 'wp_default_scripts', 'dequeue_jquery_migrate' );
 
-// add SVG to allowed file uploads
+// add SVG to allowed file uploads with basic security scanning
 function add_file_types_to_uploads($mime_types) {
     $mime_types['svg'] = 'image/svg+xml';
-
     return $mime_types;
 }
 add_action('upload_mimes', 'add_file_types_to_uploads', 1, 1);
+
+// Sanitize SVG uploads to prevent XSS
+function rvk_sanitize_svg_upload($file) {
+    if ($file['type'] === 'image/svg+xml' && file_exists($file['tmp_name'])) {
+        $svg_content = file_get_contents($file['tmp_name']);
+        
+        // Simple check for scripts and common XSS patterns in SVG
+        $forbidden_patterns = [
+            '/<script/i',
+            '/on[a-z]+\s*=/i', // Event handlers like onmouseover, onload
+            '/<iframe/i',
+            '/<object/i',
+            '/<embed/i',
+            '/javascript:/i'
+        ];
+
+        foreach ($forbidden_patterns as $pattern) {
+            if (preg_match($pattern, $svg_content)) {
+                $file['error'] = 'Security check failed: Malicious content detected in SVG file.';
+                break;
+            }
+        }
+    }
+    return $file;
+}
+add_filter('wp_handle_upload_prefilter', 'rvk_sanitize_svg_upload');
 
 //disable update emails
 add_filter( 'auto_plugin_update_send_email', '__return_false' );
