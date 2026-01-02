@@ -22,7 +22,7 @@
 <div id="page" class="site">
 
   <header id="masthead" role="banner">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light">
       <div class="container floating-header">
         <!-- Site Branding -->
         <div class="navbar-brand">

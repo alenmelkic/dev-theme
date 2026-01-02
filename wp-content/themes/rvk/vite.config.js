@@ -20,10 +20,28 @@ const wpContentPath = fullPath.slice(getWpContentIndex);
 export default defineConfig({
 	base: './',
 
+	// Optimize caching
+	cacheDir: 'node_modules/.vite',
+
 	test: {
 		environment: 'jsdom',
 		globals: true,
 		setupFiles: './tests/setup.js',
+	},
+
+	// Optimize dependency pre-bundling
+	optimizeDeps: {
+		include: [
+			'bootstrap',
+			'photoswipe',
+			'swup',
+			'@swup/a11y-plugin',
+			'@swup/body-class-plugin',
+			'@swup/head-plugin',
+			'@swup/progress-plugin',
+			'@swup/scripts-plugin',
+		],
+		exclude: ['@wordpress/blocks', '@wordpress/components'],
 	},
 
 	plugins: [
@@ -35,9 +53,14 @@ export default defineConfig({
 				}
 			},
 		},
-		PurgeCSS({
+		// Only run PurgeCSS in production builds
+		process.env.NODE_ENV === 'production' && PurgeCSS({
 			content: [
-				'./**/*.php',
+				// Only scan theme PHP files, not all plugins/vendor
+				'./components/**/*.php',
+				'./configure/**/*.php',
+				'./inc/**/*.php',
+				'./*.php',
 				'./assets/src/js/**/*.js',
 				'./assets/src/react/**/*.{js,jsx,ts,tsx}',
 				'./assets/src/**/*.scss',
@@ -95,7 +118,7 @@ export default defineConfig({
 			variables: true,
 			keyframes: true,
 		}),
-	],
+	].filter(Boolean), // Remove false values (when PurgeCSS is disabled)
 
 	css: {
 		devSourcemap: true,
@@ -119,6 +142,14 @@ export default defineConfig({
 
 		// don't base64 images
 		assetsInlineLimit: 0,
+
+		// Optimize build performance
+		reportCompressedSize: false, // Skip compression size reporting (faster)
+		chunkSizeWarningLimit: 1000, // Increase limit to reduce warnings
+
+		// Enable better minification in production
+		minify: 'esbuild',
+		target: 'es2015',
 
 		rollupOptions: {
 			input: {
