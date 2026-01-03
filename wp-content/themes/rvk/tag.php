@@ -7,6 +7,7 @@ get_header();
 ?>
 
 <main id="main" class="site-main tag-archive">
+    <?php get_component('structured-data'); ?>
     <div class="container">
         <header class="archive-header">
             <h1 class="archive-title">
@@ -30,11 +31,12 @@ get_header();
         </header>
 
         <?php if (have_posts()) : ?>
-            <div class="posts-grid">
+            <div class="posts-grid row">
                 <?php
                 while (have_posts()) : the_post();
                 ?>
-                    <article <?php post_class('post-card'); ?>>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article <?php post_class('post-card'); ?> aria-labelledby="post-<?php the_ID(); ?>-title">
                         <?php if (has_post_thumbnail()) : ?>
                             <div class="post-card-image">
                                 <a href="<?php the_permalink(); ?>">
@@ -66,7 +68,7 @@ get_header();
                             </header>
                             
                             <div class="post-card-excerpt">
-                                <?php the_excerpt(); ?>
+                                <?php echo get_trimmed_excerpt(); ?>
                             </div>
                             
                             <a href="<?php the_permalink(); ?>" class="read-more">
@@ -75,6 +77,7 @@ get_header();
                             </a>
                         </div>
                     </article>
+                </div>
                 <?php
                 endwhile;
                 ?>
@@ -82,11 +85,7 @@ get_header();
 
             <?php
             // Pagination
-            the_posts_pagination(array(
-                'mid_size'  => 2,
-                'prev_text' => __('← Previous', 'dev-theme'),
-                'next_text' => __('Next →', 'dev-theme'),
-            ));
+            get_component('load-more');
             ?>
 
         <?php else : ?>

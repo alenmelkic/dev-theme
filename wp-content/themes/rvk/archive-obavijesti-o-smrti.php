@@ -46,6 +46,7 @@ $tags = get_terms(array(
 ?>
 
 <main id="main" class="site-main obavijesti-o-smrti-archive">
+    <?php get_component('structured-data'); ?>
     <div class="container">
         <header class="page-header">
             <h1 class="page-title">Obavijesti o Smrti</h1>
@@ -63,44 +64,33 @@ $tags = get_terms(array(
         <?php if ($query->have_posts()) : ?>
             <div class="obavijesti-o-smrti-grid">
                 <?php while ($query->have_posts()) : $query->the_post(); ?>
-                    <article class="obavijest-o-smrti-card">
-                        <?php get_component('featured-image', array('variant' => 'card')); ?>
-                        
-                        <div class="card-content">
-                            <?php get_component('post-title', array('tag' => 'h2', 'link' => true)); ?>
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <article class="obavijest-o-smrti-card">
+                            <?php get_component('featured-image', array('variant' => 'card')); ?>
                             
-                            <?php if (has_excerpt()) : ?>
+                            <div class="card-content">
+                                <?php get_component('post-title', array('tag' => 'h2', 'link' => true)); ?>
+                                
                                 <div class="card-excerpt">
-                                    <?php the_excerpt(); ?>
+                                    <?php echo get_trimmed_excerpt(); ?>
                                 </div>
-                            <?php endif; ?>
-                            
-                            <div class="card-meta">
-                                <?php get_component('author', array('size' => 'small')); ?>
-                                <?php get_component('post-date'); ?>
+                                
+                                <div class="card-meta">
+                                    <?php get_component('author', array('size' => 'small')); ?>
+                                    <?php get_component('post-date'); ?>
+                                </div>
+                                
+                                <?php get_component('post-terms', array('taxonomy' => 'obavijest_tag')); ?>
                             </div>
-                            
-                            <?php get_component('post-terms', array('taxonomy' => 'obavijest_tag')); ?>
-                        </div>
-                    </article>
+                        </article>
+                    </div>
                 <?php endwhile; ?>
             </div>
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <?php
-                echo paginate_links(array(
-                    'total' => $query->max_num_pages,
-                    'current' => $paged,
-                    'prev_text' => '&laquo; Prethodna',
-                    'next_text' => 'Sljedeća &raquo;',
-                    'add_args' => array(
-                        's' => $search,
-                        'tag' => $tag_id
-                    )
-                ));
-                ?>
-            </div>
+            <?php
+            // Pagination
+            get_component('load-more', array('container' => '.obavijesti-o-smrti-grid'));
+            ?>
         <?php else : ?>
             <div class="no-results">
                 <p>Nema pronađenih obavijesti.</p>

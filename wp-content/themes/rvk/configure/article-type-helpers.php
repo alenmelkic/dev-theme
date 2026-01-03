@@ -43,9 +43,9 @@ function get_article_type_icon($post_id = null) {
     $slug = get_article_type_slug($post_id);
 
     $icons = [
-        'video'    => 'dashicons-video-alt3',
-        'audio'    => 'dashicons-format-audio',
-        'galerija' => 'dashicons-format-gallery',
+        'video'    => 'rvk__icon-video',
+        'audio'    => 'rvk__icon-audio',
+        'galerija' => 'rvk__icon-gallery',
         'standard' => '',
     ];
 

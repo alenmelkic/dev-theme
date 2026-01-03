@@ -7,42 +7,51 @@ get_header();
 ?>
 
 <main id="main" class="site-main category-archive">
+    <?php get_component('structured-data'); ?>
     <div class="container">
-        <header class="archive-header">
-            <h1 class="archive-title">
-                <?php
-                printf(
-                    esc_html__('Category: %s', 'dev-theme'),
-                    '<span>' . single_cat_title('', false) . '</span>'
-                );
-                ?>
-            </h1>
-            
-            <?php
-            // Category description
-            $category_description = category_description();
-            if (!empty($category_description)) :
-            ?>
-                <div class="archive-description">
-                    <?php echo wp_kses_post($category_description); ?>
-                </div>
-            <?php endif; ?>
-        </header>
+        <div class="col-xl-10 mx-auto">
+            <header class="archive-header my-5">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h1 class="archive-title">
+                            <?php
+                                printf(
+                                    esc_html__('%s', 'dev-theme'),
+                                '<span>' . single_cat_title('', false) . '</span>'
+                            );
+                    ?>
+                </h1>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <?php
+                        // Category description
+                        $category_description = category_description();
+                        if (!empty($category_description)) :
+                        ?>
+                            <div class="archive-description text-right">
+                                <?php echo wp_kses_post($category_description); ?>
+                            </div>
+                        <?php endif; ?>
+                        
+                    </div>
+                </div>              
+            </header>
 
         <?php if (have_posts()) : ?>
-            <div class="posts-grid">
+            <div class="posts-grid row">
                 <?php
                 while (have_posts()) : the_post();
                 ?>
-                    <article <?php post_class('post-card'); ?>>
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <article <?php post_class('post-card'); ?> aria-labelledby="post-<?php the_ID(); ?>-title">
                         <?php if (has_post_thumbnail()) : ?>
                             <div class="post-card-image">
-                                <a href="<?php the_permalink(); ?>">
+                                <a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
                                     <?php
                                     get_component('featured-image', array(
                                         'variant' => 'card',
                                         'size' => 'medium',
-                                        'loading' => 'lazy'
+                                        'loading' => 'lazy',
                                     ));
                                     ?>
                                     <?php get_component('article-type-overlay'); ?>
@@ -52,29 +61,29 @@ get_header();
                         
                         <div class="post-card-content">
                             <header class="post-card-header">
-                                <?php get_component('post-title', array('tag' => 'h2', 'link' => true)); ?>
+                                <div id="post-<?php the_ID(); ?>-title">
+                                    <?php get_component('post-title', array('tag' => 'h2', 'link' => true)); ?>
+                                </div>
 
                                 <?php
                                 // Sponsored badge
                                 get_component('sponsored-badge');
                                 ?>
 
-                                <div class="post-card-meta">
-                                    <?php get_component('post-date'); ?>
-                                    <?php get_component('author', array('size' => 'small')); ?>
-                                </div>
+                                
                             </header>
                             
-                            <div class="post-card-excerpt">
-                                <?php the_excerpt(); ?>
+                            <div class="post-card-excerpt mt-3">
+                                <?php echo get_trimmed_excerpt(); ?>
                             </div>
-                            
-                            <a href="<?php the_permalink(); ?>" class="read-more">
-                                <?php esc_html_e('Read More', 'dev-theme'); ?>
-                                <span aria-hidden="true">→</span>
-                            </a>
+
+                            <div class="post-card-meta mt-3 d-flex justify-content-between align-items-center">                                    
+                                    <?php get_component('author', array('size' => 'small')); ?>
+                                    <?php get_component('post-date'); ?>
+                                </div>
                         </div>
                     </article>
+                </div>
                 <?php
                 endwhile;
                 ?>
@@ -82,11 +91,7 @@ get_header();
 
             <?php
             // Pagination
-            the_posts_pagination(array(
-                'mid_size'  => 2,
-                'prev_text' => __('← Previous', 'dev-theme'),
-                'next_text' => __('Next →', 'dev-theme'),
-            ));
+            get_component('load-more');
             ?>
 
         <?php else : ?>
@@ -94,6 +99,7 @@ get_header();
                 <p><?php esc_html_e('No posts found in this category.', 'dev-theme'); ?></p>
             </div>
         <?php endif; ?>
+    </div>
     </div>
 </main>
 

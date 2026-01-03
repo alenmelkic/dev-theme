@@ -8,6 +8,7 @@ import { initSoundCloudPlayers, cleanupSoundCloudPlayers } from './soundcloud-cu
 import { initFacebookVideoPlayers, cleanupFacebookVideoPlayers } from './facebook-video-player';
 import { initYouTubeVideoPlayers, cleanupYouTubeVideoPlayers } from './youtube-video-player';
 import { initNavigation } from './navigation';
+import { initLoadMore } from './load-more';
 
 const App = {
 	/**
@@ -42,6 +43,9 @@ const App = {
 		// Expose Swup globally for other scripts
 		window.swup = swup;
 
+		// Init Load More
+		initLoadMore();
+
 		// Re-init header button on navigation
 		if (swup) {
 			swup.hooks.on('content:replace', () => {
@@ -54,8 +58,19 @@ const App = {
 				initFacebookVideoPlayers();
 				cleanupYouTubeVideoPlayers();
 				initYouTubeVideoPlayers();
+				initLoadMore();
 			});
 		}
+
+		// Handle Load More re-init
+		document.addEventListener('load-more:loaded', (e) => {
+			cleanupSoundCloudPlayers();
+			initSoundCloudPlayers();
+			cleanupFacebookVideoPlayers();
+			initFacebookVideoPlayers();
+			cleanupYouTubeVideoPlayers();
+			initYouTubeVideoPlayers();
+		});
 	},
 };
 
