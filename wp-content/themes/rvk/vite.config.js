@@ -130,6 +130,12 @@ export default defineConfig({
 			scss: {
 				quietDeps: true,
 				silenceDeprecations: ['legacy-js-api', 'import'],
+				loadPaths: [resolve(__dirname, 'assets/src/scss')],
+				additionalData: `
+					@use "settings/variables" as *;
+					@use "settings/mixins" as *;
+					@use "settings/functions" as *;
+				`,
 			},
 		},
 	},

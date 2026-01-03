@@ -59,7 +59,7 @@ get_header();
                             </div>
                         <?php endif; ?>
                         
-                        <div class="post-card-content">
+                        <div class="post-card-content d-flex flex-column justify-content-between">
                             <header class="post-card-header">
                                 <div id="post-<?php the_ID(); ?>-title">
                                     <?php get_component('post-title', array('tag' => 'h2', 'link' => true)); ?>
@@ -69,18 +69,16 @@ get_header();
                                 // Sponsored badge
                                 get_component('sponsored-badge');
                                 ?>
-
-                                
+                            
+                                <div class="post-card-excerpt">
+                                    <?php echo get_trimmed_excerpt(); ?>
+                                </div>
                             </header>
                             
-                            <div class="post-card-excerpt mt-3">
-                                <?php echo get_trimmed_excerpt(); ?>
-                            </div>
-
                             <div class="post-card-meta mt-3 d-flex justify-content-between align-items-center">                                    
                                     <?php get_component('author', array('size' => 'small')); ?>
                                     <?php get_component('post-date'); ?>
-                                </div>
+                            </div>
                         </div>
                     </article>
                 </div>
