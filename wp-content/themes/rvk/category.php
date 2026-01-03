@@ -6,7 +6,7 @@
 get_header();
 ?>
 
-<main id="main" class="site-main category-archive">
+<main id="main" class="site-main category-archive archive-main">
     <?php get_component('structured-data'); ?>
     <div class="container">
         <div class="col-xl-10 mx-auto">
