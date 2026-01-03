@@ -1,0 +1,280 @@
+/**
+ * Social Share Buttons Styling
+ */
+
+.rvk-social-share-buttons {
+    padding: 30px 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    margin: 40px 0;
+
+    .share-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 20px 0;
+        color: #333;
+    }
+
+    .share-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .share-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: #f5f5f5;
+        color: #333;
+        text-decoration: none;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .share-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .share-label {
+            font-weight: 500;
+        }
+    }
+
+    // Platform-specific colors
+    .share-facebook {
+        background: #1877f2;
+        color: white;
+        border-color: #1877f2;
+
+        &:hover {
+            background: #145dbf;
+            color: white;
+        }
+    }
+
+    .share-twitter {
+        background: #000000;
+        color: white;
+        border-color: #000000;
+
+        &:hover {
+            background: #333333;
+            color: white;
+        }
+    }
+
+    .share-linkedin {
+        background: #0a66c2;
+        color: white;
+        border-color: #0a66c2;
+
+        &:hover {
+            background: #084d91;
+            color: white;
+        }
+    }
+
+    .share-whatsapp {
+        background: #25d366;
+        color: white;
+        border-color: #25d366;
+
+        &:hover {
+            background: #1da851;
+            color: white;
+        }
+    }
+
+    .share-email {
+        background: #ea4335;
+        color: white;
+        border-color: #ea4335;
+
+        &:hover {
+            background: #c5362b;
+            color: white;
+        }
+    }
+
+    .share-copy {
+        background: #6c757d;
+        color: white;
+        border-color: #6c757d;
+
+        &:hover {
+            background: #5a6268;
+            color: white;
+        }
+
+        &.copied {
+            background: #28a745;
+            border-color: #28a745;
+
+            .share-label::after {
+                content: ' ✓';
+            }
+        }
+    }
+
+    .share-hashtags {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+        font-size: 0.9rem;
+        color: #666;
+
+        .hashtags-label {
+            font-weight: 600;
+            margin-right: 8px;
+            color: #333;
+        }
+
+        .hashtags-list {
+            color: #1877f2;
+            font-weight: 500;
+        }
+    }
+}
+
+// Round style
+.rvk-social-share-round {
+    .share-button {
+        border-radius: 50px;
+    }
+}
+
+// Minimal style (icons only)
+.rvk-social-share-minimal {
+    .share-button {
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+
+        .share-label {
+            display: none;
+        }
+
+        .share-icon {
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+
+// Size variations
+.rvk-social-share-small {
+    .share-button {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+
+        .share-icon {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    &.rvk-social-share-minimal .share-button {
+        width: 36px;
+        height: 36px;
+
+        .share-icon {
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+.rvk-social-share-large {
+    .share-button {
+        padding: 16px 24px;
+        font-size: 1rem;
+
+        .share-icon {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    &.rvk-social-share-minimal .share-button {
+        width: 52px;
+        height: 52px;
+
+        .share-icon {
+            width: 28px;
+            height: 28px;
+        }
+    }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+    .rvk-social-share-buttons {
+        .share-buttons {
+            justify-content: center;
+        }
+
+        .share-button {
+            flex: 1 1 auto;
+            min-width: 120px;
+
+            .share-label {
+                font-size: 0.85rem;
+            }
+        }
+    }
+
+    .rvk-social-share-minimal {
+        .share-button {
+            flex: 0 0 auto;
+            min-width: auto;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .rvk-social-share-buttons {
+        .share-button:not(.share-copy) {
+            .share-label {
+                display: none;
+            }
+
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            justify-content: center;
+            border-radius: 50%;
+            min-width: auto;
+
+            .share-icon {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        .share-copy {
+            flex: 1 1 100%;
+        }
+    }
+}

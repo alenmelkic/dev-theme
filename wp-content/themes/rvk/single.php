@@ -11,6 +11,10 @@ while (have_posts()) : the_post();
 <main id="main" class="site-main single-post-page">
     <div class="container">
         <article <?php post_class(); ?>>
+            <?php
+            // BlogPosting schema
+            get_template_part('components/schema-markup/schema-blogposting');
+            ?>
             <header class="post-header col-xl-10 mx-auto">
                 <?php
                 // Sponsored disclaimer - top
@@ -67,6 +71,16 @@ while (have_posts()) : the_post();
                 ));
                 ?>
             </div>
+
+            <?php
+            // Social share buttons
+            get_template_part('components/social-share-buttons/social-share-buttons', null, array(
+                'platforms' => array('facebook', 'twitter', 'linkedin', 'whatsapp', 'email'),
+                'include_hashtags' => true,
+                'style' => 'default',
+                'size' => 'medium'
+            ));
+            ?>
 
             <footer class="post-footer">
                 <?php

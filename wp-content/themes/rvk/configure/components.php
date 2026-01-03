@@ -124,4 +124,7 @@ add_action('wp_enqueue_scripts', function() {
     register_component_assets('article-type-overlay', true, false);
     register_component_assets('sponsored-disclaimer', true, false);
     register_component_assets('sponsored-badge', true, false);
+
+    // Social share buttons
+    register_component_assets('social-share-buttons', true, false);
 }, 5);

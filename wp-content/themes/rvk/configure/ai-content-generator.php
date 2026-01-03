@@ -199,14 +199,15 @@ class AI_Content_Generator {
     
     /**
      * Call Google Gemini API
+     * Changed to protected to allow extension by child classes
      */
-    private function call_gemini_api($prompt) {
+    protected function call_gemini_api($prompt, $max_tokens = 100) {
         if (empty($this->api_key)) {
             return new WP_Error('no_api_key', 'Gemini API key not configured', array('status' => 500));
         }
-        
+
         $url = $this->api_endpoint . '?key=' . $this->api_key;
-        
+
         $body = array(
             'contents' => array(
                 array(
@@ -217,10 +218,10 @@ class AI_Content_Generator {
             ),
             'generationConfig' => array(
                 'temperature' => 0.7,
-                'maxOutputTokens' => 100
+                'maxOutputTokens' => $max_tokens
             )
         );
-        
+
         $response = wp_remote_post($url, array(
             'headers' => array(
                 'Content-Type' => 'application/json',
@@ -228,36 +229,96 @@ class AI_Content_Generator {
             'body' => json_encode($body),
             'timeout' => 30,
         ));
-        
+
         if (is_wp_error($response)) {
             return $response;
         }
-        
+
         $status_code = wp_remote_retrieve_response_code($response);
         $body = wp_remote_retrieve_body($response);
         $data = json_decode($body, true);
-        
+
         // Log the response for debugging
         error_log('Gemini API Response: ' . print_r($data, true));
-        
+
         if ($status_code !== 200) {
             $error_message = isset($data['error']['message']) ? $data['error']['message'] : 'API request failed';
             return new WP_Error('api_error', $error_message, array('status' => $status_code));
         }
-        
+
         // Try different response formats
         if (isset($data['candidates'][0]['content']['parts'][0]['text'])) {
             $text = $data['candidates'][0]['content']['parts'][0]['text'];
             return trim($text);
         }
-        
+
         // Alternative format
         if (isset($data['candidates'][0]['output'])) {
             return trim($data['candidates'][0]['output']);
         }
-        
+
         // Log the full response if we can't parse it
         error_log('Could not parse Gemini response. Full response: ' . $body);
+        return new WP_Error('invalid_response', 'Invalid API response. Check error log for details.', array('status' => 500));
+    }
+
+    /**
+     * Call OpenAI API
+     * New method to support dual AI providers
+     */
+    protected function call_openai_api($prompt, $max_tokens = 100) {
+        $openai_key = get_option('dev_theme_openai_api_key', '');
+
+        if (empty($openai_key)) {
+            return new WP_Error('no_api_key', 'OpenAI API key not configured', array('status' => 500));
+        }
+
+        $url = 'https://api.openai.com/v1/chat/completions';
+
+        $body = array(
+            'model' => 'gpt-4o-mini',
+            'messages' => array(
+                array(
+                    'role' => 'user',
+                    'content' => $prompt
+                )
+            ),
+            'max_tokens' => $max_tokens,
+            'temperature' => 0.7
+        );
+
+        $response = wp_remote_post($url, array(
+            'headers' => array(
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $openai_key
+            ),
+            'body' => json_encode($body),
+            'timeout' => 30,
+        ));
+
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $status_code = wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        // Log the response for debugging
+        error_log('OpenAI API Response: ' . print_r($data, true));
+
+        if ($status_code !== 200) {
+            $error_message = isset($data['error']['message']) ? $data['error']['message'] : 'API request failed';
+            return new WP_Error('api_error', $error_message, array('status' => $status_code));
+        }
+
+        // Parse OpenAI response
+        if (isset($data['choices'][0]['message']['content'])) {
+            return trim($data['choices'][0]['message']['content']);
+        }
+
+        // Log the full response if we can't parse it
+        error_log('Could not parse OpenAI response. Full response: ' . $body);
         return new WP_Error('invalid_response', 'Invalid API response. Check error log for details.', array('status' => 500));
     }
 }
