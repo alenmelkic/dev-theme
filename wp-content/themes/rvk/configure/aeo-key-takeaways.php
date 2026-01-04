@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 class RVK_AEO_Key_Takeaways {
 
     public function __construct() {
-        // Add key takeaways meta box
-        add_action('add_meta_boxes', array($this, 'add_meta_box'));
+        // Don't register classic meta box - we use Gutenberg sidebar panel instead
+        // add_action('add_meta_boxes', array($this, 'add_meta_box'));
 
         // Register meta fields
         add_action('init', array($this, 'register_meta'));

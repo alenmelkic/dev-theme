@@ -358,6 +358,9 @@ class AI_Content_Generator {
         }
 
         if ($result) {
+            // Remove quotes if present (AI sometimes wraps titles in quotes)
+            $result = trim($result, '"\'');
+
             // Cache result and increment usage
             $api_manager->set_cache($cache_key, $result);
             $api_manager->increment_usage('gemini', $max_tokens);
@@ -439,6 +442,9 @@ class AI_Content_Generator {
         // Parse OpenAI response
         if (isset($data['choices'][0]['message']['content'])) {
             $result = trim($data['choices'][0]['message']['content']);
+
+            // Remove quotes if present (AI sometimes wraps titles in quotes)
+            $result = trim($result, '"\'');
 
             // Cache result and increment usage
             $api_manager->set_cache($cache_key, $result);

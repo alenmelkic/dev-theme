@@ -155,8 +155,13 @@ class RVK_SEO_Core {
 
     /**
      * Register meta boxes for post editor
+     * DISABLED: We use Gutenberg sidebar panel instead
      */
     public function register_meta_boxes() {
+        // Don't register classic meta boxes - we use Gutenberg sidebar panel
+        // If you need classic editor support, uncomment below:
+
+        /*
         $post_types = get_post_types(array('public' => true), 'names');
 
         foreach ($post_types as $post_type) {
@@ -169,6 +174,7 @@ class RVK_SEO_Core {
                 'high'
             );
         }
+        */
     }
 
     /**
@@ -455,6 +461,15 @@ class RVK_SEO_Core {
         if (!in_array($hook, ['post.php', 'post-new.php', 'settings_page_seo-aeo-settings'])) {
             return;
         }
+
+        // Enqueue SEO content panel JavaScript for Gutenberg
+        wp_enqueue_script(
+            'rvk-seo-content-panel',
+            get_template_directory_uri() . '/dist/js/seo-content-panel.js',
+            array('wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data'),
+            filemtime(get_template_directory() . '/dist/js/seo-content-panel.js'),
+            true
+        );
 
         // Admin CSS (inline for now, can be moved to separate file)
         wp_add_inline_style('wp-admin', '

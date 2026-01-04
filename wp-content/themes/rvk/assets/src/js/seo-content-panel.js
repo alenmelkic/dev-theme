@@ -34,6 +34,9 @@
             };
         });
 
+        // Get dispatch functions to trigger saves
+        const { editPost } = useDispatch('core/editor');
+
         // Use useEntityProp for reliable meta handling
         // This is THE recommended way to handle meta in Gutenberg
         const [meta, setMeta] = useEntityProp('postType', postType, 'meta', postId);
@@ -44,6 +47,7 @@
         const [loadingTitle, setLoadingTitle] = useState(false);
         const [loadingDescription, setLoadingDescription] = useState(false);
         const [loadingKeywords, setLoadingKeywords] = useState(false);
+        const [loadingTakeaways, setLoadingTakeaways] = useState(false);
         const [message, setMessage] = useState(null);
         const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -54,6 +58,7 @@
         const seoCanonical = meta?._seo_canonical || '';
         const seoNoindex = meta?._seo_noindex === '1';
         const seoNofollow = meta?._seo_nofollow === '1';
+        const aeoKeyTakeaways = meta?._aeo_key_takeaways || '';
 
         /**
          * Update individual meta fields
@@ -61,10 +66,16 @@
         const updateMeta = (key, value) => {
             const safeValue = value === null || value === undefined ? '' : value;
             console.log(`SEO [useEntityProp]: Updating ${key}:`, safeValue === '' ? '[EMPTY]' : safeValue);
-            setMeta({
+
+            const newMeta = {
                 ...meta,
                 [key]: safeValue
-            });
+            };
+
+            setMeta(newMeta);
+
+            // CRITICAL: Also update via editPost to mark post as dirty and trigger save
+            editPost({ meta: newMeta });
         };
 
         /**
@@ -163,6 +174,27 @@
                 setMessage({ type: 'error', text: error.message });
             } finally {
                 setLoadingKeywords(false);
+            }
+        };
+
+        const generateTakeaways = async () => {
+            if (!postId) return;
+            setLoadingTakeaways(true);
+            setMessage(null);
+            try {
+                const response = await wp.apiFetch({
+                    path: '/dev-theme/v1/aeo/generate-takeaways',
+                    method: 'POST',
+                    data: { post_id: postId }
+                });
+                if (response.success && response.takeaways) {
+                    updateMeta('_aeo_key_takeaways', response.takeaways);
+                    setMessage({ type: 'success', text: '✓ Key Takeaways generisani!' });
+                }
+            } catch (error) {
+                setMessage({ type: 'error', text: error.message });
+            } finally {
+                setLoadingTakeaways(false);
             }
         };
 
@@ -271,6 +303,21 @@
                     }),
                     el(Button, { variant: 'secondary', onClick: extractKeywords, disabled: loadingKeywords || loadingAll, style: { marginTop: '5px' } },
                         loadingKeywords ? el(Spinner) : '🤖 Ekstraktuj sa AI'
+                    )
+                ),
+
+                // Key Takeaways (AEO)
+                el('div', { style: { marginBottom: '15px' } },
+                    el('label', { style: { display: 'block', marginBottom: '5px', fontWeight: '600' } }, '🎯 Key Takeaways (AEO)'),
+                    el(TextareaControl, {
+                        value: aeoKeyTakeaways,
+                        onChange: (val) => updateMeta('_aeo_key_takeaways', val),
+                        placeholder: '• Prvi ključni point\n• Drugi ključni point\n• Treći ključni point',
+                        rows: 5,
+                        help: 'AI engines prioritize content with clear takeaways. Add 3-5 key points.'
+                    }),
+                    el(Button, { variant: 'secondary', onClick: generateTakeaways, disabled: loadingTakeaways || loadingAll, style: { marginTop: '5px' } },
+                        loadingTakeaways ? el(Spinner) : '🤖 Generiši sa AI'
                     )
                 ),
 

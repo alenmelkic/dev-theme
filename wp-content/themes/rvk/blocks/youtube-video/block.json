@@ -36,6 +36,5 @@
         "align": false,
         "anchor": true
     },
-    "editorScript": "file:./index.jsx",
     "render": "file:./render.php"
 }
