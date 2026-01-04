@@ -19,6 +19,13 @@ function rvk_remove_default_meta_tags() {
 
     // Remove WordPress default meta description (if any theme adds it)
     remove_action('wp_head', 'rel_canonical');
+
+    // Remove WordPress default noindex robots meta (we handle it ourselves)
+    remove_action('wp_head', 'noindex', 1);
+    remove_action('wp_head', 'wp_no_robots');
+
+    // Prevent WordPress from outputting robots meta tag
+    add_filter('wp_robots', '__return_empty_array', 999);
 }
 add_action('init', 'rvk_remove_default_meta_tags');
 

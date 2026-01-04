@@ -103,6 +103,8 @@ function rvk_update_term_seo_meta($term_id, $key, $value) {
  * @return string Sanitized title
  */
 function rvk_sanitize_seo_title($title) {
+    // Decode HTML entities first (in case title was already encoded)
+    $title = html_entity_decode($title, ENT_QUOTES, 'UTF-8');
     $title = wp_strip_all_tags($title);
     $title = trim($title);
 
@@ -126,6 +128,8 @@ function rvk_sanitize_seo_title($title) {
  * @return string Sanitized description
  */
 function rvk_sanitize_meta_description($description) {
+    // Decode HTML entities first (in case description was already encoded)
+    $description = html_entity_decode($description, ENT_QUOTES, 'UTF-8');
     $description = wp_strip_all_tags($description);
     $description = trim($description);
 
@@ -222,7 +226,7 @@ function rvk_get_seo_title($post_id = null, $template = null) {
 
     // Get custom SEO title or fallback to post title
     if (!isset($title)) {
-        $title = rvk_get_seo_meta($post_id, 'naslov', get_the_title($post_id));
+        $title = rvk_get_seo_meta($post_id, 'title', get_the_title($post_id));
     }
 
     // Use template if provided
@@ -254,7 +258,7 @@ function rvk_get_meta_description($post_id = null) {
     }
 
     // Get custom meta description
-    $description = rvk_get_seo_meta($post_id, 'opis');
+    $description = rvk_get_seo_meta($post_id, 'description');
 
     // Fallback to excerpt
     if (empty($description)) {
@@ -433,7 +437,7 @@ function rvk_get_focus_keywords($post_id = null) {
         $post_id = get_the_ID();
     }
 
-    $keywords = rvk_get_seo_meta($post_id, 'tagovi', '');
+    $keywords = rvk_get_seo_meta($post_id, 'keywords', '');
 
     if (empty($keywords)) {
         return [];

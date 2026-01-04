@@ -78,8 +78,8 @@ class RVK_SEO_Core {
         add_action('wp_ajax_rvk_seo_analyze_content', array($this, 'ajax_analyze_content'));
 
         // Handle title output
-        add_filter('pre_get_document_title', array($this, 'filter_document_title'), 20);
-        add_filter('document_title_parts', array($this, 'filter_title_parts'), 20);
+        // ONLY use pre_get_document_title to completely bypass WordPress title assembly
+        add_filter('pre_get_document_title', array($this, 'filter_document_title'), 10);
     }
 
     /**
@@ -181,9 +181,9 @@ class RVK_SEO_Core {
         wp_nonce_field('rvk_seo_meta_box', 'rvk_seo_meta_box_nonce');
 
         // Get current values
-        $seo_title = rvk_get_seo_meta($post->ID, 'naslov');
-        $seo_description = rvk_get_seo_meta($post->ID, 'opis');
-        $seo_keywords = rvk_get_seo_meta($post->ID, 'tagovi');
+        $seo_title = rvk_get_seo_meta($post->ID, 'title');
+        $seo_description = rvk_get_seo_meta($post->ID, 'description');
+        $seo_keywords = rvk_get_seo_meta($post->ID, 'keywords');
         $seo_canonical = rvk_get_seo_meta($post->ID, 'canonical');
         $seo_noindex = rvk_get_seo_meta($post->ID, 'noindex');
         $seo_nofollow = rvk_get_seo_meta($post->ID, 'nofollow');
@@ -353,19 +353,19 @@ class RVK_SEO_Core {
         // Save SEO title
         if (isset($_POST['rvk_seo_title'])) {
             $seo_title = rvk_sanitize_seo_title($_POST['rvk_seo_title']);
-            rvk_update_seo_meta($post_id, 'naslov', $seo_title);
+            rvk_update_seo_meta($post_id, 'title', $seo_title);
         }
 
         // Save meta description
         if (isset($_POST['rvk_seo_description'])) {
             $seo_description = rvk_sanitize_meta_description($_POST['rvk_seo_description']);
-            rvk_update_seo_meta($post_id, 'opis', $seo_description);
+            rvk_update_seo_meta($post_id, 'description', $seo_description);
         }
 
         // Save keywords/tags
         if (isset($_POST['rvk_seo_keywords'])) {
             $seo_keywords = sanitize_text_field($_POST['rvk_seo_keywords']);
-            rvk_update_seo_meta($post_id, 'tagovi', $seo_keywords);
+            rvk_update_seo_meta($post_id, 'keywords', $seo_keywords);
         }
 
         // Save canonical URL
@@ -504,43 +504,63 @@ class RVK_SEO_Core {
 
     /**
      * Filter document title (pre_get_document_title)
+     * Build complete title to prevent WordPress from adding extra separators
+     * This completely bypasses WordPress title assembly
      */
     public function filter_document_title($title) {
         if (!rvk_should_output_meta_tags()) {
-            return $title;
+            return null; // Let other plugins handle it
         }
 
-        $custom_title = rvk_get_seo_title();
-        if (!empty($custom_title) && $custom_title !== get_the_title()) {
-            return $custom_title;
-        }
+        $separator = get_option('rvk_seo_title_separator', '-');
+        $site_name = get_bloginfo('name');
+        $final_title = '';
 
-        return $title;
-    }
-
-    /**
-     * Filter document title parts
-     */
-    public function filter_title_parts($parts) {
-        if (!rvk_should_output_meta_tags()) {
-            return $parts;
-        }
-
-        $post_id = get_queried_object_id();
-        $custom_title = '';
-
+        // Handle singular posts/pages
         if (is_singular()) {
+            $post_id = get_the_ID();
             $custom_title = rvk_get_seo_meta($post_id, 'title');
-        } elseif (is_category() || is_tag() || is_tax()) {
-            $custom_title = rvk_get_term_seo_meta($post_id, 'title');
+
+            if (!empty($custom_title)) {
+                $final_title = $custom_title;
+            } else {
+                $final_title = get_the_title($post_id);
+            }
+        }
+        // Handle archives
+        elseif (is_category() || is_tag() || is_tax()) {
+            $term = get_queried_object();
+            $custom_title = rvk_get_term_seo_meta($term->term_id, 'title');
+
+            if (!empty($custom_title)) {
+                $final_title = $custom_title;
+            } else {
+                $final_title = $term->name;
+            }
+        }
+        // Handle home page
+        elseif (is_home() || is_front_page()) {
+            $custom_title = get_option('rvk_seo_homepage_title');
+
+            if (!empty($custom_title)) {
+                $final_title = $custom_title;
+            } else {
+                return null; // Let WordPress handle it
+            }
+        }
+        // For everything else, let WordPress handle it
+        else {
+            return null;
         }
 
-        if (!empty($custom_title)) {
-            $parts['title'] = $custom_title;
+        // Build final title with separator and site name
+        if (!empty($final_title)) {
+            return $final_title . ' ' . $separator . ' ' . $site_name;
         }
 
-        return $parts;
+        return null;
     }
+
 
     /**
      * Get system status for debugging

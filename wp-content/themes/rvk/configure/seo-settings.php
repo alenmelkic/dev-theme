@@ -133,7 +133,13 @@ class RVK_SEO_Settings_Page {
             update_option('rvk_seo_default_og_image', absint($_POST['default_og_image']));
             update_option('rvk_seo_twitter_handle', sanitize_text_field($_POST['twitter_handle']));
             update_option('rvk_seo_homepage_description', sanitize_textarea_field($_POST['homepage_description']));
-            update_option('rvk_seo_title_separator', sanitize_text_field($_POST['title_separator']));
+
+            // Title separator - handle custom value
+            $separator = sanitize_text_field($_POST['title_separator']);
+            if ($separator === 'custom' && !empty($_POST['title_separator_custom'])) {
+                $separator = sanitize_text_field($_POST['title_separator_custom']);
+            }
+            update_option('rvk_seo_title_separator', $separator);
 
             // Compatibility settings
             update_option('rvk_seo_override_plugins', isset($_POST['override_plugins']));
@@ -157,7 +163,7 @@ class RVK_SEO_Settings_Page {
         $default_og_image = get_option('rvk_seo_default_og_image');
         $twitter_handle = get_option('rvk_seo_twitter_handle', '');
         $homepage_description = get_option('rvk_seo_homepage_description', get_bloginfo('description'));
-        $title_separator = get_option('rvk_seo_title_separator', '|');
+        $title_separator = get_option('rvk_seo_title_separator', '-');
 
         $override_plugins = get_option('rvk_seo_override_plugins', false);
 
@@ -451,12 +457,40 @@ class RVK_SEO_Settings_Page {
                                 <label for="title_separator">Title Separator</label>
                             </th>
                             <td>
-                                <input type="text"
-                                       name="title_separator"
-                                       id="title_separator"
-                                       value="<?php echo esc_attr($title_separator); ?>"
-                                       class="small-text">
-                                <p class="description">Separator u title tagovima (npr. "Naslov | Ime sajta")</p>
+                                <fieldset>
+                                    <legend class="screen-reader-text"><span>Title Separator</span></legend>
+                                    <?php
+                                    $separators = array(
+                                        '-' => '-',
+                                        '–' => '–', // En dash
+                                        '—' => '—', // Em dash
+                                        '|' => '|',
+                                        '/' => '/',
+                                        '::' => '::',
+                                        '>' => '>',
+                                        '~' => '~',
+                                        '•' => '•'
+                                    );
+
+                                    // Check if current separator is in the predefined list
+                                    $is_custom = !array_key_exists($title_separator, $separators);
+                                    $custom_value = $is_custom ? $title_separator : '';
+
+                                    foreach ($separators as $value => $label) {
+                                        $checked = (!$is_custom && $title_separator === $value) ? 'checked="checked"' : '';
+                                        echo '<label style="display: inline-block; margin-right: 15px;">';
+                                        echo '<input type="radio" name="title_separator" value="' . esc_attr($value) . '" ' . $checked . '> ';
+                                        echo '<span style="font-size: 18px; font-weight: bold;">' . esc_html($label) . '</span>';
+                                        echo '</label> ';
+                                    }
+                                    ?>
+                                    <br><br>
+                                    <label>
+                                        <input type="radio" name="title_separator" value="custom" <?php checked($is_custom, true); ?>>
+                                        Custom: <input type="text" name="title_separator_custom" value="<?php echo esc_attr($custom_value); ?>" class="small-text" placeholder="Enter custom separator">
+                                    </label>
+                                    <p class="description">Odaberite separator koji će se koristiti u title tagovima (npr. "Naslov - Ime sajta")</p>
+                                </fieldset>
                             </td>
                         </tr>
                     </table>
