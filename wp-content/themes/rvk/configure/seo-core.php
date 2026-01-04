@@ -36,6 +36,10 @@ class RVK_SEO_Core {
      * Constructor - Initialize all hooks and modules
      */
     private function __construct() {
+        // Register post meta fields EARLY (before init hook)
+        // This must run before REST API initialization
+        $this->register_post_meta_fields();
+
         // Initialize modules
         add_action('init', array($this, 'init_modules'));
 
@@ -67,11 +71,50 @@ class RVK_SEO_Core {
      * Initialize SEO modules
      */
     public function init_modules() {
-        // Meta tags are already initialized via seo-meta-tags.php hooks
-
         // Log initialization
         if (defined('WP_DEBUG') && WP_DEBUG) {
             error_log('RVK SEO/AEO v' . self::VERSION . ' initialized');
+        }
+    }
+
+    /**
+     * Register post meta fields for Gutenberg editor
+     * Required for meta fields to work with Gutenberg's editPost()
+     */
+    public function register_post_meta_fields() {
+        // Register for common post types directly
+        $post_types = array('post', 'page');
+
+        $meta_fields = array(
+            '_seo_title' => 'string',
+            '_seo_description' => 'string',
+            '_seo_keywords' => 'string',
+            '_seo_canonical' => 'string',
+            '_seo_noindex' => 'string',
+            '_seo_nofollow' => 'string',
+            '_seo_og_title' => 'string',
+            '_seo_og_description' => 'string',
+            '_seo_og_image' => 'integer',
+            '_seo_twitter_title' => 'string',
+            '_seo_twitter_description' => 'string',
+            '_seo_twitter_image' => 'integer',
+            '_seo_readability_score' => 'number',
+            '_seo_content_score' => 'number',
+            '_seo_last_optimized' => 'string'
+        );
+
+        foreach ($post_types as $post_type) {
+            foreach ($meta_fields as $meta_key => $type) {
+                register_post_meta($post_type, $meta_key, array(
+                    'show_in_rest' => true,
+                    'single' => true,
+                    'type' => $type,
+                    'default' => '',
+                    'auth_callback' => function() {
+                        return current_user_can('edit_posts');
+                    }
+                ));
+            }
         }
     }
 

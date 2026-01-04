@@ -26,8 +26,8 @@ class RVK_SEO_API_Manager {
      */
     const RATE_LIMITS = array(
         'gemini' => array(
-            'per_minute' => 10,  // Conservative limit (free tier: 15/min)
-            'per_day' => 1000    // Conservative limit (free tier: 1,500/day)
+            'per_minute' => 10,  // Conservative limit (Gemini 1.5 Flash free tier: 15/min)
+            'per_day' => 1000    // Conservative limit (Gemini 1.5 Flash free tier: 1,500/day)
         ),
         'openai' => array(
             'per_minute' => 20,

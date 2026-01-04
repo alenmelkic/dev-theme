@@ -46,31 +46,41 @@
         const [seoNoindex, setSeoNoindex] = useState(postMeta._seo_noindex === '1');
         const [seoNofollow, setSeoNofollow] = useState(postMeta._seo_nofollow === '1');
         const [seoScore, setSeoScore] = useState(0);
-        const [loading, setLoading] = useState(false);
+        const [loadingAll, setLoadingAll] = useState(false);
+        const [loadingTitle, setLoadingTitle] = useState(false);
+        const [loadingDescription, setLoadingDescription] = useState(false);
+        const [loadingKeywords, setLoadingKeywords] = useState(false);
         const [message, setMessage] = useState(null);
         const [showAdvanced, setShowAdvanced] = useState(false);
+        const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
-        // Update state when post meta changes
-        useEffect(() => {
-            if (postMeta._seo_title !== undefined) setSeoTitle(postMeta._seo_title);
-            if (postMeta._seo_description !== undefined) setSeoDescription(postMeta._seo_description);
-            if (postMeta._seo_keywords !== undefined) setSeoKeywords(postMeta._seo_keywords);
-            if (postMeta._seo_canonical !== undefined) setSeoCanonical(postMeta._seo_canonical);
-            if (postMeta._seo_noindex !== undefined) setSeoNoindex(postMeta._seo_noindex === '1');
-            if (postMeta._seo_nofollow !== undefined) setSeoNofollow(postMeta._seo_nofollow === '1');
-        }, [postMeta]);
-
-        // Auto-save meta when changed
-        useEffect(() => {
+        // Helper function to save meta to database
+        const saveMeta = (updates = {}) => {
             const meta = {
-                _seo_title: seoTitle,
-                _seo_description: seoDescription,
-                _seo_keywords: seoKeywords,
-                _seo_canonical: seoCanonical,
-                _seo_noindex: seoNoindex ? '1' : '0',
-                _seo_nofollow: seoNofollow ? '1' : '0'
+                _seo_title: updates.title !== undefined ? updates.title : seoTitle,
+                _seo_description: updates.description !== undefined ? updates.description : seoDescription,
+                _seo_keywords: updates.keywords !== undefined ? updates.keywords : seoKeywords,
+                _seo_canonical: updates.canonical !== undefined ? updates.canonical : seoCanonical,
+                _seo_noindex: updates.noindex !== undefined ? (updates.noindex ? '1' : '0') : (seoNoindex ? '1' : '0'),
+                _seo_nofollow: updates.nofollow !== undefined ? (updates.nofollow ? '1' : '0') : (seoNofollow ? '1' : '0')
             };
             editPost({ meta });
+        };
+
+        // Auto-save meta when manually changed (but not on initial mount or AI generation)
+        useEffect(() => {
+            // Skip saving on initial mount
+            if (!hasUserInteracted) {
+                setHasUserInteracted(true);
+                return;
+            }
+
+            // Debounce manual changes
+            const timer = setTimeout(() => {
+                saveMeta();
+            }, 500);
+
+            return () => clearTimeout(timer);
         }, [seoTitle, seoDescription, seoKeywords, seoCanonical, seoNoindex, seoNofollow]);
 
         /**
@@ -82,7 +92,7 @@
                 return;
             }
 
-            setLoading(true);
+            setLoadingAll(true);
             setMessage(null);
 
             try {
@@ -93,11 +103,23 @@
                 });
 
                 if (response.success) {
-                    if (response.title) setSeoTitle(response.title);
-                    if (response.description) setSeoDescription(response.description);
-                    if (response.keywords && response.keywords.length > 0) {
-                        setSeoKeywords(response.keywords.join(', '));
+                    const updates = {};
+                    if (response.title) {
+                        setSeoTitle(response.title);
+                        updates.title = response.title;
                     }
+                    if (response.description) {
+                        setSeoDescription(response.description);
+                        updates.description = response.description;
+                    }
+                    if (response.keywords && response.keywords.length > 0) {
+                        const keywordString = response.keywords.join(', ');
+                        setSeoKeywords(keywordString);
+                        updates.keywords = keywordString;
+                    }
+
+                    // Save immediately with new values
+                    saveMeta(updates);
 
                     setMessage({ type: 'success', text: '✓ SEO meta podaci uspješno generisani!' });
 
@@ -107,7 +129,7 @@
             } catch (error) {
                 setMessage({ type: 'error', text: 'Greška: ' + error.message });
             } finally {
-                setLoading(false);
+                setLoadingAll(false);
             }
         };
 
@@ -120,7 +142,8 @@
                 return;
             }
 
-            setLoading(true);
+            setLoadingTitle(true);
+            setMessage(null);
             try {
                 const response = await wp.apiFetch({
                     path: '/dev-theme/v1/ai/generate-title',
@@ -130,12 +153,13 @@
 
                 if (response.success && response.title) {
                     setSeoTitle(response.title);
+                    saveMeta({ title: response.title });
                     setMessage({ type: 'success', text: `✓ SEO naslov generisan! (${response.length} karaktera)` });
                 }
             } catch (error) {
                 setMessage({ type: 'error', text: 'Greška: ' + error.message });
             } finally {
-                setLoading(false);
+                setLoadingTitle(false);
             }
         };
 
@@ -148,7 +172,8 @@
                 return;
             }
 
-            setLoading(true);
+            setLoadingDescription(true);
+            setMessage(null);
             try {
                 const response = await wp.apiFetch({
                     path: '/dev-theme/v1/ai/generate-excerpt',
@@ -158,12 +183,13 @@
 
                 if (response.success && response.excerpt) {
                     setSeoDescription(response.excerpt);
+                    saveMeta({ description: response.excerpt });
                     setMessage({ type: 'success', text: `✓ Meta opis generisan! (${response.length} karaktera)` });
                 }
             } catch (error) {
                 setMessage({ type: 'error', text: 'Greška: ' + error.message });
             } finally {
-                setLoading(false);
+                setLoadingDescription(false);
             }
         };
 
@@ -176,7 +202,8 @@
                 return;
             }
 
-            setLoading(true);
+            setLoadingKeywords(true);
+            setMessage(null);
             try {
                 const response = await wp.apiFetch({
                     path: '/dev-theme/v1/seo/extract-keywords',
@@ -185,13 +212,15 @@
                 });
 
                 if (response.success && response.keywords) {
-                    setSeoKeywords(response.keywords.join(', '));
+                    const keywordString = response.keywords.join(', ');
+                    setSeoKeywords(keywordString);
+                    saveMeta({ keywords: keywordString });
                     setMessage({ type: 'success', text: '✓ Ključne riječi ekstraktovane!' });
                 }
             } catch (error) {
                 setMessage({ type: 'error', text: 'Greška: ' + error.message });
             } finally {
-                setLoading(false);
+                setLoadingKeywords(false);
             }
         };
 
@@ -216,9 +245,12 @@
             }
         };
 
-        // Analyze on mount and content change
+        // Analyze on mount and content change (if auto-analysis enabled)
         useEffect(() => {
-            if (postContent && postId) {
+            // Check if auto-analysis is enabled
+            const autoAnalysisEnabled = window.seoData?.autoAnalysisEnabled !== false;
+
+            if (postContent && postId && autoAnalysisEnabled) {
                 const timer = setTimeout(() => {
                     analyzeContent();
                 }, 2000); // Debounce
@@ -305,9 +337,9 @@
                     el(Button, {
                         variant: 'secondary',
                         onClick: generateTitle,
-                        disabled: loading,
+                        disabled: loadingTitle || loadingAll,
                         style: { marginTop: '5px' }
-                    }, loading ? el(Spinner) : '🤖 Generiši sa AI')
+                    }, loadingTitle ? el(Spinner) : '🤖 Generiši sa AI')
                 ),
 
                 // Meta Description
@@ -327,9 +359,9 @@
                     el(Button, {
                         variant: 'secondary',
                         onClick: generateDescription,
-                        disabled: loading,
+                        disabled: loadingDescription || loadingAll,
                         style: { marginTop: '5px' }
-                    }, loading ? el(Spinner) : '🤖 Generiši sa AI')
+                    }, loadingDescription ? el(Spinner) : '🤖 Generiši sa AI')
                 ),
 
                 // Focus Keywords
@@ -346,9 +378,9 @@
                     el(Button, {
                         variant: 'secondary',
                         onClick: extractKeywords,
-                        disabled: loading,
+                        disabled: loadingKeywords || loadingAll,
                         style: { marginTop: '5px' }
-                    }, loading ? el(Spinner) : '🤖 Ekstraktuj sa AI')
+                    }, loadingKeywords ? el(Spinner) : '🤖 Ekstraktuj sa AI')
                 ),
 
                 // Bulk AI Generation
@@ -356,9 +388,9 @@
                     el(Button, {
                         variant: 'primary',
                         onClick: generateAllWithAI,
-                        disabled: loading,
+                        disabled: loadingAll || loadingTitle || loadingDescription || loadingKeywords,
                         style: { width: '100%', justifyContent: 'center', marginTop: '10px' }
-                    }, loading ? el(Spinner) : '🤖 Optimiziraj Sve sa AI')
+                    }, loadingAll ? el(Spinner) : '🤖 Optimiziraj Sve sa AI')
                 ),
 
                 // Advanced Settings Toggle

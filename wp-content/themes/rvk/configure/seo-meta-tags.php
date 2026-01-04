@@ -11,6 +11,18 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * Remove default WordPress meta tags to prevent duplicates
+ */
+function rvk_remove_default_meta_tags() {
+    // Remove default WordPress generator meta
+    remove_action('wp_head', 'wp_generator');
+
+    // Remove WordPress default meta description (if any theme adds it)
+    remove_action('wp_head', 'rel_canonical');
+}
+add_action('init', 'rvk_remove_default_meta_tags');
+
+/**
  * Output all SEO meta tags in <head>
  * Hooked to wp_head with priority 1 to run early
  */

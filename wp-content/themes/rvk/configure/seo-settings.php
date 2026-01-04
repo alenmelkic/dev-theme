@@ -49,6 +49,11 @@ class RVK_SEO_Settings_Page {
             'default' => true,
         ));
 
+        register_setting('rvk_seo_settings', 'rvk_seo_auto_analysis_enabled', array(
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'default' => true,
+        ));
+
         // Organization Schema Settings
         register_setting('rvk_seo_settings', 'rvk_seo_organization_name', array(
             'sanitize_callback' => 'sanitize_text_field',
@@ -114,6 +119,7 @@ class RVK_SEO_Settings_Page {
             update_option('rvk_seo_ai_provider', sanitize_text_field($_POST['ai_provider']));
             update_option('dev_theme_openai_api_key', sanitize_text_field($_POST['openai_api_key']));
             update_option('rvk_seo_ai_enabled', isset($_POST['ai_enabled']));
+            update_option('rvk_seo_auto_analysis_enabled', isset($_POST['auto_analysis_enabled']));
 
             // Organization settings
             update_option('rvk_seo_organization_name', sanitize_text_field($_POST['organization_name']));
@@ -194,6 +200,22 @@ class RVK_SEO_Settings_Page {
 
                         <tr>
                             <th scope="row">
+                                <label>Automatska SEO Analiza</label>
+                            </th>
+                            <td>
+                                <input type="checkbox"
+                                       name="auto_analysis_enabled"
+                                       value="1"
+                                       <?php checked(get_option('rvk_seo_auto_analysis_enabled', true), true); ?>>
+                                <p class="description">
+                                    Automatski analiziraj sadržaj dok pišeš (bez AI poziva - samo lokalna analiza).<br>
+                                    <strong>Napomena:</strong> Ovo NE koristi API - samo računa riječi, čitljivost i SEO score.
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">
                                 <label>AI Provider</label>
                             </th>
                             <td>
@@ -261,6 +283,12 @@ class RVK_SEO_Settings_Page {
                                        value="<?php echo esc_attr($openai_key); ?>"
                                        class="regular-text"
                                        placeholder="Unesite OpenAI API ključ">
+
+                                <p class="description">
+                                    <a href="<?php echo admin_url('options-general.php?page=seo-api-usage'); ?>" target="_blank">
+                                        📊 Pogledaj API Usage Statistics
+                                    </a>
+                                </p>
 
                                 <?php if (!empty($openai_key)): ?>
                                     <p class="description" style="color: green;">

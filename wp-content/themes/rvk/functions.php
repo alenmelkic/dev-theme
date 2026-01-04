@@ -49,6 +49,7 @@ include( 'configure/seo-compatibility.php' );
 include( 'configure/seo-meta-tags.php' );
 include( 'configure/seo-core.php' );
 include( 'configure/seo-settings.php' );
+include( 'configure/seo-api-manager.php' );
 include( 'configure/seo-ai-optimizer.php' );
 include( 'configure/seo-rest-api.php' );
 

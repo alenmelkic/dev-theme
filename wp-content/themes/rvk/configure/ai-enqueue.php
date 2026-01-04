@@ -62,7 +62,8 @@ function enqueue_ai_content_helper() {
         // Localize script with REST API data
         wp_localize_script('seo-content-panel', 'seoData', array(
             'apiUrl' => rest_url('dev-theme/v1/seo/'),
-            'nonce' => wp_create_nonce('wp_rest')
+            'nonce' => wp_create_nonce('wp_rest'),
+            'autoAnalysisEnabled' => get_option('rvk_seo_auto_analysis_enabled', true)
         ));
     }
 }

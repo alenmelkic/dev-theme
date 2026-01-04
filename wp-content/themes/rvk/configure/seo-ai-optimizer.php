@@ -23,37 +23,81 @@ class SEO_AI_Optimizer extends AI_Content_Generator {
     }
 
     /**
-     * Call AI API with provider selection
+     * Call AI API with provider selection, caching, and rate limiting
      *
      * @param string $prompt AI prompt
      * @param int $max_tokens Maximum tokens for response
      * @return string|WP_Error AI response or error
      */
     protected function call_ai_api($prompt, $max_tokens = 100) {
+        $api_manager = RVK_SEO_API_Manager::get_instance();
+
+        // Check cache first
+        $cache_key = 'ai_' . md5($prompt . $max_tokens);
+        $cached = $api_manager->get_cache($cache_key);
+
+        if ($cached !== false) {
+            return $cached;
+        }
+
         $provider = $this->provider;
+        $gemini_key = get_option('dev_theme_gemini_api_key', '');
+        $openai_key = get_option('dev_theme_openai_api_key', '');
 
-        // Auto-select provider
+        // Determine provider(s) to try
+        $providers_to_try = array();
+
         if ($provider === 'auto') {
-            $gemini_key = get_option('dev_theme_gemini_api_key', '');
-            $openai_key = get_option('dev_theme_openai_api_key', '');
-
+            // Auto mode: Try both providers (Gemini first, OpenAI as fallback)
             if (!empty($gemini_key)) {
-                $provider = 'gemini';
-            } elseif (!empty($openai_key)) {
-                $provider = 'openai';
-            } else {
+                $providers_to_try[] = 'gemini';
+            }
+            if (!empty($openai_key)) {
+                $providers_to_try[] = 'openai';
+            }
+
+            if (empty($providers_to_try)) {
                 return new WP_Error('no_api_key', 'No AI provider configured');
             }
-        }
-
-        // Call appropriate provider
-        if ($provider === 'gemini') {
-            return $this->call_gemini_api($prompt, $max_tokens);
+        } elseif ($provider === 'gemini') {
+            $providers_to_try[] = 'gemini';
         } elseif ($provider === 'openai') {
-            return $this->call_openai_api($prompt, $max_tokens);
+            $providers_to_try[] = 'openai';
+        } else {
+            return new WP_Error('invalid_provider', 'Invalid AI provider');
         }
 
-        return new WP_Error('invalid_provider', 'Invalid AI provider');
+        // Try each provider
+        $last_error = null;
+        foreach ($providers_to_try as $current_provider) {
+            // Check rate limit
+            $rate_check = $api_manager->check_rate_limit($current_provider);
+            if (is_wp_error($rate_check)) {
+                $last_error = $rate_check;
+                continue; // Try next provider
+            }
+
+            // Call provider
+            $result = null;
+            if ($current_provider === 'gemini') {
+                $result = $this->call_gemini_api($prompt, $max_tokens);
+            } elseif ($current_provider === 'openai') {
+                $result = $this->call_openai_api($prompt, $max_tokens);
+            }
+
+            // If successful, cache and return
+            if (!is_wp_error($result)) {
+                $api_manager->increment_usage($current_provider, $max_tokens);
+                $api_manager->set_cache($cache_key, $result);
+                return $result;
+            }
+
+            // Store error and try next provider
+            $last_error = $result;
+        }
+
+        // All providers failed, return last error
+        return $last_error ? $last_error : new WP_Error('api_failed', 'All AI providers failed');
     }
 
     /**
