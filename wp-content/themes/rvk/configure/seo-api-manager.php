@@ -395,6 +395,86 @@ class RVK_SEO_API_Manager {
     }
 
     /**
+     * Generate content using AI
+     * Supports both Gemini and OpenAI providers
+     *
+     * @param string $prompt The prompt to send to AI
+     * @param array $options Optional parameters (max_tokens, temperature, provider)
+     * @return string|WP_Error Generated content or error
+     */
+    public function generate_content($prompt, $options = array()) {
+        // Default options
+        $defaults = array(
+            'max_tokens' => 500,
+            'temperature' => 0.7,
+            'provider' => 'auto' // auto, gemini, or openai
+        );
+
+        $options = wp_parse_args($options, $defaults);
+
+        // Check if AI Content Generator class exists
+        if (!class_exists('AI_Content_Generator')) {
+            return new WP_Error('ai_not_available', 'AI Content Generator not available', array('status' => 500));
+        }
+
+        // Determine provider
+        $provider = $options['provider'];
+
+        if ($provider === 'auto') {
+            // Auto-detect: Try Gemini first, fall back to OpenAI
+            $gemini_key = get_option('dev_theme_api_key', '');
+            $openai_key = get_option('dev_theme_openai_api_key', '');
+
+            if (!empty($gemini_key)) {
+                $provider = 'gemini';
+            } elseif (!empty($openai_key)) {
+                $provider = 'openai';
+            } else {
+                return new WP_Error('no_api_key', 'No AI API key configured. Please configure Gemini or OpenAI API key.', array('status' => 500));
+            }
+        }
+
+        // Create temporary instance to call AI API
+        $ai_generator = new AI_Content_Generator();
+
+        // Use reflection to access protected methods
+        try {
+            $reflection = new ReflectionClass($ai_generator);
+
+            // Select method based on provider
+            $method_name = ($provider === 'openai') ? 'call_openai_api' : 'call_gemini_api';
+            $method = $reflection->getMethod($method_name);
+            $method->setAccessible(true);
+
+            // Call the API
+            $result = $method->invoke($ai_generator, $prompt, $options['max_tokens']);
+
+            if (is_wp_error($result)) {
+                // If Gemini fails and we're in auto mode, try OpenAI as fallback
+                if ($provider === 'gemini' && $options['provider'] === 'auto') {
+                    $openai_key = get_option('dev_theme_openai_api_key', '');
+                    if (!empty($openai_key)) {
+                        error_log('Gemini failed, trying OpenAI fallback');
+                        $method = $reflection->getMethod('call_openai_api');
+                        $method->setAccessible(true);
+                        $result = $method->invoke($ai_generator, $prompt, $options['max_tokens']);
+                    }
+                }
+
+                if (is_wp_error($result)) {
+                    return $result;
+                }
+            }
+
+            return $result;
+
+        } catch (ReflectionException $e) {
+            error_log('AI Content Generation Error: ' . $e->getMessage());
+            return new WP_Error('reflection_error', 'Could not access AI generator: ' . $e->getMessage(), array('status' => 500));
+        }
+    }
+
+    /**
      * AJAX: Reset statistics
      */
     public function ajax_reset_stats() {

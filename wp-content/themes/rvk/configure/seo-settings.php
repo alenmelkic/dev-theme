@@ -103,6 +103,42 @@ class RVK_SEO_Settings_Page {
             'sanitize_callback' => 'rest_sanitize_boolean',
             'default' => false,
         ));
+
+        // Sitemap Settings
+        register_setting('rvk_seo_settings', 'rvk_seo_sitemap_enabled', array(
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'default' => true,
+        ));
+
+        register_setting('rvk_seo_settings', 'rvk_seo_sitemap_exclude_post_types', array(
+            'sanitize_callback' => array($this, 'sanitize_array'),
+            'default' => array(),
+        ));
+
+        register_setting('rvk_seo_settings', 'rvk_seo_sitemap_exclude_taxonomies', array(
+            'sanitize_callback' => array($this, 'sanitize_array'),
+            'default' => array(),
+        ));
+
+        register_setting('rvk_seo_settings', 'rvk_seo_sitemap_include_images', array(
+            'sanitize_callback' => 'rest_sanitize_boolean',
+            'default' => true,
+        ));
+
+        register_setting('rvk_seo_settings', 'rvk_seo_sitemap_entries_per_page', array(
+            'sanitize_callback' => 'absint',
+            'default' => 2000,
+        ));
+    }
+
+    /**
+     * Sanitize array for settings
+     */
+    public function sanitize_array($input) {
+        if (!is_array($input)) {
+            return array();
+        }
+        return array_map('sanitize_text_field', $input);
     }
 
     /**
@@ -144,6 +180,16 @@ class RVK_SEO_Settings_Page {
             // Compatibility settings
             update_option('rvk_seo_override_plugins', isset($_POST['override_plugins']));
 
+            // Sitemap settings
+            update_option('rvk_seo_sitemap_enabled', isset($_POST['sitemap_enabled']));
+            update_option('rvk_seo_sitemap_exclude_post_types', isset($_POST['sitemap_exclude_post_types']) ? $_POST['sitemap_exclude_post_types'] : array());
+            update_option('rvk_seo_sitemap_exclude_taxonomies', isset($_POST['sitemap_exclude_taxonomies']) ? $_POST['sitemap_exclude_taxonomies'] : array());
+            update_option('rvk_seo_sitemap_include_images', isset($_POST['sitemap_include_images']));
+            update_option('rvk_seo_sitemap_entries_per_page', absint($_POST['sitemap_entries_per_page']));
+
+            // Flush rewrite rules to update sitemap
+            flush_rewrite_rules();
+
             echo '<div class="notice notice-success"><p>Postavke uspješno sačuvane!</p></div>';
         }
 
@@ -167,6 +213,13 @@ class RVK_SEO_Settings_Page {
 
         $override_plugins = get_option('rvk_seo_override_plugins', false);
 
+        // Sitemap settings
+        $sitemap_enabled = get_option('rvk_seo_sitemap_enabled', true);
+        $sitemap_exclude_post_types = get_option('rvk_seo_sitemap_exclude_post_types', array());
+        $sitemap_exclude_taxonomies = get_option('rvk_seo_sitemap_exclude_taxonomies', array());
+        $sitemap_include_images = get_option('rvk_seo_sitemap_include_images', true);
+        $sitemap_entries_per_page = get_option('rvk_seo_sitemap_entries_per_page', 2000);
+
         // Mask API keys
         $gemini_key_masked = !empty($gemini_key) ? substr($gemini_key, 0, 10) . '...' : '';
         $openai_key_masked = !empty($openai_key) ? substr($openai_key, 0, 10) . '...' : '';
@@ -179,7 +232,7 @@ class RVK_SEO_Settings_Page {
             <h1>SEO & AEO Optimization - Postavke</h1>
 
             <?php if ($compat_status['has_seo_plugin']): ?>
-            <div class="notice notice-<?php echo $compat_status['theme_handles_seo'] ? 'warning' : 'info'; ?>">
+            <div class="notice notice-<?php echo esc_attr($compat_status['theme_handles_seo'] ? 'warning' : 'info'); ?>">
                 <p><?php echo esc_html($compat_status['message']); ?></p>
             </div>
             <?php endif; ?>
@@ -517,8 +570,153 @@ class RVK_SEO_Settings_Page {
                 </div>
                 <?php endif; ?>
 
+                <!-- Sitemap Settings -->
+                <div class="card" style="max-width: 900px; margin-top: 20px;">
+                    <h2>🗺️ XML Sitemap Postavke</h2>
+                    <p style="color: #666; margin-bottom: 20px;">
+                        WordPress sitemap URL: <a href="<?php echo home_url('/wp-sitemap.xml'); ?>" target="_blank"><?php echo home_url('/wp-sitemap.xml'); ?></a>
+                    </p>
+
+                    <table class="form-table">
+                        <tr>
+                            <th scope="row">
+                                <label>Omogući Sitemap</label>
+                            </th>
+                            <td>
+                                <input type="checkbox"
+                                       name="sitemap_enabled"
+                                       id="sitemap_enabled"
+                                       value="1"
+                                       <?php checked($sitemap_enabled, true); ?>>
+                                <label for="sitemap_enabled">Omogući WordPress XML sitemap</label>
+                                <p class="description">WordPress automatski generiše sitemap koji prati vaše SEO postavke</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">
+                                <label>Isključi Post Tipove</label>
+                            </th>
+                            <td>
+                                <?php
+                                $post_types = get_post_types(array('public' => true), 'objects');
+                                foreach ($post_types as $post_type) {
+                                    if ($post_type->name === 'attachment') continue;
+                                    $checked = in_array($post_type->name, $sitemap_exclude_post_types);
+                                    ?>
+                                    <label style="display: block; margin-bottom: 8px;">
+                                        <input type="checkbox"
+                                               name="sitemap_exclude_post_types[]"
+                                               value="<?php echo esc_attr($post_type->name); ?>"
+                                               <?php checked($checked, true); ?>>
+                                        <?php echo esc_html($post_type->label); ?> (<?php echo esc_html($post_type->name); ?>)
+                                    </label>
+                                    <?php
+                                }
+                                ?>
+                                <p class="description">Post tipovi koji NEĆE biti uključeni u sitemap</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">
+                                <label>Isključi Taksonomije</label>
+                            </th>
+                            <td>
+                                <?php
+                                $taxonomies = get_taxonomies(array('public' => true), 'objects');
+                                foreach ($taxonomies as $taxonomy) {
+                                    if ($taxonomy->name === 'post_format') continue;
+                                    $checked = in_array($taxonomy->name, $sitemap_exclude_taxonomies);
+                                    ?>
+                                    <label style="display: block; margin-bottom: 8px;">
+                                        <input type="checkbox"
+                                               name="sitemap_exclude_taxonomies[]"
+                                               value="<?php echo esc_attr($taxonomy->name); ?>"
+                                               <?php checked($checked, true); ?>>
+                                        <?php echo esc_html($taxonomy->label); ?> (<?php echo esc_html($taxonomy->name); ?>)
+                                    </label>
+                                    <?php
+                                }
+                                ?>
+                                <p class="description">Taksonomije (kategorije, tagovi) koje NEĆE biti uključene u sitemap</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">
+                                <label>Slike u Sitemap-u</label>
+                            </th>
+                            <td>
+                                <input type="checkbox"
+                                       name="sitemap_include_images"
+                                       id="sitemap_include_images"
+                                       value="1"
+                                       <?php checked($sitemap_include_images, true); ?>>
+                                <label for="sitemap_include_images">Uključi slike u sitemap (Google Image Search)</label>
+                                <p class="description">Dodaje sve slike iz postova u sitemap za bolju vidljivost u Google Image pretrazi</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">
+                                <label for="sitemap_entries_per_page">Max Unosa po Stranici</label>
+                            </th>
+                            <td>
+                                <input type="number"
+                                       name="sitemap_entries_per_page"
+                                       id="sitemap_entries_per_page"
+                                       value="<?php echo esc_attr($sitemap_entries_per_page); ?>"
+                                       min="1"
+                                       max="50000"
+                                       class="small-text">
+                                <p class="description">Preporučeno: 2000 (Google limit je 50,000)</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
                 <?php submit_button('Sačuvaj Postavke'); ?>
             </form>
+
+            <!-- Sitemap Statistics -->
+            <?php if ($sitemap_enabled): ?>
+            <div class="card" style="max-width: 900px; margin-top: 20px;">
+                <h2>📊 Sitemap Statistika</h2>
+                <?php
+                $sitemap_stats = RVK_SEO_Sitemap::get_sitemap_stats();
+                ?>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                    <div>
+                        <h3 style="margin-top: 0; color: #666; font-size: 14px; text-transform: uppercase;">Post Tipovi u Sitemap-u</h3>
+                        <?php if (!empty($sitemap_stats['post_types'])): ?>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <?php foreach ($sitemap_stats['post_types'] as $post_type => $count): ?>
+                                    <li><strong><?php echo esc_html($post_type); ?>:</strong> <?php echo esc_html($count); ?> unosa</li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p style="color: #999;">Nema post tipova u sitemap-u</p>
+                        <?php endif; ?>
+                    </div>
+                    <div>
+                        <h3 style="margin-top: 0; color: #666; font-size: 14px; text-transform: uppercase;">Taksonomije u Sitemap-u</h3>
+                        <?php if (!empty($sitemap_stats['taxonomies'])): ?>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <?php foreach ($sitemap_stats['taxonomies'] as $taxonomy => $count): ?>
+                                    <li><strong><?php echo esc_html($taxonomy); ?>:</strong> <?php echo esc_html($count); ?> termova</li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p style="color: #999;">Nema taksonomija u sitemap-u</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: #f0f6fc; border-left: 4px solid #0073aa; border-radius: 4px;">
+                    <p style="margin: 0;"><strong>💡 Savjet:</strong> Sitemap se automatski ažurira kada kreirate, ažurirate ili obrišete sadržaj. Ne morate ručno regenerisati.</p>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <div class="card" style="max-width: 900px; margin-top: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
                 <p style="margin: 0; text-align: center; font-size: 14px;">

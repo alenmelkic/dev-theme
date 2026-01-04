@@ -97,24 +97,65 @@ class RVK_SEO_REST_API {
             'callback' => array($this, 'save_post_meta'),
             'permission_callback' => array($this, 'check_permissions'),
         ));
+
+        // AEO Endpoints
+        $aeo_namespace = 'dev-theme/v1/aeo';
+
+        // Generate FAQ schema
+        register_rest_route($aeo_namespace, '/generate-faqs', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_faqs'),
+            'permission_callback' => array($this, 'check_permissions'),
+        ));
+
+        // Generate How-To steps
+        register_rest_route($aeo_namespace, '/generate-howto', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_howto'),
+            'permission_callback' => array($this, 'check_permissions'),
+        ));
+
+        // Generate key takeaways
+        register_rest_route($aeo_namespace, '/generate-takeaways', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'generate_takeaways'),
+            'permission_callback' => array($this, 'check_permissions'),
+        ));
     }
 
     /**
      * Check user permissions
+     * Security: Require edit_published_posts (Authors+) to prevent Contributors from accessing AI features
      */
     public function check_permissions() {
-        return current_user_can('edit_posts');
+        // Only Authors, Editors, and Admins can use AI features
+        // This prevents Contributors from consuming AI API credits
+        return current_user_can('edit_published_posts');
     }
 
     /**
      * Analyze content
      */
     public function analyze_content($request) {
+        // Security: Sanitize and validate inputs
         $content = $request->get_param('content');
-        $post_id = $request->get_param('post_id');
+        $post_id = absint($request->get_param('post_id'));
 
         if (empty($content) && empty($post_id)) {
             return new WP_Error('no_content', 'Content or post ID required', array('status' => 400));
+        }
+
+        // Security: Sanitize content to prevent XSS
+        if (!empty($content)) {
+            $content = wp_kses_post($content);
+        }
+
+        // Security: Verify post ID belongs to user if specified
+        if ($post_id) {
+            $post = get_post($post_id);
+            if (!$post || !current_user_can('edit_post', $post_id)) {
+                return new WP_Error('unauthorized', 'You do not have permission to analyze this post', array('status' => 403));
+            }
         }
 
         $analysis = $this->seo_optimizer->analyze_content($post_id ? $post_id : $content);
@@ -133,8 +174,17 @@ class RVK_SEO_REST_API {
      * Generate all SEO meta (title, description, keywords)
      */
     public function generate_meta($request) {
-        $content = $request->get_param('content');
-        $title = $request->get_param('title');
+        // Security: Rate limiting (50 requests per hour per user)
+        $user_id = get_current_user_id();
+        $rate_check = RVK_SEO_Rate_Limiter::check_rate_limit($user_id, 'ai_generation', 50);
+
+        if (is_wp_error($rate_check)) {
+            return $rate_check;
+        }
+
+        // Security: Sanitize inputs
+        $content = wp_kses_post($request->get_param('content'));
+        $title = sanitize_text_field($request->get_param('title'));
 
         if (empty($content)) {
             return new WP_Error('no_content', 'Content required', array('status' => 400));
@@ -392,6 +442,108 @@ class RVK_SEO_REST_API {
         return rest_ensure_response(array(
             'success' => true,
             'message' => 'SEO meta saved'
+        ));
+    }
+
+    /**
+     * Generate FAQ schema with AI
+     */
+    public function generate_faqs($request) {
+        // Security: Validate and sanitize post ID
+        $post_id = absint($request->get_param('post_id'));
+
+        if (empty($post_id)) {
+            return new WP_Error('no_post_id', 'Post ID required', array('status' => 400));
+        }
+
+        // Security: Verify user can edit this post
+        if (!current_user_can('edit_post', $post_id)) {
+            return new WP_Error('unauthorized', 'You do not have permission to edit this post', array('status' => 403));
+        }
+
+        $content = get_post_field('post_content', $post_id);
+
+        if (empty($content)) {
+            return new WP_Error('no_content', 'Post has no content', array('status' => 400));
+        }
+
+        $faqs = RVK_AEO_FAQ_Schema::generate_faqs_with_ai($content);
+
+        if (empty($faqs)) {
+            return new WP_Error('generation_failed', 'Could not generate FAQs', array('status' => 500));
+        }
+
+        // Save FAQs
+        update_post_meta($post_id, '_aeo_faq_items', $faqs);
+
+        return rest_ensure_response(array(
+            'success' => true,
+            'faqs' => $faqs
+        ));
+    }
+
+    /**
+     * Generate How-To steps with AI
+     */
+    public function generate_howto($request) {
+        // Security: Validate and sanitize post ID
+        $post_id = absint($request->get_param('post_id'));
+
+        if (empty($post_id)) {
+            return new WP_Error('no_post_id', 'Post ID required', array('status' => 400));
+        }
+
+        // Security: Verify user can edit this post
+        if (!current_user_can('edit_post', $post_id)) {
+            return new WP_Error('unauthorized', 'You do not have permission to edit this post', array('status' => 403));
+        }
+
+        $content = get_post_field('post_content', $post_id);
+
+        if (empty($content)) {
+            return new WP_Error('no_content', 'Post has no content', array('status' => 400));
+        }
+
+        $steps = RVK_AEO_HowTo_Schema::generate_howto_with_ai($content);
+
+        if (empty($steps)) {
+            return new WP_Error('generation_failed', 'Could not generate how-to steps', array('status' => 500));
+        }
+
+        // Save steps
+        update_post_meta($post_id, '_aeo_howto_steps', $steps);
+
+        return rest_ensure_response(array(
+            'success' => true,
+            'steps' => $steps
+        ));
+    }
+
+    /**
+     * Generate key takeaways with AI
+     */
+    public function generate_takeaways($request) {
+        // Security: Validate and sanitize post ID
+        $post_id = absint($request->get_param('post_id'));
+
+        if (empty($post_id)) {
+            return new WP_Error('no_post_id', 'Post ID required', array('status' => 400));
+        }
+
+        // Security: Verify user can edit this post
+        if (!current_user_can('edit_post', $post_id)) {
+            return new WP_Error('unauthorized', 'You do not have permission to edit this post', array('status' => 403));
+        }
+
+        $takeaways = RVK_AEO_Key_Takeaways::generate_takeaways($post_id);
+
+        if (empty($takeaways)) {
+            return new WP_Error('generation_failed', 'Could not generate takeaways', array('status' => 500));
+        }
+
+        return rest_ensure_response(array(
+            'success' => true,
+            'takeaways' => $takeaways
         ));
     }
 }

@@ -11,10 +11,6 @@ while (have_posts()) : the_post();
 <main id="main" class="site-main single-post-page">
     <div class="container">
         <article <?php post_class(); ?>>
-            <?php
-            // BlogPosting schema
-            get_template_part('components/schema-markup/schema-blogposting');
-            ?>
             <header class="post-header col-xl-10 mx-auto">
                 <?php
                 // Sponsored disclaimer - top
