@@ -26,6 +26,27 @@ function rvk_remove_default_meta_tags() {
 
     // Prevent WordPress from outputting robots meta tag
     add_filter('wp_robots', '__return_empty_array', 999);
+
+    // Remove unnecessary WordPress bloat from <head>
+    remove_action('wp_head', 'rsd_link'); // RSD link
+    remove_action('wp_head', 'wlwmanifest_link'); // Windows Live Writer
+    remove_action('wp_head', 'wp_shortlink_wp_head'); // Shortlink
+    remove_action('wp_head', 'wp_oembed_add_discovery_links'); // oEmbed discovery
+    remove_action('wp_head', 'rest_output_link_wp_head'); // REST API link
+    remove_action('wp_head', 'wp_resource_hints', 2); // DNS prefetch hints
+
+    // Remove XFN profile link (rarely used)
+    remove_action('wp_head', 'index_rel_link');
+    remove_action('wp_head', 'parent_post_rel_link', 10);
+    remove_action('wp_head', 'start_post_rel_link', 10);
+    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10);
+
+    // Remove pingback header
+    add_filter('xmlrpc_enabled', '__return_false');
+    add_filter('wp_headers', function($headers) {
+        unset($headers['X-Pingback']);
+        return $headers;
+    });
 }
 add_action('init', 'rvk_remove_default_meta_tags');
 
@@ -244,10 +265,20 @@ function rvk_output_open_graph_tags($post_id, $is_singular, $is_archive, $is_hom
         // Article modified time
         echo '<meta property="article:modified_time" content="' . esc_attr(get_the_modified_date('c', $post_id)) . '">' . "\n";
 
-        // Article author
+        // Article author (use full name - security: don't expose username or author URL)
         $author_id = get_post_field('post_author', $post_id);
-        $author_url = get_author_posts_url($author_id);
-        echo '<meta property="article:author" content="' . esc_url($author_url) . '">' . "\n";
+
+        // Prefer first name + last name, fallback to display name
+        $first_name = get_the_author_meta('first_name', $author_id);
+        $last_name = get_the_author_meta('last_name', $author_id);
+
+        if (!empty($first_name) && !empty($last_name)) {
+            $author_name = trim($first_name . ' ' . $last_name);
+        } else {
+            $author_name = get_the_author_meta('display_name', $author_id);
+        }
+
+        echo '<meta property="article:author" content="' . esc_attr($author_name) . '">' . "\n";
 
         // Article section (category)
         $categories = get_the_category($post_id);
@@ -392,11 +423,7 @@ function rvk_output_additional_meta_tags($post_id, $is_singular, $is_archive, $i
         echo '<meta name="generator" content="RVK SEO/AEO v1.0">' . "\n";
     }
 
-    // Author meta for posts
-    if ($is_singular && get_post_type() === 'post') {
-        $author_name = get_the_author_meta('display_name', get_post_field('post_author', $post_id));
-        echo '<meta name="author" content="' . esc_attr($author_name) . '">' . "\n";
-    }
+    // Note: Author meta removed - already included in Open Graph as article:author
 
     // Keywords meta (optional - not heavily used by search engines but useful for some)
     if ($is_singular) {
