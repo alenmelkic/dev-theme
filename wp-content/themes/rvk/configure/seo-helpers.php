@@ -29,7 +29,7 @@ function rvk_get_seo_meta($post_id, $key, $default = '') {
     }
 
     $value = get_post_meta($post_id, $key, true);
-    return !empty($value) ? $value : $default;
+    return ($value !== '') ? $value : $default;
 }
 
 /**
@@ -72,7 +72,7 @@ function rvk_get_term_seo_meta($term_id, $key, $default = '') {
     }
 
     $value = get_term_meta($term_id, $key, true);
-    return !empty($value) ? $value : $default;
+    return ($value !== '') ? $value : $default;
 }
 
 /**
@@ -208,15 +208,22 @@ function rvk_get_twitter_hashtags($post_id, $limit = 5) {
  */
 function rvk_get_seo_title($post_id = null, $template = null) {
     if (!$post_id) {
-        $post_id = get_the_ID();
+        if (is_category() || is_tag() || is_tax()) {
+            $term = get_queried_object();
+            $title = rvk_get_term_seo_meta($term->term_id, 'title', $term->name);
+        } else {
+            $post_id = get_the_ID();
+        }
     }
 
-    if (!$post_id) {
+    if (!$post_id && !isset($title)) {
         return get_bloginfo('name');
     }
 
     // Get custom SEO title or fallback to post title
-    $title = rvk_get_seo_meta($post_id, 'title', get_the_title($post_id));
+    if (!isset($title)) {
+        $title = rvk_get_seo_meta($post_id, 'naslov', get_the_title($post_id));
+    }
 
     // Use template if provided
     if ($template) {
@@ -229,6 +236,7 @@ function rvk_get_seo_title($post_id = null, $template = null) {
 
     return $title;
 }
+
 
 /**
  * Get SEO meta description
@@ -246,7 +254,7 @@ function rvk_get_meta_description($post_id = null) {
     }
 
     // Get custom meta description
-    $description = rvk_get_seo_meta($post_id, 'description');
+    $description = rvk_get_seo_meta($post_id, 'opis');
 
     // Fallback to excerpt
     if (empty($description)) {
@@ -425,7 +433,7 @@ function rvk_get_focus_keywords($post_id = null) {
         $post_id = get_the_ID();
     }
 
-    $keywords = rvk_get_seo_meta($post_id, 'keywords', '');
+    $keywords = rvk_get_seo_meta($post_id, 'tagovi', '');
 
     if (empty($keywords)) {
         return [];

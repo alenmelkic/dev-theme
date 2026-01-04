@@ -36,12 +36,13 @@ class RVK_SEO_Core {
      * Constructor - Initialize all hooks and modules
      */
     private function __construct() {
-        // Register post meta fields EARLY (before init hook)
+        // Register post meta fields on init to ensure all CPTs are loaded
         // This must run before REST API initialization
-        $this->register_post_meta_fields();
+        add_action('init', array($this, 'register_post_meta_fields'), 10);
 
         // Initialize modules
         add_action('init', array($this, 'init_modules'));
+
 
         // Register meta boxes
         add_action('add_meta_boxes', array($this, 'register_meta_boxes'));
@@ -52,6 +53,16 @@ class RVK_SEO_Core {
         // Save term meta
         add_action('edited_term', array($this, 'save_term_meta'), 10, 3);
         add_action('create_term', array($this, 'save_term_meta'), 10, 3);
+
+        // Debug REST saving (ALL types)
+        add_filter('rest_pre_insert_post', array($this, 'debug_rest_save'), 10, 2);
+        add_filter('rest_pre_insert_page', array($this, 'debug_rest_save'), 10, 2);
+        add_filter('rest_pre_insert_servicne-informacije', array($this, 'debug_rest_save'), 10, 2);
+        add_filter('rest_pre_insert_obavijesti-o-smrti', array($this, 'debug_rest_save'), 10, 2);
+
+        // Deep Debug: Trace who is updating meta
+        add_action('updated_post_meta', array($this, 'debug_meta_updates'), 1, 4);
+        add_action('added_post_meta', array($this, 'debug_meta_updates'), 1, 4);
 
         // Add term meta fields to category/tag edit screens
         add_action('category_edit_form_fields', array($this, 'render_term_meta_fields'), 10, 2);
@@ -65,6 +76,10 @@ class RVK_SEO_Core {
 
         // Register AJAX handlers
         add_action('wp_ajax_rvk_seo_analyze_content', array($this, 'ajax_analyze_content'));
+
+        // Handle title output
+        add_filter('pre_get_document_title', array($this, 'filter_document_title'), 20);
+        add_filter('document_title_parts', array($this, 'filter_title_parts'), 20);
     }
 
     /**
@@ -77,13 +92,10 @@ class RVK_SEO_Core {
         }
     }
 
-    /**
-     * Register post meta fields for Gutenberg editor
-     * Required for meta fields to work with Gutenberg's editPost()
-     */
     public function register_post_meta_fields() {
-        // Register for common post types directly
-        $post_types = array('post', 'page');
+        // Get all public post types that support custom fields
+        $post_types = get_post_types(array('public' => true), 'names');
+        error_log("SEO REGISTER: registering for post types: " . implode(', ', $post_types));
 
         $meta_fields = array(
             '_seo_title' => 'string',
@@ -103,20 +115,43 @@ class RVK_SEO_Core {
             '_seo_last_optimized' => 'string'
         );
 
+        $post_types = get_post_types(array('public' => true));
+        // Explicitly ensure our CPTs are included
+        if (post_type_exists('servicne-informacije') && !in_array('servicne-informacije', $post_types)) $post_types[] = 'servicne-informacije';
+        if (post_type_exists('obavijesti-o-smrti') && !in_array('obavijesti-o-smrti', $post_types)) $post_types[] = 'obavijesti-o-smrti';
+
+        $sanitization_callbacks = array(
+            'string'  => function($v, $meta_key, $object_type, $object_id) { 
+                $clean = sanitize_text_field($v); 
+                error_log("SEO SANITIZE: Key $meta_key, Value: '$v' -> '$clean'");
+                return $clean; 
+            },
+            'integer' => function($v) { return absint($v); },
+            'number'  => function($v) { return floatval($v); }
+        );
+
         foreach ($post_types as $post_type) {
             foreach ($meta_fields as $meta_key => $type) {
                 register_post_meta($post_type, $meta_key, array(
-                    'show_in_rest' => true,
-                    'single' => true,
-                    'type' => $type,
-                    'default' => '',
-                    'auth_callback' => function() {
-                        return current_user_can('edit_posts');
+                    'show_in_rest'      => true,
+                    'single'            => true,
+                    'type'              => $type,
+                    'default'           => ($type === 'number' || $type === 'integer') ? 0 : '',
+                    'sanitize_callback' => $sanitization_callbacks[$type] ?? 'sanitize_text_field',
+                    'auth_callback'     => function($allowed, $meta_key, $post_id, $user_id, $cap, $caps) {
+                        $can_edit = current_user_can('edit_post', $post_id);
+                        if (!$can_edit) {
+                            error_log("SEO AUTH [DENIED]: User $user_id cannot edit post $post_id for $meta_key");
+                        } else {
+                            // error_log("SEO AUTH [ALLOWED]: User $user_id can edit post $post_id for $meta_key");
+                        }
+                        return $can_edit;
                     }
                 ));
             }
         }
     }
+
 
     /**
      * Register meta boxes for post editor
@@ -146,9 +181,9 @@ class RVK_SEO_Core {
         wp_nonce_field('rvk_seo_meta_box', 'rvk_seo_meta_box_nonce');
 
         // Get current values
-        $seo_title = rvk_get_seo_meta($post->ID, 'title');
-        $seo_description = rvk_get_seo_meta($post->ID, 'description');
-        $seo_keywords = rvk_get_seo_meta($post->ID, 'keywords');
+        $seo_title = rvk_get_seo_meta($post->ID, 'naslov');
+        $seo_description = rvk_get_seo_meta($post->ID, 'opis');
+        $seo_keywords = rvk_get_seo_meta($post->ID, 'tagovi');
         $seo_canonical = rvk_get_seo_meta($post->ID, 'canonical');
         $seo_noindex = rvk_get_seo_meta($post->ID, 'noindex');
         $seo_nofollow = rvk_get_seo_meta($post->ID, 'nofollow');
@@ -300,12 +335,14 @@ class RVK_SEO_Core {
      * @param WP_Post $post Post object
      */
     public function save_post_meta($post_id, $post) {
-        // Security checks
-        if (!isset($_POST['rvk_seo_meta_box_nonce']) || !wp_verify_nonce($_POST['rvk_seo_meta_box_nonce'], 'rvk_seo_meta_box')) {
-            return;
-        }
+        // Skip for autosave or revisions
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+        if (wp_is_post_revision($post_id)) return;
 
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        // Security check for classic meta box
+        // IMPORTANT: We ONLY process this for classic editor POST requests with our nonce.
+        // Gutenberg updates happen automatically via REST API and register_post_meta['show_in_rest'].
+        if (!isset($_POST['rvk_seo_meta_box_nonce']) || !wp_verify_nonce($_POST['rvk_seo_meta_box_nonce'], 'rvk_seo_meta_box')) {
             return;
         }
 
@@ -316,19 +353,19 @@ class RVK_SEO_Core {
         // Save SEO title
         if (isset($_POST['rvk_seo_title'])) {
             $seo_title = rvk_sanitize_seo_title($_POST['rvk_seo_title']);
-            rvk_update_seo_meta($post_id, 'title', $seo_title);
+            rvk_update_seo_meta($post_id, 'naslov', $seo_title);
         }
 
         // Save meta description
         if (isset($_POST['rvk_seo_description'])) {
             $seo_description = rvk_sanitize_meta_description($_POST['rvk_seo_description']);
-            rvk_update_seo_meta($post_id, 'description', $seo_description);
+            rvk_update_seo_meta($post_id, 'opis', $seo_description);
         }
 
-        // Save keywords
+        // Save keywords/tags
         if (isset($_POST['rvk_seo_keywords'])) {
             $seo_keywords = sanitize_text_field($_POST['rvk_seo_keywords']);
-            rvk_update_seo_meta($post_id, 'keywords', $seo_keywords);
+            rvk_update_seo_meta($post_id, 'tagovi', $seo_keywords);
         }
 
         // Save canonical URL
@@ -338,12 +375,16 @@ class RVK_SEO_Core {
         }
 
         // Save noindex
-        $seo_noindex = isset($_POST['rvk_seo_noindex']) ? '1' : '0';
-        rvk_update_seo_meta($post_id, 'noindex', $seo_noindex);
+        if (isset($_POST['rvk_seo_noindex_submitted'])) {
+            $seo_noindex = isset($_POST['rvk_seo_noindex']) ? '1' : '0';
+            rvk_update_seo_meta($post_id, 'noindex', $seo_noindex);
+        }
 
         // Save nofollow
-        $seo_nofollow = isset($_POST['rvk_seo_nofollow']) ? '1' : '0';
-        rvk_update_seo_meta($post_id, 'nofollow', $seo_nofollow);
+        if (isset($_POST['rvk_seo_nofollow_submitted'])) {
+            $seo_nofollow = isset($_POST['rvk_seo_nofollow']) ? '1' : '0';
+            rvk_update_seo_meta($post_id, 'nofollow', $seo_nofollow);
+        }
     }
 
     /**
@@ -462,6 +503,46 @@ class RVK_SEO_Core {
     }
 
     /**
+     * Filter document title (pre_get_document_title)
+     */
+    public function filter_document_title($title) {
+        if (!rvk_should_output_meta_tags()) {
+            return $title;
+        }
+
+        $custom_title = rvk_get_seo_title();
+        if (!empty($custom_title) && $custom_title !== get_the_title()) {
+            return $custom_title;
+        }
+
+        return $title;
+    }
+
+    /**
+     * Filter document title parts
+     */
+    public function filter_title_parts($parts) {
+        if (!rvk_should_output_meta_tags()) {
+            return $parts;
+        }
+
+        $post_id = get_queried_object_id();
+        $custom_title = '';
+
+        if (is_singular()) {
+            $custom_title = rvk_get_seo_meta($post_id, 'title');
+        } elseif (is_category() || is_tag() || is_tax()) {
+            $custom_title = rvk_get_term_seo_meta($post_id, 'title');
+        }
+
+        if (!empty($custom_title)) {
+            $parts['title'] = $custom_title;
+        }
+
+        return $parts;
+    }
+
+    /**
      * Get system status for debugging
      */
     public static function get_system_status() {
@@ -472,6 +553,40 @@ class RVK_SEO_Core {
             'php_version' => PHP_VERSION,
             'wp_version' => get_bloginfo('version')
         );
+    }
+    
+    /**
+     * Debug REST API save requests
+     */
+    public function debug_rest_save($prepared_post, $request) {
+        $meta = $request->get_param('meta');
+        $params = $request->get_params(); // Log EVERYTHING to see if it's outside 'meta'
+        error_log("SEO REST SAVE [DEBUG]: Full params keys: " . implode(', ', array_keys($params)));
+        
+        if ($meta) {
+            $seo_meta = array_filter($meta, function($k) { return strpos($k, '_seo_') === 0; }, ARRAY_FILTER_USE_KEY);
+            if (!empty($seo_meta)) {
+                error_log("SEO REST SAVE: Meta found: " . var_export($seo_meta, true));
+            } else {
+                error_log("SEO REST SAVE: No _seo_ meta in the 'meta' object.");
+            }
+        } else {
+            error_log("SEO REST SAVE: NO 'meta' object found in request.");
+        }
+        return $prepared_post;
+    }
+
+    /**
+     * Debug meta updates (for internal hooks)
+     */
+    public function debug_meta_updates($meta_id, $object_id, $meta_key, $meta_value) {
+        if (strpos($meta_key, '_seo_') === 0) {
+            error_log("SEO META UPDATE: Post ID $object_id, Key $meta_key, Value: " . var_export($meta_value, true));
+            ob_start();
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
+            $trace = ob_get_clean();
+            error_log("SEO TRACE:\n" . $trace);
+        }
     }
 }
 

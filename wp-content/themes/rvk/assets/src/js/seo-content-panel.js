@@ -1,6 +1,6 @@
 /**
  * SEO & AEO Content Panel - Gutenberg Sidebar
- * AI-powered SEO optimization panel
+ * Store-first implementation using useEntityProp for reliable persistence
  * Tailored by Alen Melkić
  */
 
@@ -8,43 +8,37 @@
     'use strict';
 
     // Wait for WordPress to be ready
-    if (typeof wp === 'undefined' || !wp.data || !wp.plugins || !wp.editPost) {
-        console.error('WordPress editor not available');
+    if (typeof wp === 'undefined' || !wp.data || !wp.plugins || !wp.editor) {
         return;
     }
 
     const { registerPlugin } = wp.plugins;
-    const { PluginDocumentSettingPanel } = wp.editPost;
+    const { PluginDocumentSettingPanel } = wp.editor;
     const { createElement: el, Fragment, useState, useEffect } = wp.element;
     const { useSelect, useDispatch } = wp.data;
+    const { useEntityProp } = wp.coreData;
     const { TextControl, TextareaControl, Button, PanelRow, CheckboxControl, Notice, Spinner } = wp.components;
 
     /**
      * SEO Content Panel Component
      */
     const SEOContentPanel = () => {
-        const { editPost } = useDispatch('core/editor');
-        const { savePost } = useDispatch('core/editor');
-
-        // Get post data
-        const { postId, postContent, postTitle, postExcerpt, postMeta } = useSelect((select) => {
+        // Get post type and ID
+        const { postType, postId, postContent, postTitle } = useSelect((select) => {
             const editor = select('core/editor');
             return {
+                postType: editor.getCurrentPostType(),
                 postId: editor.getCurrentPostId(),
                 postContent: editor.getEditedPostContent(),
-                postTitle: editor.getEditedPostAttribute('title'),
-                postExcerpt: editor.getEditedPostAttribute('excerpt'),
-                postMeta: editor.getEditedPostAttribute('meta') || {}
+                postTitle: editor.getEditedPostAttribute('title')
             };
         });
 
-        // State
-        const [seoTitle, setSeoTitle] = useState(postMeta._seo_title || '');
-        const [seoDescription, setSeoDescription] = useState(postMeta._seo_description || '');
-        const [seoKeywords, setSeoKeywords] = useState(postMeta._seo_keywords || '');
-        const [seoCanonical, setSeoCanonical] = useState(postMeta._seo_canonical || '');
-        const [seoNoindex, setSeoNoindex] = useState(postMeta._seo_noindex === '1');
-        const [seoNofollow, setSeoNofollow] = useState(postMeta._seo_nofollow === '1');
+        // Use useEntityProp for reliable meta handling
+        // This is THE recommended way to handle meta in Gutenberg
+        const [meta, setMeta] = useEntityProp('postType', postType, 'meta', postId);
+
+        // Local state for UI feedback (loading, messages)
         const [seoScore, setSeoScore] = useState(0);
         const [loadingAll, setLoadingAll] = useState(false);
         const [loadingTitle, setLoadingTitle] = useState(false);
@@ -52,43 +46,33 @@
         const [loadingKeywords, setLoadingKeywords] = useState(false);
         const [message, setMessage] = useState(null);
         const [showAdvanced, setShowAdvanced] = useState(false);
-        const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
-        // Helper function to save meta to database
-        const saveMeta = (updates = {}) => {
-            const meta = {
-                _seo_title: updates.title !== undefined ? updates.title : seoTitle,
-                _seo_description: updates.description !== undefined ? updates.description : seoDescription,
-                _seo_keywords: updates.keywords !== undefined ? updates.keywords : seoKeywords,
-                _seo_canonical: updates.canonical !== undefined ? updates.canonical : seoCanonical,
-                _seo_noindex: updates.noindex !== undefined ? (updates.noindex ? '1' : '0') : (seoNoindex ? '1' : '0'),
-                _seo_nofollow: updates.nofollow !== undefined ? (updates.nofollow ? '1' : '0') : (seoNofollow ? '1' : '0')
-            };
-            editPost({ meta });
-        };
-
-        // Auto-save meta when manually changed (but not on initial mount or AI generation)
-        useEffect(() => {
-            // Skip saving on initial mount
-            if (!hasUserInteracted) {
-                setHasUserInteracted(true);
-                return;
-            }
-
-            // Debounce manual changes
-            const timer = setTimeout(() => {
-                saveMeta();
-            }, 500);
-
-            return () => clearTimeout(timer);
-        }, [seoTitle, seoDescription, seoKeywords, seoCanonical, seoNoindex, seoNofollow]);
+        // Values from meta object
+        const seoTitle = meta?._seo_title || '';
+        const seoDescription = meta?._seo_description || '';
+        const seoKeywords = meta?._seo_keywords || '';
+        const seoCanonical = meta?._seo_canonical || '';
+        const seoNoindex = meta?._seo_noindex === '1';
+        const seoNofollow = meta?._seo_nofollow === '1';
 
         /**
-         * Generate all SEO meta with AI
+         * Update individual meta fields
+         */
+        const updateMeta = (key, value) => {
+            const safeValue = value === null || value === undefined ? '' : value;
+            console.log(`SEO [useEntityProp]: Updating ${key}:`, safeValue === '' ? '[EMPTY]' : safeValue);
+            setMeta({
+                ...meta,
+                [key]: safeValue
+            });
+        };
+
+        /**
+         * AI Generation Handlers
          */
         const generateAllWithAI = async () => {
-            if (!postContent || postContent.trim() === '') {
-                setMessage({ type: 'error', text: 'Molimo dodajte sadržaj prije generisanja SEO meta podataka.' });
+            if (!postContent) {
+                setMessage({ type: 'error', text: 'Molimo dodajte sadržaj prije optimizacije.' });
                 return;
             }
 
@@ -103,27 +87,13 @@
                 });
 
                 if (response.success) {
-                    const updates = {};
-                    if (response.title) {
-                        setSeoTitle(response.title);
-                        updates.title = response.title;
-                    }
-                    if (response.description) {
-                        setSeoDescription(response.description);
-                        updates.description = response.description;
-                    }
-                    if (response.keywords && response.keywords.length > 0) {
-                        const keywordString = response.keywords.join(', ');
-                        setSeoKeywords(keywordString);
-                        updates.keywords = keywordString;
-                    }
+                    const newMeta = { ...meta };
+                    if (response.title) newMeta._seo_title = response.title;
+                    if (response.description) newMeta._seo_description = response.description;
+                    if (response.keywords) newMeta._seo_keywords = response.keywords.join(', ');
 
-                    // Save immediately with new values
-                    saveMeta(updates);
-
+                    setMeta(newMeta);
                     setMessage({ type: 'success', text: '✓ SEO meta podaci uspješno generisani!' });
-
-                    // Analyze content after generation
                     analyzeContent();
                 }
             } catch (error) {
@@ -133,15 +103,8 @@
             }
         };
 
-        /**
-         * Generate SEO title with AI
-         */
         const generateTitle = async () => {
-            if (!postContent || postContent.trim() === '') {
-                setMessage({ type: 'error', text: 'Molimo dodajte sadržaj prije generisanja naslova.' });
-                return;
-            }
-
+            if (!postContent) return;
             setLoadingTitle(true);
             setMessage(null);
             try {
@@ -150,28 +113,19 @@
                     method: 'POST',
                     data: { content: postContent }
                 });
-
                 if (response.success && response.title) {
-                    setSeoTitle(response.title);
-                    saveMeta({ title: response.title });
-                    setMessage({ type: 'success', text: `✓ SEO naslov generisan! (${response.length} karaktera)` });
+                    updateMeta('_seo_title', response.title);
+                    setMessage({ type: 'success', text: '✓ SEO naslov generisan!' });
                 }
             } catch (error) {
-                setMessage({ type: 'error', text: 'Greška: ' + error.message });
+                setMessage({ type: 'error', text: error.message });
             } finally {
                 setLoadingTitle(false);
             }
         };
 
-        /**
-         * Generate meta description with AI
-         */
         const generateDescription = async () => {
-            if (!postContent || postContent.trim() === '') {
-                setMessage({ type: 'error', text: 'Molimo dodajte sadržaj prije generisanja opisa.' });
-                return;
-            }
-
+            if (!postContent) return;
             setLoadingDescription(true);
             setMessage(null);
             try {
@@ -180,28 +134,19 @@
                     method: 'POST',
                     data: { content: postContent }
                 });
-
                 if (response.success && response.excerpt) {
-                    setSeoDescription(response.excerpt);
-                    saveMeta({ description: response.excerpt });
-                    setMessage({ type: 'success', text: `✓ Meta opis generisan! (${response.length} karaktera)` });
+                    updateMeta('_seo_description', response.excerpt);
+                    setMessage({ type: 'success', text: '✓ Meta opis generisan!' });
                 }
             } catch (error) {
-                setMessage({ type: 'error', text: 'Greška: ' + error.message });
+                setMessage({ type: 'error', text: error.message });
             } finally {
                 setLoadingDescription(false);
             }
         };
 
-        /**
-         * Extract keywords with AI
-         */
         const extractKeywords = async () => {
-            if (!postContent || postContent.trim() === '') {
-                setMessage({ type: 'error', text: 'Molimo dodajte sadržaj prije ekstrakcije ključnih riječi.' });
-                return;
-            }
-
+            if (!postContent) return;
             setLoadingKeywords(true);
             setMessage(null);
             try {
@@ -210,33 +155,25 @@
                     method: 'POST',
                     data: { content: postContent }
                 });
-
                 if (response.success && response.keywords) {
-                    const keywordString = response.keywords.join(', ');
-                    setSeoKeywords(keywordString);
-                    saveMeta({ keywords: keywordString });
-                    setMessage({ type: 'success', text: '✓ Ključne riječi ekstraktovane!' });
+                    updateMeta('_seo_keywords', response.keywords.join(', '));
+                    setMessage({ type: 'success', text: '✓ SEO tagovi ekstraktovani!' });
                 }
             } catch (error) {
-                setMessage({ type: 'error', text: 'Greška: ' + error.message });
+                setMessage({ type: 'error', text: error.message });
             } finally {
                 setLoadingKeywords(false);
             }
         };
 
-        /**
-         * Analyze content and calculate SEO score
-         */
         const analyzeContent = async () => {
             if (!postId) return;
-
             try {
                 const response = await wp.apiFetch({
                     path: '/dev-theme/v1/seo/analyze',
                     method: 'POST',
                     data: { post_id: postId, content: postContent }
                 });
-
                 if (response.success && response.analysis) {
                     setSeoScore(response.analysis.seo_score || 0);
                 }
@@ -245,25 +182,16 @@
             }
         };
 
-        // Analyze on mount and content change (if auto-analysis enabled)
+        // Analyze on mount and content change
         useEffect(() => {
-            // Check if auto-analysis is enabled
             const autoAnalysisEnabled = window.seoData?.autoAnalysisEnabled !== false;
-
             if (postContent && postId && autoAnalysisEnabled) {
-                const timer = setTimeout(() => {
-                    analyzeContent();
-                }, 2000); // Debounce
-
+                const timer = setTimeout(analyzeContent, 2000);
                 return () => clearTimeout(timer);
             }
         }, [postContent, postId]);
 
-        // Character counts
-        const titleLength = seoTitle.length;
-        const descLength = seoDescription.length;
-
-        // SEO score color
+        // Helpers
         const getScoreColor = (score) => {
             if (score >= 70) return '#46b450';
             if (score >= 50) return '#ffb900';
@@ -280,7 +208,6 @@
                     title: 'SEO & AEO Optimization',
                     className: 'seo-optimization-panel'
                 },
-                // Message notice
                 message && el(Notice, {
                     status: message.type === 'success' ? 'success' : 'error',
                     isDismissible: true,
@@ -292,134 +219,93 @@
                     el('div', { style: { width: '100%', marginBottom: '15px' } },
                         el('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
                             el('strong', {}, 'SEO Score:'),
-                            el('span', {
-                                style: {
-                                    fontSize: '18px',
-                                    fontWeight: 'bold',
-                                    color: getScoreColor(seoScore)
-                                }
-                            }, seoScore + '/100')
+                            el('span', { style: { fontSize: '18px', fontWeight: 'bold', color: getScoreColor(seoScore) } }, seoScore + '/100')
                         ),
-                        el('div', {
-                            style: {
-                                height: '8px',
-                                background: '#e0e0e0',
-                                borderRadius: '4px',
-                                marginTop: '8px',
-                                overflow: 'hidden'
-                            }
-                        },
-                            el('div', {
-                                style: {
-                                    width: seoScore + '%',
-                                    height: '100%',
-                                    background: getScoreColor(seoScore),
-                                    transition: 'width 0.3s ease'
-                                }
-                            })
+                        el('div', { style: { height: '8px', background: '#e0e0e0', borderRadius: '4px', marginTop: '8px', overflow: 'hidden' } },
+                            el('div', { style: { width: seoScore + '%', height: '100%', background: getScoreColor(seoScore), transition: 'width 0.3s ease' } })
                         )
                     )
                 ),
 
                 // SEO Title
                 el('div', { style: { marginBottom: '15px' } },
-                    el('label', { style: { display: 'block', marginBottom: '5px', fontWeight: '600' } },
-                        'SEO Title'
-                    ),
+                    el('label', { style: { display: 'block', marginBottom: '5px', fontWeight: '600' } }, 'SEO Naslov'),
                     el(TextControl, {
                         value: seoTitle,
-                        onChange: setSeoTitle,
+                        onChange: (val) => updateMeta('_seo_title', val),
                         placeholder: postTitle || 'Unesite SEO naslov',
                         help: el('span', {
-                            style: { color: titleLength > 60 ? '#dc3232' : (titleLength >= 50 ? '#46b450' : '#666') }
-                        }, `${titleLength}/60 karaktera`)
+                            style: { color: (seoTitle || '').length > 60 ? '#dc3232' : ((seoTitle || '').length >= 50 ? '#46b450' : '#666') }
+                        }, `${(seoTitle || '').length}/60 karaktera`)
                     }),
-                    el(Button, {
-                        variant: 'secondary',
-                        onClick: generateTitle,
-                        disabled: loadingTitle || loadingAll,
-                        style: { marginTop: '5px' }
-                    }, loadingTitle ? el(Spinner) : '🤖 Generiši sa AI')
+                    el(Button, { variant: 'secondary', onClick: generateTitle, disabled: loadingTitle || loadingAll, style: { marginTop: '5px' } },
+                        loadingTitle ? el(Spinner) : '🤖 Generiši sa AI'
+                    )
                 ),
 
                 // Meta Description
                 el('div', { style: { marginBottom: '15px' } },
-                    el('label', { style: { display: 'block', marginBottom: '5px', fontWeight: '600' } },
-                        'Meta Description'
-                    ),
+                    el('label', { style: { display: 'block', marginBottom: '5px', fontWeight: '600' } }, 'Meta Opis'),
                     el(TextareaControl, {
                         value: seoDescription,
-                        onChange: setSeoDescription,
+                        onChange: (val) => updateMeta('_seo_description', val),
                         placeholder: 'Unesite meta opis',
                         rows: 3,
                         help: el('span', {
-                            style: { color: descLength > 160 ? '#dc3232' : (descLength >= 150 ? '#46b450' : '#666') }
-                        }, `${descLength}/160 karaktera`)
+                            style: { color: (seoDescription || '').length > 160 ? '#dc3232' : ((seoDescription || '').length >= 150 ? '#46b450' : '#666') }
+                        }, `${(seoDescription || '').length}/160 karaktera`)
                     }),
-                    el(Button, {
-                        variant: 'secondary',
-                        onClick: generateDescription,
-                        disabled: loadingDescription || loadingAll,
-                        style: { marginTop: '5px' }
-                    }, loadingDescription ? el(Spinner) : '🤖 Generiši sa AI')
+                    el(Button, { variant: 'secondary', onClick: generateDescription, disabled: loadingDescription || loadingAll, style: { marginTop: '5px' } },
+                        loadingDescription ? el(Spinner) : '🤖 Generiši sa AI'
+                    )
                 ),
 
-                // Focus Keywords
+                // Focus Tags
                 el('div', { style: { marginBottom: '15px' } },
-                    el('label', { style: { display: 'block', marginBottom: '5px', fontWeight: '600' } },
-                        'Focus Keywords'
-                    ),
+                    el('label', { style: { display: 'block', marginBottom: '5px', fontWeight: '600' } }, 'SEO Tagovi'),
                     el(TextControl, {
                         value: seoKeywords,
-                        onChange: setSeoKeywords,
+                        onChange: (val) => updateMeta('_seo_keywords', val),
                         placeholder: 'npr. WordPress, SEO, optimizacija',
                         help: 'Odvojeno zarezom'
                     }),
-                    el(Button, {
-                        variant: 'secondary',
-                        onClick: extractKeywords,
-                        disabled: loadingKeywords || loadingAll,
-                        style: { marginTop: '5px' }
-                    }, loadingKeywords ? el(Spinner) : '🤖 Ekstraktuj sa AI')
+                    el(Button, { variant: 'secondary', onClick: extractKeywords, disabled: loadingKeywords || loadingAll, style: { marginTop: '5px' } },
+                        loadingKeywords ? el(Spinner) : '🤖 Ekstraktuj sa AI'
+                    )
                 ),
 
-                // Bulk AI Generation
+                // Bulk
                 el(PanelRow, {},
-                    el(Button, {
-                        variant: 'primary',
-                        onClick: generateAllWithAI,
-                        disabled: loadingAll || loadingTitle || loadingDescription || loadingKeywords,
-                        style: { width: '100%', justifyContent: 'center', marginTop: '10px' }
-                    }, loadingAll ? el(Spinner) : '🤖 Optimiziraj Sve sa AI')
+                    el(Button, { variant: 'primary', onClick: generateAllWithAI, disabled: loadingAll || loadingTitle || loadingDescription || loadingKeywords, style: { width: '100%', justifyContent: 'center', marginTop: '10px' } },
+                        loadingAll ? el(Spinner) : '🤖 Optimiziraj Sve sa AI'
+                    )
                 ),
 
-                // Advanced Settings Toggle
+                // Advanced
                 el(PanelRow, { style: { marginTop: '15px' } },
-                    el(Button, {
-                        variant: 'link',
-                        onClick: () => setShowAdvanced(!showAdvanced)
-                    }, showAdvanced ? '▼ Sakrij Napredne Postavke' : '▶ Napredne Postavke')
+                    el(Button, { variant: 'link', onClick: () => setShowAdvanced(!showAdvanced) },
+                        showAdvanced ? '▼ Sakrij Napredne Postavke' : '▶ Napredne Postavke'
+                    )
                 ),
 
-                // Advanced Settings
                 showAdvanced && el(Fragment, null,
                     el('div', { style: { marginTop: '15px', paddingTop: '15px', borderTop: '1px solid #ddd' } },
                         el(TextControl, {
                             label: 'Canonical URL',
                             value: seoCanonical,
-                            onChange: setSeoCanonical,
+                            onChange: (val) => updateMeta('_seo_canonical', val),
                             placeholder: 'Ostavi prazno za default',
                             type: 'url'
                         }),
                         el(CheckboxControl, {
-                            label: 'No Index (sprečava indeksiranje)',
+                            label: 'No Index',
                             checked: seoNoindex,
-                            onChange: setSeoNoindex
+                            onChange: (val) => updateMeta('_seo_noindex', val ? '1' : '0')
                         }),
                         el(CheckboxControl, {
-                            label: 'No Follow (sprečava praćenje linkova)',
+                            label: 'No Follow',
                             checked: seoNofollow,
-                            onChange: setSeoNofollow
+                            onChange: (val) => updateMeta('_seo_nofollow', val ? '1' : '0')
                         })
                     )
                 )
@@ -427,7 +313,6 @@
         );
     };
 
-    // Register the plugin
     registerPlugin('seo-content-panel', {
         render: SEOContentPanel,
         icon: 'search'

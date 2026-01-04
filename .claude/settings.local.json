@@ -20,7 +20,8 @@
       "Bash(\"c:\\xampp\\php\\php.exe\" find-posts.php)",
       "Bash(\"c:\\xampp\\php\\php.exe\" test-save-meta.php)",
       "Bash(\"c:\\xampp\\php\\php.exe\" -r \"require ''wp-load.php''; $title = get_post_meta(141196, ''_seo_title'', true); $desc = get_post_meta(141196, ''_seo_description'', true); echo ''Title: '' . $title . PHP_EOL . ''Description: '' . $desc . PHP_EOL;\")",
-      "Bash(\"c:\\xampp\\php\\php.exe\" check-saved.php)"
+      "Bash(\"c:\\xampp\\php\\php.exe\" check-saved.php)",
+      "Bash(\"c:\\xampp\\php\\php.exe\" check-current-meta.php)"
     ],
     "deny": [],
     "ask": []

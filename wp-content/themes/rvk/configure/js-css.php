@@ -67,7 +67,7 @@ add_action( 'wp_enqueue_scripts', 'add_vite_assets', 100 );
 // Add type="module" to our scripts to prevent redeclaration errors
 function add_module_type_attribute( $tag, $handle, $src ) {
 	// List of scripts that should be loaded as modules
-	$module_scripts = [ 'main', 'navigation', 'bootstrap-components', 'social-share' ];
+	$module_scripts = [ 'main', 'navigation', 'bootstrap-components', 'social-share', 'seo-content-panel', 'ai-content-helper' ];
 	
 	if ( in_array( $handle, $module_scripts, true ) ) {
 		if ( $handle === 'main' ) {
