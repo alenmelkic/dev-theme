@@ -121,29 +121,30 @@ class RVK_AEO_Key_Takeaways {
             return $content;
         }
 
-        // Build takeaways box
-        $html = '<div class="aeo-key-takeaways" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 8px; margin: 30px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">';
-        $html .= '<h3 style="margin-top: 0; color: white; font-size: 20px; display: flex; align-items: center; gap: 10px;">';
-        $html .= '<span style="font-size: 24px;">🎯</span> Key Takeaways';
-        $html .= '</h3>';
-        $html .= '<ul style="margin: 15px 0 0 0; padding-left: 25px; line-height: 1.8;">';
+        // Build hidden takeaways for AEO - using d-none Bootstrap class
+        // AI crawlers read the HTML source regardless of display property
+        // Using Schema.org ItemList for structured data
+        $html = '<div class="aeo-key-takeaways d-none" itemscope itemtype="https://schema.org/ItemList">';
+        $html .= '<h3 itemprop="name">Ključni Zaključci</h3>';
+        $html .= '<meta itemprop="description" content="Key Takeaways - Main points summary">';
+        $html .= '<ul>';
 
+        $position = 1;
         foreach ($points as $point) {
             // Remove bullet points if they exist
             $point = preg_replace('/^[\•\-\*]\s*/', '', $point);
-            $html .= '<li style="margin-bottom: 10px;">' . esc_html($point) . '</li>';
+            $html .= '<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            $html .= '<meta itemprop="position" content="' . $position . '">';
+            $html .= '<span itemprop="name">' . esc_html($point) . '</span>';
+            $html .= '</li>';
+            $position++;
         }
 
         $html .= '</ul>';
         $html .= '</div>';
 
-        // Inject at the beginning of content (after first paragraph for better UX)
-        $paragraphs = explode('</p>', $content, 2);
-        if (count($paragraphs) > 1) {
-            return $paragraphs[0] . '</p>' . $html . $paragraphs[1];
-        }
-
-        return $html . $content;
+        // Inject at the bottom of content
+        return $content . $html;
     }
 
     /**
@@ -159,7 +160,7 @@ class RVK_AEO_Key_Takeaways {
 
         $api_manager = RVK_SEO_API_Manager::get_instance();
 
-        $prompt = "Extract 3-5 key takeaways from this article. Format as bullet points. Be concise and factual.\n\nTitle: $title\n\nContent: " . wp_strip_all_tags($content);
+        $prompt = "Ekstraktuj 3-5 ključnih zaključaka iz ovog članka. Formatiraj kao bullet points. Budi koncizan i faktičan. VAŽNO: Odgovori SAMO na bosanskom jeziku.\n\nNaslov: $title\n\nSadržaj: " . wp_strip_all_tags($content);
 
         try {
             $response = $api_manager->generate_content($prompt, array(

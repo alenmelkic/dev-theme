@@ -185,6 +185,7 @@ class RVK_SEO_REST_API {
         // Security: Sanitize inputs
         $content = wp_kses_post($request->get_param('content'));
         $title = sanitize_text_field($request->get_param('title'));
+        $post_id = absint($request->get_param('post_id'));
 
         if (empty($content)) {
             return new WP_Error('no_content', 'Content required', array('status' => 400));
@@ -194,35 +195,47 @@ class RVK_SEO_REST_API {
         $content_text = wp_strip_all_tags($content);
         $content_text = substr($content_text, 0, 1000);
 
-        $title_prompt = "Create an SEO-optimized title for this article.\n\n";
-        $title_prompt .= "Requirements:\n";
-        $title_prompt .= "- 50-60 characters\n";
-        $title_prompt .= "- Include primary keyword\n";
-        $title_prompt .= "- Compelling and clear\n";
-        $title_prompt .= "- Return ONLY the title\n\n";
-        $title_prompt .= "Content:\n" . $content_text;
+        // Use API manager for all AI generation
+        $api_manager = RVK_SEO_API_Manager::get_instance();
 
-        $seo_title = $this->seo_optimizer->call_gemini_api($title_prompt, 60);
+        $title_prompt = "Analiziraj sadržaj ovog blog posta i generiši SEO-optimiziran, privlačan naslov.\n\n";
+        $title_prompt .= "Zahtjevi:\n";
+        $title_prompt .= "- Maksimalno 50-60 karaktera\n";
+        $title_prompt .= "- Uključi primarnu ključnu riječ iz sadržaja\n";
+        $title_prompt .= "- Privlačan i vrijedan klika\n";
+        $title_prompt .= "- Jasan i opisan\n";
+        $title_prompt .= "- VAŽNO: Vrati SAMO naslov na bosanskom jeziku, bez objašnjenja\n\n";
+        $title_prompt .= "Sadržaj:\n" . $content_text;
+
+        $seo_title = $api_manager->generate_content($title_prompt, array('max_tokens' => 100));
 
         // Generate meta description
-        $desc_prompt = "Create a compelling meta description for this article.\n\n";
-        $desc_prompt .= "Requirements:\n";
-        $desc_prompt .= "- 150-160 characters\n";
-        $desc_prompt .= "- Include primary keyword\n";
-        $desc_prompt .= "- Summarize main points\n";
-        $desc_prompt .= "- Return ONLY the description\n\n";
-        $desc_prompt .= "Content:\n" . $content_text;
+        $desc_prompt = "Kreiraj privlačan meta opis za ovaj blog post.\n\n";
+        $desc_prompt .= "Zahtjevi:\n";
+        $desc_prompt .= "- Maksimalno 150-160 karaktera\n";
+        $desc_prompt .= "- Uključi primarnu ključnu riječ iz sadržaja\n";
+        $desc_prompt .= "- Sumiraj glavne tačke\n";
+        $desc_prompt .= "- Uključi poziv na akciju ako je primjereno\n";
+        $desc_prompt .= "- VAŽNO: Vrati SAMO opis na bosanskom jeziku, bez objašnjenja\n\n";
+        $desc_prompt .= "Sadržaj:\n" . $content_text;
 
-        $seo_description = $this->seo_optimizer->call_gemini_api($desc_prompt, 100);
+        $seo_description = $api_manager->generate_content($desc_prompt, array('max_tokens' => 150));
 
         // Extract keywords
         $keywords = $this->seo_optimizer->extract_keywords($content_text);
+
+        // Generate Key Takeaways (AEO)
+        $takeaways = '';
+        if ($post_id) {
+            $takeaways = RVK_AEO_Key_Takeaways::generate_takeaways($post_id);
+        }
 
         return rest_ensure_response(array(
             'success' => true,
             'title' => is_wp_error($seo_title) ? '' : $seo_title,
             'description' => is_wp_error($seo_description) ? '' : $seo_description,
-            'keywords' => is_wp_error($keywords) ? array() : $keywords
+            'keywords' => is_wp_error($keywords) ? array() : $keywords,
+            'takeaways' => is_wp_error($takeaways) ? '' : $takeaways
         ));
     }
 

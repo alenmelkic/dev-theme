@@ -156,14 +156,14 @@ class AI_Content_Generator {
         $content = wp_strip_all_tags($content);
         $content = substr($content, 0, 1000);
         
-        $prompt = "Analyze this blog post content and generate an SEO-optimized, engaging title.\n\n";
-        $prompt .= "Requirements:\n";
-        $prompt .= "- 50-60 characters maximum\n";
-        $prompt .= "- Include primary keyword from content\n";
-        $prompt .= "- Compelling and click-worthy\n";
-        $prompt .= "- Clear and descriptive\n";
-        $prompt .= "- Return ONLY the title, no explanations\n\n";
-        $prompt .= "Content:\n" . $content;
+        $prompt = "Analiziraj sadržaj ovog blog posta i generiši SEO-optimiziran, privlačan naslov.\n\n";
+        $prompt .= "Zahtjevi:\n";
+        $prompt .= "- Maksimalno 50-60 karaktera\n";
+        $prompt .= "- Uključi primarnu ključnu riječ iz sadržaja\n";
+        $prompt .= "- Privlačan i vrijedan klika\n";
+        $prompt .= "- Jasan i opisan\n";
+        $prompt .= "- VAŽNO: Vrati SAMO naslov na bosanskom jeziku, bez objašnjenja\n\n";
+        $prompt .= "Sadržaj:\n" . $content;
 
         $result = $this->call_ai_api_with_provider($prompt);
 
@@ -192,14 +192,14 @@ class AI_Content_Generator {
         $content = wp_strip_all_tags($content);
         $content = substr($content, 0, 1000);
         
-        $prompt = "Create a compelling meta description for this blog post.\n\n";
-        $prompt .= "Requirements:\n";
-        $prompt .= "- 150-160 characters maximum\n";
-        $prompt .= "- Include primary keyword from content\n";
-        $prompt .= "- Summarize main points\n";
-        $prompt .= "- Include call-to-action if appropriate\n";
-        $prompt .= "- Return ONLY the excerpt, no explanations\n\n";
-        $prompt .= "Content:\n" . $content;
+        $prompt = "Kreiraj privlačan meta opis za ovaj blog post.\n\n";
+        $prompt .= "Zahtjevi:\n";
+        $prompt .= "- Maksimalno 150-160 karaktera\n";
+        $prompt .= "- Uključi primarnu ključnu riječ iz sadržaja\n";
+        $prompt .= "- Sumiraj glavne tačke\n";
+        $prompt .= "- Uključi poziv na akciju ako je primjereno\n";
+        $prompt .= "- VAŽNO: Vrati SAMO opis na bosanskom jeziku, bez objašnjenja\n\n";
+        $prompt .= "Sadržaj:\n" . $content;
 
         $result = $this->call_ai_api_with_provider($prompt);
 

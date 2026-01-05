@@ -110,13 +110,13 @@ class SEO_AI_Optimizer extends AI_Content_Generator {
         $content = wp_strip_all_tags($content);
         $content = substr($content, 0, 2000); // Limit to prevent token overflow
 
-        $prompt = "Analyze this article and extract 3-5 SEO focus keywords.\n\n";
-        $prompt .= "Requirements:\n";
-        $prompt .= "- Each keyword should be 1-3 words\n";
-        $prompt .= "- Keywords must appear naturally in the content\n";
-        $prompt .= "- Optimize for search intent\n";
-        $prompt .= "- Return ONLY comma-separated keywords, no explanations\n\n";
-        $prompt .= "Content:\n" . $content;
+        $prompt = "Analiziraj ovaj članak i ekstraktuj 3-5 SEO ključnih riječi.\n\n";
+        $prompt .= "Zahtjevi:\n";
+        $prompt .= "- Svaka ključna riječ treba biti 1-3 riječi\n";
+        $prompt .= "- Ključne riječi moraju prirodno postojati u sadržaju\n";
+        $prompt .= "- Optimizuj za search intent\n";
+        $prompt .= "- VAŽNO: Vrati SAMO ključne riječi odvojene zarezom na bosanskom jeziku, bez objašnjenja\n\n";
+        $prompt .= "Sadržaj:\n" . $content;
 
         $result = $this->call_ai_api($prompt, 50);
 

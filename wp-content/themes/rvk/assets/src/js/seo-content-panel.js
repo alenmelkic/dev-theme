@@ -94,7 +94,7 @@
                 const response = await wp.apiFetch({
                     path: '/dev-theme/v1/seo/generate-meta',
                     method: 'POST',
-                    data: { content: postContent, title: postTitle }
+                    data: { content: postContent, title: postTitle, post_id: postId }
                 });
 
                 if (response.success) {
@@ -102,9 +102,10 @@
                     if (response.title) newMeta._seo_title = response.title;
                     if (response.description) newMeta._seo_description = response.description;
                     if (response.keywords) newMeta._seo_keywords = response.keywords.join(', ');
+                    if (response.takeaways) newMeta._aeo_key_takeaways = response.takeaways;
 
                     setMeta(newMeta);
-                    setMessage({ type: 'success', text: '✓ SEO meta podaci uspješno generisani!' });
+                    setMessage({ type: 'success', text: '✓ SEO & AEO meta podaci uspješno generisani!' });
                     analyzeContent();
                 }
             } catch (error) {
