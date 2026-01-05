@@ -45,62 +45,81 @@ $tags = get_terms(array(
 ));
 ?>
 
-<main id="main" class="site-main servicne-informacije-archive">
+<main id="main" class="site-main servicne-informacije-archive archive-main">
+    <?php get_component('structured-data'); ?>
     <div class="container">
-        <header class="page-header">
-            <h1 class="page-title">Servicne informacije</h1>
-            <?php 
-            $archive_description = get_option('dev_theme_archive_description', '');
-            if (!empty($archive_description)) : 
-            ?>
-                <p class="archive-description"><?php echo wp_kses_post($archive_description); ?></p>
-            <?php endif; ?>
-        </header>
+        <div class="col-xl-10 mx-auto">
+            <header class="archive-header my-5">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h1 class="archive-title">Servicne informacije</h1>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <?php 
+                        $archive_description = get_option('dev_theme_archive_description', '');
+                        if (!empty($archive_description)) : 
+                        ?>
+                            <div class="archive-description text-right">
+                                <?php echo wp_kses_post($archive_description); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </header>
 
 
 
         <!-- Posts Grid -->
         <?php if ($query->have_posts()) : ?>
-            <div class="servicne-informacije-grid">
+            <div class="posts-grid row">
                 <?php while ($query->have_posts()) : $query->the_post(); ?>
-                    <article class="servicna-informacija-card">
-                        <?php get_component('featured-image', array('variant' => 'card')); ?>
-                        
-                        <div class="card-content">
-                            <?php get_component('post-title', array('tag' => 'h2', 'link' => true)); ?>
-                            
-                            <?php if (has_excerpt()) : ?>
-                                <div class="card-excerpt">
-                                    <?php the_excerpt(); ?>
+                    <div class="col-12 col-md-6 col-lg-4 mb-4">
+                        <article <?php post_class('post-card'); ?> aria-labelledby="post-<?php the_ID(); ?>-title">
+                            <?php if (has_post_thumbnail()) : ?>
+                                <div class="post-card-image">
+                                    <a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
+                                        <?php
+                                        get_component('featured-image', array(
+                                            'variant' => 'card',
+                                            'size' => 'medium',
+                                            'loading' => 'lazy',
+                                        ));
+                                        ?>
+                                        <?php get_component('article-type-overlay'); ?>
+                                    </a>
                                 </div>
                             <?php endif; ?>
                             
-                            <div class="card-meta">
-                                <?php get_component('author', array('size' => 'small')); ?>
-                                <?php get_component('post-date'); ?>
+                            <div class="post-card-content d-flex flex-column justify-content-between">
+                                <header class="post-card-header">
+                                    <div id="post-<?php the_ID(); ?>-title">
+                                        <?php get_component('post-title', array('tag' => 'h2', 'link' => true)); ?>
+                                    </div>
+    
+                                    <?php
+                                    // Sponsored badge
+                                    get_component('sponsored-badge');
+                                    ?>
+                                
+                                    <div class="post-card-excerpt">
+                                        <?php echo get_trimmed_excerpt(); ?>
+                                    </div>
+                                </header>
+                                
+                                <div class="post-card-meta mt-3 d-flex justify-content-between align-items-center">                                    
+                                        <?php get_component('author', array('size' => 'small')); ?>
+                                        <?php get_component('post-date'); ?>
+                                </div>
                             </div>
-                            
-                            <?php get_component('post-terms', array('taxonomy' => 'servicne_tag')); ?>
-                        </div>
-                    </article>
+                        </article>
+                    </div>
                 <?php endwhile; ?>
             </div>
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <?php
-                echo paginate_links(array(
-                    'total' => $query->max_num_pages,
-                    'current' => $paged,
-                    'prev_text' => '&laquo; Prethodna',
-                    'next_text' => 'Sljedeća &raquo;',
-                    'add_args' => array(
-                        's' => $search,
-                        'tag' => $tag_id
-                    )
-                ));
-                ?>
-            </div>
+            <?php
+            // Pagination
+            get_component('load-more', array('container' => '.posts-grid'));
+            ?>
         <?php else : ?>
             <div class="no-results">
                 <p>Nema pronađenih informacija.</p>
@@ -108,6 +127,7 @@ $tags = get_terms(array(
         <?php endif; ?>
 
         <?php wp_reset_postdata(); ?>
+    </div>
     </div>
 </main>
 

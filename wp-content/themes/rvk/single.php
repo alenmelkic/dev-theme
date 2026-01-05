@@ -68,6 +68,16 @@ while (have_posts()) : the_post();
                 ?>
             </div>
 
+            <?php
+            // Social share buttons
+            get_template_part('components/social-share-buttons/social-share-buttons', null, array(
+                'platforms' => array('facebook', 'twitter', 'linkedin', 'whatsapp', 'email'),
+                'include_hashtags' => true,
+                'style' => 'default',
+                'size' => 'medium'
+            ));
+            ?>
+
             <footer class="post-footer">
                 <?php
                 // Tags

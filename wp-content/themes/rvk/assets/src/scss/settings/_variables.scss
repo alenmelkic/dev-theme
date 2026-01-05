@@ -10,6 +10,8 @@ $gray-color: #f8f9fc;
 $white: #fff;
 $white-off: #F5F5F5;
 
+$white-filter: brightness(0) saturate(100%) invert(100%) sepia(5%) saturate(150%) hue-rotate(260deg) brightness(112%) contrast(78%);
+
 // Typography
 $font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-size-base: 1rem;

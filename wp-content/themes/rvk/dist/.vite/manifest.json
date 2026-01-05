@@ -66,6 +66,18 @@
     "src": "assets/src/js/navigation.js",
     "isEntry": true
   },
+  "assets/src/js/seo-content-panel.js": {
+    "file": "js/seo-content-panel.js",
+    "name": "js/seo-content-panel",
+    "src": "assets/src/js/seo-content-panel.js",
+    "isEntry": true
+  },
+  "assets/src/js/social-share.js": {
+    "file": "js/social-share.js",
+    "name": "js/social-share",
+    "src": "assets/src/js/social-share.js",
+    "isEntry": true
+  },
   "assets/src/js/soundcloud-custom-player.js": {
     "file": "js/soundcloud-custom-player.js",
     "name": "js/soundcloud-custom-player",
@@ -180,6 +192,14 @@
     "isEntry": true,
     "names": [
       "components/radio-player.css"
+    ]
+  },
+  "components/social-share-buttons/social-share-buttons.scss": {
+    "file": "css/components/social-share-buttons.css",
+    "src": "components/social-share-buttons/social-share-buttons.scss",
+    "isEntry": true,
+    "names": [
+      "components/social-share-buttons.css"
     ]
   },
   "components/soundcloud-custom-player/soundcloud-custom-player.scss": {

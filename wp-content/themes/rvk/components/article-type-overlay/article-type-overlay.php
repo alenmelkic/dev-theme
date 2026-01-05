@@ -18,6 +18,6 @@ $icon = get_article_type_icon($post_id);
 
 <div class="article-type-overlay article-type-overlay--<?php echo esc_attr($type->slug); ?>">
     <?php if ($icon) : ?>
-        <span class="dashicons <?php echo esc_attr($icon); ?>"></span>
+        <span class="<?php echo esc_attr($icon); ?>"></span>
     <?php endif; ?>
 </div>

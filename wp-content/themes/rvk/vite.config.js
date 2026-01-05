@@ -130,6 +130,12 @@ export default defineConfig({
 			scss: {
 				quietDeps: true,
 				silenceDeprecations: ['legacy-js-api', 'import'],
+				loadPaths: [resolve(__dirname, 'assets/src/scss')],
+				additionalData: `
+					@use "settings/variables" as *;
+					@use "settings/mixins" as *;
+					@use "settings/functions" as *;
+				`,
 			},
 		},
 	},
@@ -162,7 +168,9 @@ export default defineConfig({
 				'js/facebook-video-player': resolve(`${__dirname}/assets/src/js/facebook-video-player.js`),
 				'js/youtube-video-player': resolve(`${__dirname}/assets/src/js/youtube-video-player.js`),
 				'js/ai-content-helper': resolve(`${__dirname}/assets/src/js/ai-content-helper.js`),
+				'js/seo-content-panel': resolve(`${__dirname}/assets/src/js/seo-content-panel.js`),
 				'js/article-type-panel': resolve(`${__dirname}/assets/src/js/article-type-panel.js`),
+				'js/social-share': resolve(`${__dirname}/assets/src/js/social-share.js`),
 				'marketing-admin': resolve(`${__dirname}/assets/js/marketing-admin.js`),
 
 				// Main CSS bundles
@@ -185,6 +193,9 @@ export default defineConfig({
 				'components/article-type-overlay': resolve(`${__dirname}/components/article-type-overlay/article-type-overlay.scss`),
 				'components/sponsored-disclaimer': resolve(`${__dirname}/components/sponsored-disclaimer/sponsored-disclaimer.scss`),
 				'components/sponsored-badge': resolve(`${__dirname}/components/sponsored-badge/sponsored-badge.scss`),
+
+				// Social share buttons
+				'components/social-share-buttons': resolve(`${__dirname}/components/social-share-buttons/social-share-buttons.scss`),
 
 				// Mini Banners Carousel
 				'components/mini-banners-carousel': resolve(`${__dirname}/assets/src/scss/components/_mini-banners-carousel.scss`),

@@ -16,7 +16,8 @@ function add_vite_assets() {
 		'main' => 'assets/src/js/main.js',
 		'navigation' => 'assets/src/js/navigation.js',
 
-		'bootstrap-components' => 'assets/src/js/bootstrap-components.js'
+		'bootstrap-components' => 'assets/src/js/bootstrap-components.js',
+		'social-share' => 'assets/src/js/social-share.js'
 	];
 
 	// add your custom scss files here
@@ -66,7 +67,7 @@ add_action( 'wp_enqueue_scripts', 'add_vite_assets', 100 );
 // Add type="module" to our scripts to prevent redeclaration errors
 function add_module_type_attribute( $tag, $handle, $src ) {
 	// List of scripts that should be loaded as modules
-	$module_scripts = [ 'main', 'navigation', 'bootstrap-components' ];
+	$module_scripts = [ 'main', 'navigation', 'bootstrap-components', 'social-share', 'seo-content-panel', 'ai-content-helper' ];
 	
 	if ( in_array( $handle, $module_scripts, true ) ) {
 		if ( $handle === 'main' ) {

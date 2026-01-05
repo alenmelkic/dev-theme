@@ -43,6 +43,23 @@ include( 'configure/ai-content-generator.php' );
 include( 'configure/ai-settings.php' );
 include( 'configure/ai-enqueue.php' );
 
+// SEO & AEO OPTIMIZATION
+include( 'configure/seo-helpers.php' );
+include( 'configure/seo-compatibility.php' );
+include( 'configure/seo-meta-tags.php' );
+include( 'configure/seo-core.php' );
+include( 'configure/seo-settings.php' );
+include( 'configure/seo-sitemap.php' );
+include( 'configure/seo-rate-limiter.php' );
+include( 'configure/seo-api-manager.php' );
+include( 'configure/seo-ai-optimizer.php' );
+include( 'configure/seo-rest-api.php' );
+
+// AEO (Answer Engine Optimization)
+include( 'configure/aeo-faq-schema.php' );
+include( 'configure/aeo-howto-schema.php' );
+include( 'configure/aeo-key-takeaways.php' );
+
 // MARKETING
 include( 'configure/marketing-settings.php' );
 include( 'configure/marketing-helpers.php' );
