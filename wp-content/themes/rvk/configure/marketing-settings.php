@@ -29,12 +29,12 @@ function rvk_marketing_admin_scripts($hook) {
     
     // Enqueue WordPress media uploader
     wp_enqueue_media();
-    
-    // Enqueue custom admin script
+
+    // Enqueue custom admin script (no dependencies - vanilla JS)
     wp_enqueue_script(
         'rvk-marketing-admin',
         get_template_directory_uri() . '/dist/marketing-admin.js',
-        array('jquery'),
+        array(),
         filemtime(get_template_directory() . '/dist/marketing-admin.js'),
         true
     );

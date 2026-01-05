@@ -91,14 +91,14 @@ function my_deregister_scripts() {
 }
 add_action( 'wp_footer', 'my_deregister_scripts' );
 
-// delete jquery migrate
-function dequeue_jquery_migrate( &$scripts){
+// Remove jQuery completely from frontend (not needed - using vanilla JS)
+function remove_jquery_frontend( &$scripts){
     if(!is_admin()){
         $scripts->remove( 'jquery');
-        $scripts->add('jquery', 'https://code.jquery.com/jquery-3.6.1.min.js', null, null, true );
+        $scripts->remove( 'jquery-migrate');
     }
 }
-add_filter( 'wp_default_scripts', 'dequeue_jquery_migrate' );
+add_filter( 'wp_default_scripts', 'remove_jquery_frontend' );
 
 // add SVG to allowed file uploads with basic security scanning
 function add_file_types_to_uploads($mime_types) {

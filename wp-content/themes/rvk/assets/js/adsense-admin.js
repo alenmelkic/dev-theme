@@ -1,55 +1,113 @@
 /**
- * AdSense Admin JavaScript
+ * AdSense Admin JavaScript - Vanilla JavaScript (No jQuery)
  * Handles admin interface interactions for AdSense settings
  */
 
-jQuery(document).ready(function($) {
+(function() {
     'use strict';
 
-    // Handle collapsible sections (accordion functionality)
-    $('.rvk-section-toggle').on('click', function() {
-        $(this).toggleClass('collapsed');
-        $(this).siblings('.rvk-section-content').slideToggle(300);
-    });
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 
-    // Initialize all sections as expanded on first load
-    $('.rvk-section-content').show();
+    function init() {
+        // Handle collapsible sections (accordion functionality)
+        const sectionToggles = document.querySelectorAll('.rvk-section-toggle');
+        sectionToggles.forEach(function(toggle) {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('collapsed');
+                const content = this.nextElementSibling;
+                if (content && content.classList.contains('rvk-section-content')) {
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                    } else {
+                        content.style.display = 'none';
+                    }
+                }
+            });
+        });
 
-    // Validate Publisher ID format
-    $('input[name="rvk_adsense_settings[publisher_id]"]').on('blur', function() {
-        const value = $(this).val().trim();
-        if (value && !value.startsWith('ca-pub-')) {
-            alert('Publisher ID mora počinjati sa "ca-pub-"');
-            $(this).focus();
+        // Initialize all sections as expanded on first load
+        const sectionContents = document.querySelectorAll('.rvk-section-content');
+        sectionContents.forEach(function(content) {
+            content.style.display = 'block';
+        });
+
+        // Validate Publisher ID format
+        const publisherIdInput = document.querySelector('input[name="rvk_adsense_settings[publisher_id]"]');
+        if (publisherIdInput) {
+            publisherIdInput.addEventListener('blur', function() {
+                const value = this.value.trim();
+                if (value && !value.startsWith('ca-pub-')) {
+                    alert('Publisher ID mora počinjati sa "ca-pub-"');
+                    this.focus();
+                }
+            });
         }
-    });
 
-    // A/B Testing weight slider visual feedback (optional)
-    $('input[name*="[variant_a_weight]"]').on('input', function() {
-        const weight = $(this).val();
+        // A/B Testing weight slider visual feedback
+        const weightInputs = document.querySelectorAll('input[name*="[variant_a_weight]"]');
+        weightInputs.forEach(function(input) {
+            input.addEventListener('input', handleWeightInput);
+            // Initialize weight displays
+            handleWeightInput.call(input);
+        });
+
+        // Lazy load toggle explanation
+        const lazyLoadInputs = document.querySelectorAll('input[name*="[lazy_load]"]');
+        lazyLoadInputs.forEach(function(input) {
+            input.addEventListener('change', function() {
+                const isChecked = this.checked;
+                const message = isChecked
+                    ? 'Lenjivo učitavanje omogućeno: Reklame će se učitati kada su vidljive, poboljšavajući brzinu stranice.'
+                    : 'Lenjivo učitavanje onemogućeno: Reklame će se učitati odmah pri učitavanju stranice.';
+                // console.log(message);
+            });
+        });
+
+        // Form validation before submit
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', handleFormSubmit);
+        }
+
+        // Helper: Toggle responsive size inputs based on checkbox
+        const responsiveCheckboxes = document.querySelectorAll('input[type="checkbox"][name*="[responsive]["][name*="][enabled]"]');
+        responsiveCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', handleResponsiveToggle);
+            // Trigger initial state
+            handleResponsiveToggle.call(checkbox);
+        });
+    }
+
+    function handleWeightInput() {
+        const weight = this.value;
         const variantB = 100 - weight;
-        $(this).next('.weight-display').remove();
-        $(this).after('<span class="weight-display" style="margin-left: 10px; color: #666;">Varijanta A: ' + weight + '%, Varijanta B: ' + variantB + '%</span>');
-    });
 
-    // Initialize weight displays
-    $('input[name*="[variant_a_weight]"]').trigger('input');
+        // Remove existing display
+        const existingDisplay = this.parentNode.querySelector('.weight-display');
+        if (existingDisplay) {
+            existingDisplay.remove();
+        }
 
-    // Lazy load toggle explanation
-    $('input[name*="[lazy_load]"]').on('change', function() {
-        const isChecked = $(this).is(':checked');
-        const message = isChecked
-            ? 'Lenjivo učitavanje omogućeno: Reklame će se učitati kada su vidljive, poboljšavajući brzinu stranice.'
-            : 'Lenjivo učitavanje onemogućeno: Reklame će se učitati odmah pri učitavanju stranice.';
+        // Add new display
+        const display = document.createElement('span');
+        display.className = 'weight-display';
+        display.style.marginLeft = '10px';
+        display.style.color = '#666';
+        display.textContent = 'Varijanta A: ' + weight + '%, Varijanta B: ' + variantB + '%';
+        this.parentNode.insertBefore(display, this.nextSibling);
+    }
 
-        // Show temporary message (optional)
-        // console.log(message);
-    });
+    function handleFormSubmit(e) {
+        const publisherIdInput = document.querySelector('input[name="rvk_adsense_settings[publisher_id]"]');
+        const adsenseEnabledInput = document.querySelector('input[name="rvk_adsense_settings[enable_adsense]"]');
 
-    // Form validation before submit
-    $('form').on('submit', function(e) {
-        const publisherId = $('input[name="rvk_adsense_settings[publisher_id]"]').val().trim();
-        const adsenseEnabled = $('input[name="rvk_adsense_settings[enable_adsense]"]').is(':checked');
+        const publisherId = publisherIdInput ? publisherIdInput.value.trim() : '';
+        const adsenseEnabled = adsenseEnabledInput ? adsenseEnabledInput.checked : false;
 
         if (adsenseEnabled && !publisherId) {
             alert('Molimo unesite vaš AdSense Publisher ID prije omogućavanja AdSense-a.');
@@ -66,8 +124,11 @@ jQuery(document).ready(function($) {
         // Check if at least one position has ad slot ID if enabled
         let hasValidPosition = false;
         ['position_a', 'position_b', 'position_c'].forEach(function(position) {
-            const enabled = $('input[name="rvk_adsense_settings[' + position + '][enabled]"]').is(':checked');
-            const slotId = $('input[name="rvk_adsense_settings[' + position + '][ad_slot_id]"]').val().trim();
+            const enabledInput = document.querySelector('input[name="rvk_adsense_settings[' + position + '][enabled]"]');
+            const slotIdInput = document.querySelector('input[name="rvk_adsense_settings[' + position + '][ad_slot_id]"]');
+
+            const enabled = enabledInput ? enabledInput.checked : false;
+            const slotId = slotIdInput ? slotIdInput.value.trim() : '';
 
             if (enabled && slotId) {
                 hasValidPosition = true;
@@ -87,18 +148,22 @@ jQuery(document).ready(function($) {
         }
 
         return true;
-    });
+    }
 
-    // Helper: Toggle responsive size inputs based on checkbox
-    $('input[type="checkbox"][name*="[responsive]["][name*="][enabled]"]').on('change', function() {
-        const isChecked = $(this).is(':checked');
-        const container = $(this).closest('label').parent();
-        const inputs = container.find('input[type="number"]');
+    function handleResponsiveToggle() {
+        const isChecked = this.checked;
+        const container = this.closest('label').parentNode;
+        const inputs = container.querySelectorAll('input[type="number"]');
 
-        if (isChecked) {
-            inputs.prop('disabled', false).css('opacity', '1');
-        } else {
-            inputs.prop('disabled', true).css('opacity', '0.5');
-        }
-    }).trigger('change');
-});
+        inputs.forEach(function(input) {
+            if (isChecked) {
+                input.disabled = false;
+                input.style.opacity = '1';
+            } else {
+                input.disabled = true;
+                input.style.opacity = '0.5';
+            }
+        });
+    }
+
+})();
