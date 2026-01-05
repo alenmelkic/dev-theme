@@ -27,13 +27,13 @@ function rvk_analytics_admin_scripts($hook) {
         return;
     }
 
-    // Enqueue custom admin script
+    // Enqueue custom admin script (no dependencies - vanilla JS)
     $js_file = get_template_directory() . '/dist/analytics-admin.js';
     if (file_exists($js_file)) {
         wp_enqueue_script(
             'rvk-analytics-admin',
             get_template_directory_uri() . '/dist/analytics-admin.js',
-            array('jquery'),
+            array(),
             filemtime($js_file),
             true
         );

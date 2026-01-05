@@ -27,16 +27,13 @@ function rvk_custom_scripts_admin_scripts($hook) {
         return;
     }
 
-    // Enqueue jQuery UI Sortable (already in WordPress core)
-    wp_enqueue_script('jquery-ui-sortable');
-
-    // Enqueue custom admin script
+    // Enqueue custom admin script (no dependencies - vanilla JS with Sortable.js)
     $js_file = get_template_directory() . '/dist/custom-scripts-admin.js';
     if (file_exists($js_file)) {
         wp_enqueue_script(
             'rvk-custom-scripts-admin',
             get_template_directory_uri() . '/dist/custom-scripts-admin.js',
-            array('jquery', 'jquery-ui-sortable'),
+            array(),
             filemtime($js_file),
             true
         );

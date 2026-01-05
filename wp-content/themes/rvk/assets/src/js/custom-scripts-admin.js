@@ -1,196 +1,276 @@
-(function($) {
+/**
+ * Custom Scripts Settings Admin - Vanilla JavaScript with Sortable.js (No jQuery)
+ */
+import Sortable from 'sortablejs';
+
+(function() {
   'use strict';
 
-  $(document).ready(function() {
+  let scriptIndex = 0;
+  let sortableInstance = null;
 
-    let scriptIndex = $('#scripts-container .script-item').length;
+  // Wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
-    // Initialize sortable
-    $('#scripts-container').sortable({
+  function init() {
+    const scriptsContainer = document.getElementById('scripts-container');
+    if (!scriptsContainer) return;
+
+    scriptIndex = scriptsContainer.querySelectorAll('.script-item').length;
+
+    // Initialize Sortable.js
+    sortableInstance = new Sortable(scriptsContainer, {
       handle: '.script-drag-handle',
-      placeholder: 'script-item-placeholder',
-      update: function() {
+      animation: 150,
+      ghostClass: 'script-item-placeholder',
+      onEnd: function() {
         updateScriptOrder();
       }
     });
 
-    // Update order values after drag
-    function updateScriptOrder() {
-      $('#scripts-container .script-item').each(function(index) {
-        $(this).find('.script-order').val(index);
-      });
+    // Add new script button
+    const addScriptBtn = document.getElementById('add-script-btn');
+    if (addScriptBtn) {
+      addScriptBtn.addEventListener('click', addNewScript);
     }
 
-    // Add new script
-    $('#add-script-btn').on('click', function() {
-      const timestamp = Date.now();
-      const scriptId = 'script_' + timestamp;
-
-      // Get template
-      const template = $('#script-item-template').html();
-
-      // Replace placeholders
-      const newScript = template
-        .replace(/\{\{SCRIPT_ID\}\}/g, scriptId)
-        .replace(/\{\{INDEX\}\}/g, scriptIndex);
-
-      // Append to container
-      $('#scripts-container').append(newScript);
-
-      // Initialize the new item
-      const $newItem = $('#scripts-container .script-item:last');
-      initScriptItem($newItem);
-
-      scriptIndex++;
-
-      // Update order
-      updateScriptOrder();
-
-      // Scroll to new item
-      $('html, body').animate({
-        scrollTop: $newItem.offset().top - 100
-      }, 500);
-    });
-
-    // Remove script
-    $(document).on('click', '.remove-script-btn', function() {
-      if (confirm('Are you sure you want to remove this script?')) {
-        $(this).closest('.script-item').remove();
-        updateScriptOrder();
+    // Remove script buttons (delegated)
+    scriptsContainer.addEventListener('click', function(e) {
+      if (e.target.classList.contains('remove-script-btn') || e.target.closest('.remove-script-btn')) {
+        const btn = e.target.classList.contains('remove-script-btn') ? e.target : e.target.closest('.remove-script-btn');
+        handleRemoveScript(btn);
       }
     });
 
-    // Type switcher (inline/external)
-    $(document).on('change', '.script-type-select', function() {
-      const $item = $(this).closest('.script-item');
-      const type = $(this).val();
-
-      if (type === 'inline') {
-        $item.find('.inline-code-row').show();
-        $item.find('.external-url-row').hide();
-        $item.find('.async-defer-row').hide();
-      } else {
-        $item.find('.inline-code-row').hide();
-        $item.find('.external-url-row').show();
-        $item.find('.async-defer-row').show();
+    // Type switcher (delegated)
+    scriptsContainer.addEventListener('change', function(e) {
+      if (e.target.classList.contains('script-type-select')) {
+        handleTypeSwitch(e.target);
+      }
+      if (e.target.classList.contains('lazy-load-checkbox')) {
+        handleLazyLoadToggle(e.target);
+      }
+      if (e.target.classList.contains('conditional-enabled-checkbox')) {
+        handleConditionalToggle(e.target);
+      }
+      if (e.target.classList.contains('load-on-select')) {
+        handleLoadOnChange(e.target);
       }
     });
 
-    // Lazy load toggle
-    $(document).on('change', '.lazy-load-checkbox', function() {
-      const $item = $(this).closest('.script-item');
-      const $delayLabel = $item.find('.lazy-delay-label');
+    // Form validation
+    const form = document.getElementById('custom-scripts-form');
+    if (form) {
+      form.addEventListener('submit', handleFormSubmit);
+    }
 
-      if ($(this).is(':checked')) {
-        $delayLabel.show();
-      } else {
-        $delayLabel.hide();
-      }
-    });
-
-    // Conditional loading toggle
-    $(document).on('change', '.conditional-enabled-checkbox', function() {
-      const $details = $(this).closest('details');
-
-      if ($(this).is(':checked')) {
-        $details.attr('open', true);
-      } else {
-        $details.removeAttr('open');
-      }
-    });
-
-    // Load on selector
-    $(document).on('change', '.load-on-select', function() {
-      const $item = $(this).closest('.script-item');
-      const value = $(this).val();
-      const $postTypesCheckboxes = $item.find('.post-types-checkboxes');
-
-      if (value === 'post_types') {
-        $postTypesCheckboxes.show();
-      } else {
-        $postTypesCheckboxes.hide();
+    // Clear error styling on input (delegated)
+    scriptsContainer.addEventListener('input', function(e) {
+      if (e.target.matches('input[type="url"], input[type="text"], textarea')) {
+        e.target.classList.remove('error');
       }
     });
 
     // Initialize existing script items
-    $('.script-item').each(function() {
-      initScriptItem($(this));
+    scriptsContainer.querySelectorAll('.script-item').forEach(function(item) {
+      initScriptItem(item);
     });
+  }
 
-    // Initialize a script item
-    function initScriptItem($item) {
-      // Trigger type change to show/hide fields
-      $item.find('.script-type-select').trigger('change');
-      $item.find('.lazy-load-checkbox').trigger('change');
-      $item.find('.load-on-select').trigger('change');
+  function updateScriptOrder() {
+    const scriptsContainer = document.getElementById('scripts-container');
+    const scriptItems = scriptsContainer.querySelectorAll('.script-item');
+    scriptItems.forEach(function(item, index) {
+      const orderInput = item.querySelector('.script-order');
+      if (orderInput) {
+        orderInput.value = index;
+      }
+    });
+  }
+
+  function addNewScript() {
+    const timestamp = Date.now();
+    const scriptId = 'script_' + timestamp;
+
+    // Get template
+    const template = document.getElementById('script-item-template');
+    if (!template) return;
+
+    // Clone template content
+    let newScript = template.innerHTML;
+
+    // Replace placeholders
+    newScript = newScript.replace(/\{\{SCRIPT_ID\}\}/g, scriptId);
+    newScript = newScript.replace(/\{\{INDEX\}\}/g, scriptIndex);
+
+    // Append to container
+    const scriptsContainer = document.getElementById('scripts-container');
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = newScript;
+    const newItem = tempDiv.firstElementChild;
+    scriptsContainer.appendChild(newItem);
+
+    // Initialize the new item
+    initScriptItem(newItem);
+
+    scriptIndex++;
+
+    // Update order
+    updateScriptOrder();
+
+    // Scroll to new item
+    newItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function handleRemoveScript(btn) {
+    if (confirm('Are you sure you want to remove this script?')) {
+      const scriptItem = btn.closest('.script-item');
+      if (scriptItem) {
+        scriptItem.remove();
+        updateScriptOrder();
+      }
+    }
+  }
+
+  function handleTypeSwitch(select) {
+    const scriptItem = select.closest('.script-item');
+    if (!scriptItem) return;
+
+    const type = select.value;
+    const inlineCodeRow = scriptItem.querySelector('.inline-code-row');
+    const externalUrlRow = scriptItem.querySelector('.external-url-row');
+    const asyncDeferRow = scriptItem.querySelector('.async-defer-row');
+
+    if (type === 'inline') {
+      inlineCodeRow.style.display = 'block';
+      externalUrlRow.style.display = 'none';
+      asyncDeferRow.style.display = 'none';
+    } else {
+      inlineCodeRow.style.display = 'none';
+      externalUrlRow.style.display = 'block';
+      asyncDeferRow.style.display = 'block';
+    }
+  }
+
+  function handleLazyLoadToggle(checkbox) {
+    const scriptItem = checkbox.closest('.script-item');
+    if (!scriptItem) return;
+
+    const delayLabel = scriptItem.querySelector('.lazy-delay-label');
+    if (!delayLabel) return;
+
+    delayLabel.style.display = checkbox.checked ? 'inline-block' : 'none';
+  }
+
+  function handleConditionalToggle(checkbox) {
+    const details = checkbox.closest('details');
+    if (!details) return;
+
+    if (checkbox.checked) {
+      details.setAttribute('open', 'true');
+    } else {
+      details.removeAttribute('open');
+    }
+  }
+
+  function handleLoadOnChange(select) {
+    const scriptItem = select.closest('.script-item');
+    if (!scriptItem) return;
+
+    const value = select.value;
+    const postTypesCheckboxes = scriptItem.querySelector('.post-types-checkboxes');
+    if (!postTypesCheckboxes) return;
+
+    postTypesCheckboxes.style.display = (value === 'post_types') ? 'grid' : 'none';
+  }
+
+  function initScriptItem(item) {
+    // Trigger type change to show/hide fields
+    const typeSelect = item.querySelector('.script-type-select');
+    if (typeSelect) {
+      handleTypeSwitch(typeSelect);
     }
 
-    // Form validation
-    $('#custom-scripts-form').on('submit', function(e) {
-      let isValid = true;
-      let errorMessages = [];
+    const lazyLoadCheckbox = item.querySelector('.lazy-load-checkbox');
+    if (lazyLoadCheckbox) {
+      handleLazyLoadToggle(lazyLoadCheckbox);
+    }
 
-      // Check each enabled script
-      $('#scripts-container .script-item').each(function() {
-        const $item = $(this);
-        const enabled = $item.find('.script-enabled-toggle input').is(':checked');
+    const loadOnSelect = item.querySelector('.load-on-select');
+    if (loadOnSelect) {
+      handleLoadOnChange(loadOnSelect);
+    }
+  }
 
-        if (!enabled) {
-          return; // Skip disabled scripts
-        }
+  function handleFormSubmit(e) {
+    let isValid = true;
+    let errorMessages = [];
 
-        const name = $item.find('input[name*="[name]"]').val().trim();
-        const type = $item.find('.script-type-select').val();
-        let content = '';
+    const scriptsContainer = document.getElementById('scripts-container');
+    const scriptItems = scriptsContainer.querySelectorAll('.script-item');
 
-        if (type === 'external') {
-          content = $item.find('.external-url-input').val().trim();
+    // Check each enabled script
+    scriptItems.forEach(function(item) {
+      const enabledCheckbox = item.querySelector('.script-enabled-toggle input');
+      const enabled = enabledCheckbox ? enabledCheckbox.checked : false;
 
-          // Validate HTTPS
-          if (content && !content.startsWith('https://')) {
-            errorMessages.push('Script "' + (name || 'Unnamed') + '": URL must start with https://');
-            $item.find('.external-url-input').addClass('error');
-            isValid = false;
-          }
-
-          // Check for localhost
-          if (content && (content.includes('localhost') || content.includes('127.0.0.1'))) {
-            errorMessages.push('Script "' + (name || 'Unnamed') + '": Localhost URLs are not allowed');
-            $item.find('.external-url-input').addClass('error');
-            isValid = false;
-          }
-        } else {
-          content = $item.find('.inline-code-textarea').val().trim();
-        }
-
-        // Check if content is empty
-        if (!content) {
-          errorMessages.push('Script "' + (name || 'Unnamed') + '": Content/URL is empty');
-          isValid = false;
-        }
-
-        // Check if name is empty
-        if (!name) {
-          errorMessages.push('One or more scripts are missing a name');
-          isValid = false;
-        }
-      });
-
-      // Display errors
-      if (!isValid) {
-        e.preventDefault();
-        alert('Validation Errors:\n\n' + errorMessages.join('\n'));
-        return false;
+      if (!enabled) {
+        return; // Skip disabled scripts
       }
 
-      return true;
+      const nameInput = item.querySelector('input[name*="[name]"]');
+      const name = nameInput ? nameInput.value.trim() : '';
+      const typeSelect = item.querySelector('.script-type-select');
+      const type = typeSelect ? typeSelect.value : '';
+      let content = '';
+
+      if (type === 'external') {
+        const urlInput = item.querySelector('.external-url-input');
+        content = urlInput ? urlInput.value.trim() : '';
+
+        // Validate HTTPS
+        if (content && !content.startsWith('https://')) {
+          errorMessages.push('Script "' + (name || 'Unnamed') + '": URL must start with https://');
+          if (urlInput) urlInput.classList.add('error');
+          isValid = false;
+        }
+
+        // Check for localhost
+        if (content && (content.includes('localhost') || content.includes('127.0.0.1'))) {
+          errorMessages.push('Script "' + (name || 'Unnamed') + '": Localhost URLs are not allowed');
+          if (urlInput) urlInput.classList.add('error');
+          isValid = false;
+        }
+      } else {
+        const textarea = item.querySelector('.inline-code-textarea');
+        content = textarea ? textarea.value.trim() : '';
+      }
+
+      // Check if content is empty
+      if (!content) {
+        errorMessages.push('Script "' + (name || 'Unnamed') + '": Content/URL is empty');
+        isValid = false;
+      }
+
+      // Check if name is empty
+      if (!name) {
+        errorMessages.push('One or more scripts are missing a name');
+        isValid = false;
+      }
     });
 
-    // Clear error styling on input
-    $(document).on('input', 'input[type="url"], input[type="text"], textarea', function() {
-      $(this).removeClass('error');
-    });
+    // Display errors
+    if (!isValid) {
+      e.preventDefault();
+      alert('Validation Errors:\n\n' + errorMessages.join('\n'));
+      return false;
+    }
 
-  });
+    return true;
+  }
 
-})(jQuery);
+})();
