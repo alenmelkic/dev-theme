@@ -68,6 +68,12 @@ include( 'configure/marketing-helpers.php' );
 include( 'configure/adsense-settings.php' );
 include( 'configure/adsense-helpers.php' );
 
+// THIRD-PARTY INTEGRATIONS
+include( 'configure/analytics-settings.php' );
+include( 'configure/analytics-helpers.php' );
+include( 'configure/custom-scripts-settings.php' );
+include( 'configure/custom-scripts-helpers.php' );
+
 // HOOKS ADMIN
 if(is_admin()) {
 	include( 'configure/admin.php' );

@@ -43,6 +43,12 @@
     "src": "assets/src/js/ai-content-helper.js",
     "isEntry": true
   },
+  "assets/src/js/analytics-admin.js": {
+    "file": "analytics-admin.js",
+    "name": "analytics-admin",
+    "src": "assets/src/js/analytics-admin.js",
+    "isEntry": true
+  },
   "assets/src/js/article-type-panel.js": {
     "file": "js/article-type-panel.js",
     "name": "js/article-type-panel",
@@ -57,6 +63,12 @@
     "imports": [
       "_collapse.js"
     ]
+  },
+  "assets/src/js/custom-scripts-admin.js": {
+    "file": "custom-scripts-admin.js",
+    "name": "custom-scripts-admin",
+    "src": "assets/src/js/custom-scripts-admin.js",
+    "isEntry": true
   },
   "assets/src/js/facebook-video-player.js": {
     "file": "js/facebook-video-player.js",
@@ -109,6 +121,22 @@
     "name": "js/youtube-video-player",
     "src": "assets/src/js/youtube-video-player.js",
     "isEntry": true
+  },
+  "assets/src/scss/admin/analytics.scss": {
+    "file": "css/admin/analytics.css",
+    "src": "assets/src/scss/admin/analytics.scss",
+    "isEntry": true,
+    "names": [
+      "admin/analytics.css"
+    ]
+  },
+  "assets/src/scss/admin/custom-scripts.scss": {
+    "file": "css/admin/custom-scripts.css",
+    "src": "assets/src/scss/admin/custom-scripts.scss",
+    "isEntry": true,
+    "names": [
+      "admin/custom-scripts.css"
+    ]
   },
   "assets/src/scss/admin/sponsored-meta-box.scss": {
     "file": "css/admin/sponsored-meta-box.css",

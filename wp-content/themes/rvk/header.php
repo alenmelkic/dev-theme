@@ -25,92 +25,94 @@
 <div id="page" class="site">
 
   <header id="masthead" role="banner">
-    <nav class="navbar navbar-expand-lg navbar-light">
-      <div class="container floating-header">
-        <!-- Site Branding -->
-        <div class="navbar-brand">
-          <?php
-          $logo_id = get_option('dev_theme_logo');
-          $logo_url = $logo_id ? wp_get_attachment_url($logo_id) : '';
-
-          if ( $logo_url ) : ?>
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-              <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo( 'name' ); ?>" class="site-logo">
-            </a>
-          <?php else : ?>
-            <?php if ( is_front_page() || is_home() ) : ?>
-              <h1 class="site-title mb-0">
-                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
-                  <?php bloginfo( 'name' ); ?>
-                </a>
-              </h1>
-            <?php else : ?>
-              <div class="site-title mb-0">
-                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
-                  <?php bloginfo( 'name' ); ?>
-                </a>
-              </div>
-            <?php endif; ?>
-
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <div class="floating-header d-flex justify-content-between align-items-center w-100">
+          <!-- Site Branding -->
+          <div class="navbar-brand">
             <?php
-            $description = get_bloginfo( 'description', 'display' );
-            if ( $description || is_customize_preview() ) : ?>
-              <p class="site-description mb-0 text-muted small"><?php echo $description; ?></p>
+            $logo_id = get_option('dev_theme_logo');
+            $logo_url = $logo_id ? wp_get_attachment_url($logo_id) : '';
+
+            if ( $logo_url ) : ?>
+              <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+                <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo( 'name' ); ?>" class="site-logo">
+              </a>
+            <?php else : ?>
+              <?php if ( is_front_page() || is_home() ) : ?>
+                <h1 class="site-title mb-0">
+                  <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
+                    <?php bloginfo( 'name' ); ?>
+                  </a>
+                </h1>
+              <?php else : ?>
+                <div class="site-title mb-0">
+                  <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" class="text-decoration-none">
+                    <?php bloginfo( 'name' ); ?>
+                  </a>
+                </div>
+              <?php endif; ?>
+
+              <?php
+              $description = get_bloginfo( 'description', 'display' );
+              if ( $description || is_customize_preview() ) : ?>
+                <p class="site-description mb-0 text-muted small"><?php echo $description; ?></p>
+              <?php endif; ?>
             <?php endif; ?>
-          <?php endif; ?>
-        </div>
+          </div>
 
-        
+          
 
-        <!-- Desktop Navigation (hidden on mobile) -->
-        <div class="desktop-menu d-none d-lg-block">
-          <?php
-          wp_nav_menu( array(
-            'theme_location' => 'menu-desktop',
-            'menu_id'        => 'desktop-menu',
-            'menu_class'     => 'navbar-nav ms-auto',
-            'container'      => false,
-            'fallback_cb'    => false,
-            'walker'         => new Bootstrap_Nav_Walker()
-          ) );
-          ?>
-        </div>
-
-        <!-- Mobile Navigation (hidden on desktop) -->
-        <div class="d-lg-none">
-          <div class="menu-nav-mobile" id="mobileNav">
+          <!-- Desktop Navigation (hidden on mobile) -->
+          <div class="desktop-menu d-none d-lg-block">
             <?php
             wp_nav_menu( array(
-              'theme_location' => 'menu-mobile',
-              'menu_id'        => 'mobile-menu',
-              'menu_class'     => 'navbar-nav',
+              'theme_location' => 'menu-desktop',
+              'menu_id'        => 'desktop-menu',
+              'menu_class'     => 'navbar-nav ms-auto',
               'container'      => false,
               'fallback_cb'    => false,
               'walker'         => new Bootstrap_Nav_Walker()
             ) );
             ?>
           </div>
-        </div>
 
-        <div class="button-container d-flex align-items-center">
+          <!-- Mobile Navigation (hidden on desktop) -->
+          <div class="d-lg-none">
+            <div class="menu-nav-mobile" id="mobileNav">
+              <?php
+              wp_nav_menu( array(
+                'theme_location' => 'menu-mobile',
+                'menu_id'        => 'mobile-menu',
+                'menu_class'     => 'navbar-nav',
+                'container'      => false,
+                'fallback_cb'    => false,
+                'walker'         => new Bootstrap_Nav_Walker()
+              ) );
+              ?>
+            </div>
+          </div>
 
-            <!-- Header Play Button -->
-            <button id="header-play-btn" class="header-play-btn mx-0 d-lg-flex align-items-center" aria-label="Listen Live">
-                <span class="icon-play me-2">▶</span>
-                <span class="text">RVK Uživo</span>
-            </button>
+          <div class="button-container d-flex align-items-center">
 
-            <!-- Mobile Menu Toggle -->
-            <button class="navbar-toggler hamburger" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
-                aria-label="Toggle navigation">
+              <!-- Header Play Button -->
+              <button id="header-play-btn" class="header-play-btn mx-0 d-lg-flex align-items-center" aria-label="Listen Live">
+                  <span class="icon-play me-2">▶</span>
+                  <span class="text">RVK Uživo</span>
+              </button>
 
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+              <!-- Mobile Menu Toggle -->
+              <button class="navbar-toggler hamburger" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false"
+                  aria-label="Toggle navigation">
 
-            </button>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
 
+              </button>
+
+          </div>
         </div>
       </div>
     </nav>

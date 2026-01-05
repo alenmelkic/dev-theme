@@ -174,6 +174,8 @@ export default defineConfig({
 				'js/adsense-manager': resolve(`${__dirname}/assets/src/js/adsense-manager.js`),
 				'marketing-admin': resolve(`${__dirname}/assets/js/marketing-admin.js`),
 				'adsense-admin': resolve(`${__dirname}/assets/js/adsense-admin.js`),
+				'analytics-admin': resolve(`${__dirname}/assets/src/js/analytics-admin.js`),
+				'custom-scripts-admin': resolve(`${__dirname}/assets/src/js/custom-scripts-admin.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -206,6 +208,8 @@ export default defineConfig({
 				'admin/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
 				'admin/marketing': resolve(`${__dirname}/assets/scss/marketing-admin.scss`),
 				'admin/adsense': resolve(`${__dirname}/assets/scss/adsense-admin.scss`),
+				'admin/analytics': resolve(`${__dirname}/assets/src/scss/admin/analytics.scss`),
+				'admin/custom-scripts': resolve(`${__dirname}/assets/src/scss/admin/custom-scripts.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',
