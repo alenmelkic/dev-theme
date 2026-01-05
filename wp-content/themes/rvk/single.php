@@ -21,7 +21,14 @@ while (have_posts()) : the_post();
                 ?>
 
                 <?php get_component('post-title', array('tag' => 'h1', 'link' => false)); ?>
-                
+
+                <?php
+                // AdSense Position A: Below Title, Above Featured Image
+                if (function_exists('rvk_display_adsense_ad')) {
+                    rvk_display_adsense_ad('position_a');
+                }
+                ?>
+
                 <?php if (has_excerpt()) : ?>
                     <div class="post-excerpt">
                         <?php the_excerpt(); ?>
@@ -56,6 +63,13 @@ while (have_posts()) : the_post();
                 </div>
             </header>
 
+            <?php
+            // AdSense Position B: Above Article Content
+            if (function_exists('rvk_display_adsense_ad')) {
+                rvk_display_adsense_ad('position_b');
+            }
+            ?>
+
             <div class="post-content col-xl-10 mx-auto">
                 <?php the_content(); ?>
                 
@@ -67,6 +81,13 @@ while (have_posts()) : the_post();
                 ));
                 ?>
             </div>
+
+            <?php
+            // AdSense Position C: Below Article Content
+            if (function_exists('rvk_display_adsense_ad')) {
+                rvk_display_adsense_ad('position_c');
+            }
+            ?>
 
             <?php
             // Social share buttons

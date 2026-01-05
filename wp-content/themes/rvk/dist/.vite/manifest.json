@@ -3,11 +3,25 @@
     "file": "collapse.js",
     "name": "collapse"
   },
+  "assets/js/adsense-admin.js": {
+    "file": "adsense-admin.js",
+    "name": "adsense-admin",
+    "src": "assets/js/adsense-admin.js",
+    "isEntry": true
+  },
   "assets/js/marketing-admin.js": {
     "file": "marketing-admin.js",
     "name": "marketing-admin",
     "src": "assets/js/marketing-admin.js",
     "isEntry": true
+  },
+  "assets/scss/adsense-admin.scss": {
+    "file": "css/admin/adsense.css",
+    "src": "assets/scss/adsense-admin.scss",
+    "isEntry": true,
+    "names": [
+      "admin/adsense.css"
+    ]
   },
   "assets/scss/marketing-admin.scss": {
     "file": "css/admin/marketing.css",
@@ -16,6 +30,12 @@
     "names": [
       "admin/marketing.css"
     ]
+  },
+  "assets/src/js/adsense-manager.js": {
+    "file": "js/adsense-manager.js",
+    "name": "js/adsense-manager",
+    "src": "assets/src/js/adsense-manager.js",
+    "isEntry": true
   },
   "assets/src/js/ai-content-helper.js": {
     "file": "js/ai-content-helper.js",

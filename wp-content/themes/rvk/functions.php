@@ -64,6 +64,10 @@ include( 'configure/aeo-key-takeaways.php' );
 include( 'configure/marketing-settings.php' );
 include( 'configure/marketing-helpers.php' );
 
+// ADSENSE
+include( 'configure/adsense-settings.php' );
+include( 'configure/adsense-helpers.php' );
+
 // HOOKS ADMIN
 if(is_admin()) {
 	include( 'configure/admin.php' );

@@ -1,0 +1,133 @@
+/**
+ * AdSense Admin Styles
+ * Styling for AdSense settings admin interface
+ */
+
+.rvk-adsense-section {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+
+    h2 {
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e5e5;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+            color: #0073aa;
+        }
+
+        &.collapsed {
+            &::after {
+                content: ' ▼';
+                font-size: 0.8em;
+            }
+        }
+
+        &:not(.collapsed)::after {
+            content: ' ▲';
+            font-size: 0.8em;
+        }
+    }
+
+    .description {
+        margin-bottom: 20px;
+        color: #646970;
+        font-style: italic;
+    }
+}
+
+.rvk-adsense-help {
+    h3 {
+        margin-top: 0;
+    }
+
+    ul {
+        list-style: disc;
+        margin-left: 20px;
+
+        li {
+            margin-bottom: 10px;
+        }
+    }
+
+    strong {
+        color: #2271b1;
+    }
+}
+
+// Responsive size inputs
+.form-table {
+    input[type="number"] {
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// Weight display
+.weight-display {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 8px;
+    background: #f0f0f1;
+    border-radius: 3px;
+    font-size: 12px;
+    color: #2c3338;
+}
+
+// Category/tag checkboxes
+fieldset {
+    label {
+        margin-bottom: 8px;
+
+        &[style*="inline-block"] {
+            padding: 4px 8px;
+            background: #f6f7f7;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+
+            &:hover {
+                background: #e5e5e5;
+            }
+        }
+    }
+}
+
+// Form validation
+input.error {
+    border-color: #d63638;
+    box-shadow: 0 0 0 1px #d63638;
+}
+
+// Position sections
+.rvk-adsense-position_a,
+.rvk-adsense-position_b,
+.rvk-adsense-position_c {
+    margin: 20px 0;
+}
+
+// Helper text
+.form-table {
+    th {
+        label {
+            font-weight: 600;
+            color: #1d2327;
+        }
+    }
+
+    td {
+        .description {
+            margin-top: 5px;
+            margin-bottom: 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+    }
+}

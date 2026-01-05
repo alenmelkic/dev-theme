@@ -171,7 +171,9 @@ export default defineConfig({
 				'js/seo-content-panel': resolve(`${__dirname}/assets/src/js/seo-content-panel.js`),
 				'js/article-type-panel': resolve(`${__dirname}/assets/src/js/article-type-panel.js`),
 				'js/social-share': resolve(`${__dirname}/assets/src/js/social-share.js`),
+				'js/adsense-manager': resolve(`${__dirname}/assets/src/js/adsense-manager.js`),
 				'marketing-admin': resolve(`${__dirname}/assets/js/marketing-admin.js`),
+				'adsense-admin': resolve(`${__dirname}/assets/js/adsense-admin.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -203,6 +205,7 @@ export default defineConfig({
 				// Admin CSS
 				'admin/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
 				'admin/marketing': resolve(`${__dirname}/assets/scss/marketing-admin.scss`),
+				'admin/adsense': resolve(`${__dirname}/assets/scss/adsense-admin.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',
