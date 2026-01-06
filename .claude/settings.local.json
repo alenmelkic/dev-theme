@@ -7,7 +7,8 @@
       "Bash(\"c:\\xampp\\php\\php.exe\" c:xampphtdocsdev-themeqa-seo-test.php)",
       "Bash(\"c:\\xampp\\php\\php.exe\" \"c:\\xampp\\htdocs\\dev-theme\\qa-final-report.php\")",
       "Bash(ls:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

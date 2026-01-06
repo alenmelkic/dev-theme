@@ -1,0 +1,25 @@
+// ============================================
+// BOOTSTRAP UTILITIES CONFIGURATION
+// ============================================
+// Override Bootstrap's default $utilities map to remove color utilities
+// This prevents generating classes like .text-primary, .bg-danger, etc. for default Bootstrap colors
+
+// Remove color-related utilities we don't use
+$utilities: map-remove($utilities,
+  "color",              // Removes .text-primary, .text-danger, etc.
+  "background-color",   // Removes .bg-primary, .bg-danger, etc.
+  "text-bg"             // Removes .text-bg-primary, etc.
+);
+
+// Optional: You can also add custom utilities here
+// Example:
+// $utilities: map-merge(
+//   $utilities,
+//   (
+//     "custom-color": (
+//       property: color,
+//       class: text,
+//       values: map-get($theme-colors, "primary")
+//     )
+//   )
+// );

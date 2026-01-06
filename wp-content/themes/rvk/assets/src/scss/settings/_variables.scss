@@ -1,4 +1,25 @@
-// Theme Colors
+// ============================================
+// BOOTSTRAP COLOR VARIABLES OVERRIDE
+// ============================================
+// Override Bootstrap default colors BEFORE they are defined
+// This removes: blue, indigo, purple, pink, red, orange, yellow, green, teal, cyan
+// See: node_modules/bootstrap/scss/_variables.scss line 25-35
+
+// Disable all Bootstrap default theme colors
+$blue: null;
+$indigo: null;
+$purple: null;
+$pink: null;
+$red: null;
+$orange: null;
+$yellow: null;
+$green: null;
+$teal: null;
+$cyan: null;
+
+// ============================================
+// CUSTOM THEME COLORS
+// ============================================
 
 // Primary Colors
 $primary-color: #ec1c24;
@@ -8,7 +29,7 @@ $black-color: #231f20;
 // Secondary Colors
 $gray-color: #f8f9fc;
 $white: #fff;
-$white-off: #F5F5F5;
+$white-off: #f6f7f8;
 
 $white-filter: brightness(0) saturate(100%) invert(100%) sepia(5%) saturate(150%) hue-rotate(260deg) brightness(112%) contrast(78%);
 
