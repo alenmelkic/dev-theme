@@ -11,6 +11,7 @@ import { resolve } from 'path';
 import { glob } from 'glob';
 import PurgeCSS from 'vite-plugin-purgecss';
 import react from '@vitejs/plugin-react';
+import { fontConverter } from './vite-plugin-font-converter.js';
 
 // Get the relative path of the vite.config.js file for the alias
 const fullPath = import.meta.url.slice(0, import.meta.url.lastIndexOf('/'));
@@ -46,6 +47,7 @@ export default defineConfig({
 
 	plugins: [
 		react(),
+		fontConverter(),
 		{
 			handleHotUpdate({ file, server }) {
 				if (file.endsWith('.php')) {
@@ -113,6 +115,9 @@ export default defineConfig({
 					/rvk-image-gallery/,
 					/gallery-grid/,
 					/gallery-item/,
+				],
+				greedy: [
+					/@font-face/, // Preserve font-face rules
 				],
 			},
 			variables: true,
