@@ -17,6 +17,7 @@ include( 'configure/utilities.php' );
 include( 'configure/configure.php' );
 include( 'configure/page-options.php' );
 include( 'configure/hidden-categories.php' );
+include( 'configure/admin-bar-fix.php' );
 
 // JAVASCRIPT & CSS
 include( 'configure/js-css.php' );
