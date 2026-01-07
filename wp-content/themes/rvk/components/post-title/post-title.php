@@ -8,10 +8,10 @@
  * @param string $class Additional CSS classes
  */
 
-$post_id = $post_id ?? get_the_ID();
-$tag = $tag ?? 'h2';
-$link = $link ?? true;
-$class = $class ?? '';
+$post_id = $component_args['post_id'] ?? get_the_ID();
+$tag = $component_args['tag'] ?? 'h2';
+$link = $component_args['link'] ?? true;
+$class = $component_args['class'] ?? '';
 
 $title = get_the_title($post_id);
 $permalink = get_permalink($post_id);

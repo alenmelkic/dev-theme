@@ -11,7 +11,7 @@ while (have_posts()) : the_post();
 <main id="main" class="site-main single-post-page">
     <div class="container">
         <article <?php post_class(); ?>>
-            <header class="post-header col-xl-10 mx-auto">
+            <header class="post-header col-xl-8 mx-auto">
                 <?php
                 // Sponsored disclaimer - top
                 get_component('sponsored-disclaimer', ['position' => 'top']);
@@ -21,21 +21,17 @@ while (have_posts()) : the_post();
                 ?>
 
                 <?php get_component('post-title', array('tag' => 'h1', 'link' => false)); ?>
+
                 
+
                 <?php if (has_excerpt()) : ?>
                     <div class="post-excerpt">
                         <?php the_excerpt(); ?>
                     </div>
-                <?php endif; ?>
-                
-                <div class="post-reading-time">
-                    <?php echo esc_html(get_reading_time()); ?>
-                </div>
-                
-                <?php get_component('featured-image', array('variant' => 'post', 'size' => 'large', 'loading' => 'eager')); ?>
-                
+                <?php endif; ?>       
                 <div class="post-meta">
                     <?php get_component('author', array('size' => 'medium')); ?>
+
                     <?php get_component('post-date'); ?>
                     <span class="reading-time"><?php echo esc_html(get_reading_time()); ?></span>
                     
@@ -45,7 +41,7 @@ while (have_posts()) : the_post();
                     if (!empty($categories)) :
                     ?>
                         <div class="post-categories">
-                            <span class="meta-label"><?php esc_html_e('Categories:', 'dev-theme'); ?></span>
+                            <span class="meta-label"><?php esc_html_e('', 'dev-theme'); ?></span>
                             <?php
                             foreach ($categories as $category) {
                                 echo '<a href="' . esc_url(get_category_link($category->term_id)) . '" class="category-link">' . esc_html($category->name) . '</a>';
@@ -54,9 +50,25 @@ while (have_posts()) : the_post();
                         </div>
                     <?php endif; ?>
                 </div>
+                
+                <?php get_component('featured-image', array('variant' => 'post', 'size' => 'large', 'loading' => 'eager')); ?>
+                
+                <?php
+                // AdSense Position A: Below Title, Above Featured Image
+                if (function_exists('rvk_display_adsense_ad')) {
+                    rvk_display_adsense_ad('position_a');
+                }
+                ?>
             </header>
 
-            <div class="post-content col-xl-10 mx-auto">
+            <?php
+            // AdSense Position B: Above Article Content
+            if (function_exists('rvk_display_adsense_ad')) {
+                rvk_display_adsense_ad('position_b');
+            }
+            ?>
+
+            <div class="post-content col-xl-6 mx-auto">
                 <?php the_content(); ?>
                 
                 <?php
@@ -67,6 +79,13 @@ while (have_posts()) : the_post();
                 ));
                 ?>
             </div>
+
+            <?php
+            // AdSense Position C: Below Article Content
+            if (function_exists('rvk_display_adsense_ad')) {
+                rvk_display_adsense_ad('position_c');
+            }
+            ?>
 
             <?php
             // Social share buttons

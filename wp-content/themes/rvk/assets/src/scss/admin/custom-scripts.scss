@@ -1,0 +1,372 @@
+// Custom Scripts Settings Admin Styles
+
+.rvk-custom-scripts-section {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 30px;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+
+  h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  h3 {
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  &.help-section {
+    background: #f9f9f9;
+    border-left: 4px solid #2271b1;
+
+    h2 {
+      color: #2271b1;
+    }
+
+    ul {
+      margin-left: 20px;
+
+      li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+    }
+
+    strong {
+      color: #1d2327;
+    }
+
+    code {
+      background: #f0f0f1;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+  }
+}
+
+#scripts-container {
+  min-height: 50px;
+  margin-bottom: 15px;
+
+  .script-item {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 15px;
+    position: relative;
+    transition: box-shadow 0.2s;
+
+    &:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &.ui-sortable-helper {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      opacity: 0.9;
+      cursor: move;
+    }
+  }
+
+  .script-item-placeholder {
+    background: #f6f7f7;
+    border: 2px dashed #2271b1;
+    border-radius: 4px;
+    height: 100px;
+    margin-bottom: 15px;
+  }
+
+  .script-drag-handle {
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    cursor: move;
+    color: #8c8f94;
+    padding: 10px;
+    user-select: none;
+
+    &:hover {
+      color: #2271b1;
+    }
+  }
+
+  .script-content {
+    margin-left: 30px;
+  }
+
+  .script-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+
+    .script-enabled-toggle {
+      cursor: pointer;
+      font-size: 14px;
+
+      input[type="checkbox"] {
+        margin-right: 5px;
+      }
+
+      strong {
+        font-weight: 600;
+      }
+    }
+
+    .remove-script-btn {
+      color: #d63638;
+
+      &:hover {
+        color: #a00;
+      }
+    }
+  }
+
+  .script-fields {
+    .script-row {
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+
+        strong {
+          font-weight: 600;
+          font-size: 13px;
+        }
+      }
+
+      input[type="text"],
+      input[type="url"],
+      input[type="number"],
+      select,
+      textarea {
+        margin-top: 5px;
+      }
+
+      .large-text {
+        width: 100%;
+        max-width: 800px;
+      }
+
+      .regular-text {
+        max-width: 400px;
+      }
+
+      .small-text {
+        max-width: 100px;
+      }
+
+      textarea.code {
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        background: #f6f7f7;
+      }
+
+      .description {
+        margin-top: 5px;
+        color: #646970;
+        font-size: 12px;
+      }
+    }
+
+    .inline-code-row,
+    .external-url-row,
+    .async-defer-row {
+      transition: opacity 0.2s;
+    }
+
+    fieldset {
+      border: none;
+      padding: 10px 15px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      margin: 0;
+
+      legend {
+        padding: 0 5px;
+        font-size: 13px;
+      }
+
+      label {
+        display: inline-block;
+        margin-right: 15px;
+        margin-bottom: 5px;
+        font-weight: normal;
+
+        input[type="checkbox"] {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .lazy-delay-label {
+      margin-left: 20px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .conditional-loading-details {
+      border: 1px solid #ccd0d4;
+      border-radius: 4px;
+      padding: 10px;
+      background: #f9f9f9;
+
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+        user-select: none;
+        list-style: none;
+
+        &::-webkit-details-marker {
+          display: none;
+        }
+
+        &::before {
+          content: '▶';
+          display: inline-block;
+          margin-right: 5px;
+          transition: transform 0.2s;
+        }
+
+        label {
+          cursor: pointer;
+        }
+      }
+
+      &[open] summary::before {
+        transform: rotate(90deg);
+      }
+
+      .conditional-options {
+        margin-top: 15px;
+        padding: 15px;
+        background: #fff;
+        border-radius: 3px;
+
+        label {
+          display: block;
+          margin-bottom: 10px;
+
+          strong {
+            font-weight: 600;
+            font-size: 13px;
+          }
+        }
+
+        .post-types-checkboxes {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          gap: 10px;
+          margin-top: 10px;
+          padding: 10px;
+          background: #f6f7f7;
+          border-radius: 3px;
+
+          label {
+            margin-bottom: 5px;
+            font-weight: normal;
+
+            input[type="checkbox"] {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+input.error,
+select.error,
+textarea.error {
+  border-color: #d63638;
+  box-shadow: 0 0 0 1px #d63638;
+}
+
+.error-msg {
+  color: #d63638;
+  font-size: 13px;
+  display: block;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+// Form table improvements
+.form-table {
+  th {
+    width: 200px;
+    padding: 15px 10px 15px 0;
+    vertical-align: top;
+  }
+
+  td {
+    padding: 15px 10px;
+    vertical-align: top;
+
+    .description {
+      margin-top: 5px;
+      margin-bottom: 0;
+      color: #646970;
+      font-size: 13px;
+    }
+
+    input[type="text"] {
+      &.regular-text {
+        max-width: 400px;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media screen and (max-width: 782px) {
+  .form-table th,
+  .form-table td {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .form-table th {
+    padding-bottom: 5px;
+  }
+
+  #scripts-container {
+    .script-drag-handle {
+      position: static;
+      transform: none;
+      display: block;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .script-content {
+      margin-left: 0;
+    }
+
+    .script-fields {
+      .post-types-checkboxes {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+
+// Template script (hidden)
+#script-item-template {
+  display: none;
+}

@@ -11,6 +11,7 @@ import { resolve } from 'path';
 import { glob } from 'glob';
 import PurgeCSS from 'vite-plugin-purgecss';
 import react from '@vitejs/plugin-react';
+import { fontConverter } from './vite-plugin-font-converter.js';
 
 // Get the relative path of the vite.config.js file for the alias
 const fullPath = import.meta.url.slice(0, import.meta.url.lastIndexOf('/'));
@@ -46,6 +47,7 @@ export default defineConfig({
 
 	plugins: [
 		react(),
+		fontConverter(),
 		{
 			handleHotUpdate({ file, server }) {
 				if (file.endsWith('.php')) {
@@ -114,6 +116,9 @@ export default defineConfig({
 					/gallery-grid/,
 					/gallery-item/,
 				],
+				greedy: [
+					/@font-face/, // Preserve font-face rules
+				],
 			},
 			variables: true,
 			keyframes: true,
@@ -171,7 +176,11 @@ export default defineConfig({
 				'js/seo-content-panel': resolve(`${__dirname}/assets/src/js/seo-content-panel.js`),
 				'js/article-type-panel': resolve(`${__dirname}/assets/src/js/article-type-panel.js`),
 				'js/social-share': resolve(`${__dirname}/assets/src/js/social-share.js`),
+				'js/adsense-manager': resolve(`${__dirname}/assets/src/js/adsense-manager.js`),
 				'marketing-admin': resolve(`${__dirname}/assets/js/marketing-admin.js`),
+				'adsense-admin': resolve(`${__dirname}/assets/js/adsense-admin.js`),
+				'analytics-admin': resolve(`${__dirname}/assets/src/js/analytics-admin.js`),
+				'custom-scripts-admin': resolve(`${__dirname}/assets/src/js/custom-scripts-admin.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -203,6 +212,9 @@ export default defineConfig({
 				// Admin CSS
 				'admin/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
 				'admin/marketing': resolve(`${__dirname}/assets/scss/marketing-admin.scss`),
+				'admin/adsense': resolve(`${__dirname}/assets/scss/adsense-admin.scss`),
+				'admin/analytics': resolve(`${__dirname}/assets/src/scss/admin/analytics.scss`),
+				'admin/custom-scripts': resolve(`${__dirname}/assets/src/scss/admin/custom-scripts.scss`),
 			},
 			output: {
 				entryFileNames: '[name].js',

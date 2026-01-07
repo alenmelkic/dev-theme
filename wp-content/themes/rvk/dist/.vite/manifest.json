@@ -3,11 +3,25 @@
     "file": "collapse.js",
     "name": "collapse"
   },
+  "assets/js/adsense-admin.js": {
+    "file": "adsense-admin.js",
+    "name": "adsense-admin",
+    "src": "assets/js/adsense-admin.js",
+    "isEntry": true
+  },
   "assets/js/marketing-admin.js": {
     "file": "marketing-admin.js",
     "name": "marketing-admin",
     "src": "assets/js/marketing-admin.js",
     "isEntry": true
+  },
+  "assets/scss/adsense-admin.scss": {
+    "file": "css/admin/adsense.css",
+    "src": "assets/scss/adsense-admin.scss",
+    "isEntry": true,
+    "names": [
+      "admin/adsense.css"
+    ]
   },
   "assets/scss/marketing-admin.scss": {
     "file": "css/admin/marketing.css",
@@ -17,10 +31,22 @@
       "admin/marketing.css"
     ]
   },
+  "assets/src/js/adsense-manager.js": {
+    "file": "js/adsense-manager.js",
+    "name": "js/adsense-manager",
+    "src": "assets/src/js/adsense-manager.js",
+    "isEntry": true
+  },
   "assets/src/js/ai-content-helper.js": {
     "file": "js/ai-content-helper.js",
     "name": "js/ai-content-helper",
     "src": "assets/src/js/ai-content-helper.js",
+    "isEntry": true
+  },
+  "assets/src/js/analytics-admin.js": {
+    "file": "analytics-admin.js",
+    "name": "analytics-admin",
+    "src": "assets/src/js/analytics-admin.js",
     "isEntry": true
   },
   "assets/src/js/article-type-panel.js": {
@@ -37,6 +63,12 @@
     "imports": [
       "_collapse.js"
     ]
+  },
+  "assets/src/js/custom-scripts-admin.js": {
+    "file": "custom-scripts-admin.js",
+    "name": "custom-scripts-admin",
+    "src": "assets/src/js/custom-scripts-admin.js",
+    "isEntry": true
   },
   "assets/src/js/facebook-video-player.js": {
     "file": "js/facebook-video-player.js",
@@ -89,6 +121,22 @@
     "name": "js/youtube-video-player",
     "src": "assets/src/js/youtube-video-player.js",
     "isEntry": true
+  },
+  "assets/src/scss/admin/analytics.scss": {
+    "file": "css/admin/analytics.css",
+    "src": "assets/src/scss/admin/analytics.scss",
+    "isEntry": true,
+    "names": [
+      "admin/analytics.css"
+    ]
+  },
+  "assets/src/scss/admin/custom-scripts.scss": {
+    "file": "css/admin/custom-scripts.css",
+    "src": "assets/src/scss/admin/custom-scripts.scss",
+    "isEntry": true,
+    "names": [
+      "admin/custom-scripts.css"
+    ]
   },
   "assets/src/scss/admin/sponsored-meta-box.scss": {
     "file": "css/admin/sponsored-meta-box.css",

@@ -1,58 +1,58 @@
-// Typography
+// Typography with fluid sizing
 body {
-    font-family: $font-family-base;
-    font-size: $font-size-base;
-    line-height: $line-height-base;
-    color: #212529;    
-    background-color: $white-off;
+	font-family: $font-family-base;
+	@include fluid-body(16px, 16px);
+	font-weight: 400;
+	color: $text-color;
+	background-color: $white;
 }
 
+// Headings with fluid sizing
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    line-height: 1.2;
+	margin-top: 0;
+	margin-bottom: 0.5em;
 }
 
 h1 {
-    font-size: 2.5rem;
+	@include heading-size('h1');
 }
 
 h2 {
-    font-size: 2rem;
+	@include heading-size('h2');
 }
 
 h3 {
-    font-size: 1.75rem;
+	@include heading-size('h3');
 }
 
 h4 {
-    font-size: 1.5rem;
+	@include heading-size('h4');
 }
 
 h5 {
-    font-size: 1.25rem;
+	@include heading-size('h5');
 }
 
 h6 {
-    font-size: 1rem;
+	@include heading-size('h6');
 }
 
 p {
-    margin-top: 0;
-    margin-bottom: 1rem;
+	margin-top: 0;
+	margin-bottom: 1rem;
 }
 
 a {
-    color: $primary-color;
-    text-decoration: none;
+	color: $primary-color;
+	text-decoration: none;
+	transition: color 0.2s ease;
 
-    &:hover {
-        text-decoration: underline;
-    }
+	&:hover {
+		text-decoration: underline;
+	}
 }

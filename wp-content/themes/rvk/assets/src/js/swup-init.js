@@ -30,7 +30,8 @@ const initSwup = () => {
             // Accessibility: Announce page changes to screen readers
             new SwupA11yPlugin()
         ],
-        animateHistoryBrowsing: true
+        animateHistoryBrowsing: true,
+        animationSelector: false // Disable animations temporarily as requested
     });
 
     // Re-initialize scripts on content replace

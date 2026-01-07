@@ -6,8 +6,12 @@
 @import "bootstrap/scss/mixins";
 @import "bootstrap/scss/utilities";
 
+// Custom utilities configuration (removes default color utilities)
+@import "bootstrap-utilities-config";
+
 // Layout & components
-@import "bootstrap/scss/root";
+// SKIP: @import "bootstrap/scss/root"; - This generates all CSS variables including default colors
+@import "custom-root"; // Our custom CSS variables (only theme colors)
 @import "bootstrap/scss/reboot";
 @import "bootstrap/scss/type";
 @import "bootstrap/scss/containers";
@@ -21,5 +25,6 @@
 @import "bootstrap/scss/dropdown";
 @import "bootstrap/scss/pagination";
 
-// Utilities API
+// Utilities API (generates utility classes based on $utilities map)
+// To disable default Bootstrap color utilities, modify $utilities map BEFORE this line
 @import "bootstrap/scss/utilities/api";

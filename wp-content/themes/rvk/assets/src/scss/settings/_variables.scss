@@ -1,4 +1,25 @@
-// Theme Colors
+// ============================================
+// BOOTSTRAP COLOR VARIABLES OVERRIDE
+// ============================================
+// Override Bootstrap default colors BEFORE they are defined
+// This removes: blue, indigo, purple, pink, red, orange, yellow, green, teal, cyan
+// See: node_modules/bootstrap/scss/_variables.scss line 25-35
+
+// Disable all Bootstrap default theme colors
+$blue: null;
+$indigo: null;
+$purple: null;
+$pink: null;
+$red: null;
+$orange: null;
+$yellow: null;
+$green: null;
+$teal: null;
+$cyan: null;
+
+// ============================================
+// CUSTOM THEME COLORS
+// ============================================
 
 // Primary Colors
 $primary-color: #ec1c24;
@@ -8,14 +29,58 @@ $black-color: #231f20;
 // Secondary Colors
 $gray-color: #f8f9fc;
 $white: #fff;
-$white-off: #F5F5F5;
+$white-off: #f6f7f8;
 
 $white-filter: brightness(0) saturate(100%) invert(100%) sepia(5%) saturate(150%) hue-rotate(260deg) brightness(112%) contrast(78%);
 
-// Typography
-$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-$font-size-base: 1rem;
+// ============================================
+// TYPOGRAPHY
+// ============================================
+
+// Font Families
+$font-family-primary: 'Be Vietnam Pro', sans-serif;
+$font-family-base: $font-family-primary;
+
+// Font Weights
+$font-weight-extralight: 200;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+$font-weight-normal: $font-weight-regular;
+$font-weight-heading: $font-weight-bold;
+
+// Base Font Sizes (for fluid typography)
+$font-size-base-mobile: 14px;
+$font-size-base-desktop: 16px;
+$font-size-base: 1rem; // Keep for Bootstrap compatibility
+
+// Heading Sizes (Desktop)
+$h1-font-size-desktop: 40px;
+$h2-font-size-desktop: 32px;
+$h3-font-size-desktop: 28px;
+$h4-font-size-desktop: 24px;
+$h5-font-size-desktop: 20px;
+$h6-font-size-desktop: 16px;
+
+// Heading Sizes (Mobile)
+$h1-font-size-mobile: 28px;
+$h2-font-size-mobile: 24px;
+$h3-font-size-mobile: 22px;
+$h4-font-size-mobile: 20px;
+$h5-font-size-mobile: 18px;
+$h6-font-size-mobile: 16px;
+
+// Line Heights
+$line-height-tight: 1.2;
 $line-height-base: 1.5;
+$line-height-relaxed: 1.75;
+
+// Fluid Typography Viewport Range
+$viewport-min: 375px;  // Mobile (iPhone SE)
+$viewport-max: 1440px; // Desktop standard
+
+// Text Color
+$text-color: $black-color;
 
 
 // Z-index layers

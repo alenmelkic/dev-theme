@@ -8,7 +8,10 @@
 @import "settings/mixins";
 @import "settings/functions";
 
-// 2. Vendors (Bootstrap and overrides)
+// 2. Fonts (custom web fonts)
+@import "base/fonts";
+
+// 3. Vendors (Bootstrap and overrides)
 @import "vendors/bootstrap";
 @import "vendors/bootstrap-overrides";
 

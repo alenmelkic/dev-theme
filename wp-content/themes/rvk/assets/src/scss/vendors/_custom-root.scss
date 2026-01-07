@@ -1,0 +1,41 @@
+// ============================================
+// CUSTOM CSS VARIABLES (replaces Bootstrap's _root.scss)
+// ============================================
+// Only includes our custom theme colors, not Bootstrap's default palette
+
+:root,
+[data-bs-theme="light"] {
+  // Custom theme colors
+  --bs-primary: #{$primary-color};
+  --bs-primary-rgb: #{to-rgb($primary-color)};
+
+  --bs-secondary: #{$secondary-color};
+  --bs-secondary-rgb: #{to-rgb($secondary-color)};
+
+  --bs-black: #{$black-color};
+  --bs-black-rgb: #{to-rgb($black-color)};
+
+  --bs-gray: #{$gray-color};
+  --bs-gray-rgb: #{to-rgb($gray-color)};
+
+  --bs-white: #{$white};
+  --bs-white-rgb: #{to-rgb($white)};
+
+  // Body defaults
+  --bs-body-color: #{$black-color};
+  --bs-body-bg: #{$white};
+
+  // Typography
+  --bs-font-sans-serif: #{$font-family-base};
+  --bs-body-font-family: var(--bs-font-sans-serif);
+  --bs-body-font-size: #{$font-size-base};
+  --bs-body-line-height: #{$line-height-base};
+
+  // Borders
+  --bs-border-width: 1px;
+  --bs-border-color: #dee2e6;
+  --bs-border-radius: 0.375rem;
+
+  // Only include CSS variables that your components actually use
+  // Add more as needed
+}

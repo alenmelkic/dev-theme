@@ -15,6 +15,20 @@ class RVK_SEO_Settings_Page {
     public function __construct() {
         add_action('admin_menu', array($this, 'add_settings_page'));
         add_action('admin_init', array($this, 'register_settings'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_media_uploader'));
+    }
+
+    /**
+     * Enqueue media uploader scripts
+     */
+    public function enqueue_media_uploader($hook) {
+        // Only load on our settings page
+        if ($hook !== 'settings_page_seo-aeo-settings') {
+            return;
+        }
+
+        // Enqueue WordPress media uploader
+        wp_enqueue_media();
     }
 
     /**
@@ -41,6 +55,10 @@ class RVK_SEO_Settings_Page {
         ));
 
         register_setting('rvk_seo_settings', 'dev_theme_openai_api_key', array(
+            'sanitize_callback' => 'sanitize_text_field',
+        ));
+
+        register_setting('rvk_seo_settings', 'dev_theme_gemini_api_key', array(
             'sanitize_callback' => 'sanitize_text_field',
         ));
 
@@ -154,6 +172,7 @@ class RVK_SEO_Settings_Page {
             // AI Provider settings
             update_option('rvk_seo_ai_provider', sanitize_text_field($_POST['ai_provider']));
             update_option('dev_theme_openai_api_key', sanitize_text_field($_POST['openai_api_key']));
+            update_option('dev_theme_gemini_api_key', sanitize_text_field($_POST['gemini_api_key']));
             update_option('rvk_seo_ai_enabled', isset($_POST['ai_enabled']));
             update_option('rvk_seo_auto_analysis_enabled', isset($_POST['auto_analysis_enabled']));
 
@@ -316,17 +335,19 @@ class RVK_SEO_Settings_Page {
                                        id="gemini_api_key"
                                        value="<?php echo esc_attr($gemini_key); ?>"
                                        class="regular-text"
-                                       placeholder="Konfigurisano u AI Sadržaj postavkama">
+                                       placeholder="Unesite Gemini API ključ">
 
                                 <?php if (!empty($gemini_key)): ?>
                                     <p class="description" style="color: green;">
                                         ✓ Gemini API ključ konfigurisan: <?php echo esc_html($gemini_key_masked); ?>
                                     </p>
+                                <?php else: ?>
+                                    <p class="description">
+                                        Nabavite API ključ: <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a>
+                                    </p>
                                 <?php endif; ?>
                                 <p class="description">
-                                    <a href="<?php echo admin_url('options-general.php?page=ai-content-settings'); ?>">
-                                        Konfiguriši u AI Sadržaj postavkama
-                                    </a>
+                                    Besplatno: 60 zahtjeva po minuti
                                 </p>
                             </td>
                         </tr>
@@ -386,14 +407,29 @@ class RVK_SEO_Settings_Page {
                             </th>
                             <td>
                                 <input type="hidden" name="organization_logo" id="organization_logo" value="<?php echo esc_attr($org_logo); ?>">
-                                <button type="button" class="button upload-image-button" data-target="organization_logo">
-                                    Odaberi Logo
-                                </button>
-                                <?php if ($org_logo): ?>
-                                    <div class="image-preview">
-                                        <?php echo wp_get_attachment_image($org_logo, 'thumbnail'); ?>
+                                <div style="display: flex; align-items: flex-start; gap: 10px;">
+                                    <div>
+                                        <button type="button" class="button upload-image-button" data-target="organization_logo">
+                                            Odaberi Logo
+                                        </button>
+                                        <button type="button" class="button remove-image-button" data-target="organization_logo" <?php echo !$org_logo ? 'style="display:none;"' : ''; ?>>
+                                            Ukloni
+                                        </button>
                                     </div>
-                                <?php endif; ?>
+                                    <div class="image-preview" id="preview_organization_logo" <?php echo !$org_logo ? 'style="display:none;"' : ''; ?>>
+                                        <?php if ($org_logo):
+                                            $image_url = wp_get_attachment_image_url($org_logo, 'thumbnail');
+                                            if (!$image_url) {
+                                                $image_url = wp_get_attachment_url($org_logo);
+                                            }
+                                            // Check if it's an SVG
+                                            $is_svg = (strpos($image_url, '.svg') !== false);
+                                            $style = $is_svg ? 'style="width: 150px; height: auto;"' : '';
+                                        ?>
+                                            <img src="<?php echo esc_url($image_url); ?>" alt="Organization Logo Preview" <?php echo $style; ?>>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
 
@@ -465,14 +501,29 @@ class RVK_SEO_Settings_Page {
                             </th>
                             <td>
                                 <input type="hidden" name="default_og_image" id="default_og_image" value="<?php echo esc_attr($default_og_image); ?>">
-                                <button type="button" class="button upload-image-button" data-target="default_og_image">
-                                    Odaberi Sliku
-                                </button>
-                                <?php if ($default_og_image): ?>
-                                    <div class="image-preview">
-                                        <?php echo wp_get_attachment_image($default_og_image, 'thumbnail'); ?>
+                                <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
+                                    <div>
+                                        <button type="button" class="button upload-image-button" data-target="default_og_image">
+                                            Odaberi Sliku
+                                        </button>
+                                        <button type="button" class="button remove-image-button" data-target="default_og_image" <?php echo !$default_og_image ? 'style="display:none;"' : ''; ?>>
+                                            Ukloni
+                                        </button>
                                     </div>
-                                <?php endif; ?>
+                                    <div class="image-preview" id="preview_default_og_image" <?php echo !$default_og_image ? 'style="display:none;"' : ''; ?>>
+                                        <?php if ($default_og_image):
+                                            $og_image_url = wp_get_attachment_image_url($default_og_image, 'thumbnail');
+                                            if (!$og_image_url) {
+                                                $og_image_url = wp_get_attachment_url($default_og_image);
+                                            }
+                                            // Check if it's an SVG
+                                            $is_svg_og = (strpos($og_image_url, '.svg') !== false);
+                                            $style_og = $is_svg_og ? 'style="width: 150px; height: auto;"' : '';
+                                        ?>
+                                            <img src="<?php echo esc_url($og_image_url); ?>" alt="Default OG Image Preview" <?php echo $style_og; ?>>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                                 <p class="description">Fallback slika za social sharing (1200x630 preporučeno)</p>
                             </td>
                         </tr>
@@ -737,18 +788,38 @@ class RVK_SEO_Settings_Page {
                 margin-top: 0;
             }
             .image-preview {
-                margin-top: 10px;
+                display: inline-block;
+                border: 2px solid #ddd;
+                padding: 10px;
+                background: #fff;
+                border-radius: 4px;
+                min-height: 60px;
+                min-width: 100px;
             }
             .image-preview img {
-                max-width: 150px;
-                height: auto;
+                max-width: 150px !important;
+                min-width: 50px !important;
+                width: auto !important;
+                height: auto !important;
+                min-height: 50px !important;
+                display: block !important;
+                margin: 0 auto;
+            }
+            .image-preview img[src$=".svg"] {
+                width: 150px !important;
+                height: auto !important;
+            }
+            .button.upload-image-button,
+            .button.remove-image-button {
+                margin-right: 5px;
+                margin-bottom: 5px;
             }
         </style>
 
         <script>
             jQuery(document).ready(function($) {
                 // Media uploader
-                $('.upload-image-button').click(function(e) {
+                $('.upload-image-button').on('click', function(e) {
                     e.preventDefault();
 
                     var button = $(this);
@@ -764,16 +835,50 @@ class RVK_SEO_Settings_Page {
                         var attachment = frame.state().get('selection').first().toJSON();
                         $('#' + target).val(attachment.id);
 
-                        // Show preview
-                        var preview = button.next('.image-preview');
-                        if (preview.length === 0) {
-                            button.after('<div class="image-preview"><img src="' + attachment.url + '"></div>');
-                        } else {
-                            preview.find('img').attr('src', attachment.url);
+                        // Get the best image URL (prefer thumbnail, fallback to full)
+                        var imageUrl = attachment.url;
+                        if (attachment.sizes && attachment.sizes.thumbnail) {
+                            imageUrl = attachment.sizes.thumbnail.url;
+                        } else if (attachment.sizes && attachment.sizes.medium) {
+                            imageUrl = attachment.sizes.medium.url;
                         }
+
+                        // Show preview
+                        var imgHtml = '<img src="' + imageUrl + '" alt="Preview">';
+                        var previewDiv = $('#preview_' + target);
+                        if (previewDiv.length) {
+                            previewDiv.html(imgHtml).show();
+                        } else {
+                            button.parent().find('.image-preview').html(imgHtml).show();
+                        }
+
+                        // Show remove button
+                        button.siblings('.remove-image-button').show();
                     });
 
                     frame.open();
+                });
+
+                // Remove image
+                $('.remove-image-button').on('click', function(e) {
+                    e.preventDefault();
+
+                    var button = $(this);
+                    var target = button.data('target');
+
+                    // Clear the hidden input
+                    $('#' + target).val('');
+
+                    // Hide preview
+                    var previewDiv = $('#preview_' + target);
+                    if (previewDiv.length) {
+                        previewDiv.hide().html('');
+                    } else {
+                        button.parent().find('.image-preview').hide().html('');
+                    }
+
+                    // Hide remove button
+                    button.hide();
                 });
             });
         </script>

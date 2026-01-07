@@ -87,6 +87,24 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
     // Get mime type
     $mime_type = get_post_mime_type($attachment_id);
 
+    // FIX: If image is SVG, return simple img tag without picture/srcset
+    if ($mime_type === 'image/svg+xml') {
+        $attrs = [
+            'src' => esc_url($image_src[0]),
+            'class' => esc_attr($args['class']),
+            'alt' => esc_attr($alt_text),
+            'loading' => esc_attr($args['loading']),
+            'decoding' => esc_attr($args['decoding']),
+        ];
+        
+        $html = '<img';
+        foreach ($attrs as $attr => $value) {
+            $html .= sprintf(' %s="%s"', $attr, $value);
+        }
+        $html .= '>';
+        return $html;
+    }
+
     // Build srcset for different formats
     // Only generate WebP srcset if the original is NOT WebP
     $webp_srcset = ($mime_type !== 'image/webp') ? dev_theme_build_srcset($attachment_id, $size, 'webp') : '';

@@ -146,6 +146,19 @@ function rvk_display_top_banner() {
         $desktop_image = $tablet_image ?: $mobile_image;
     }
     
+    // WebP Helper
+    $upload_dir = wp_upload_dir();
+    $get_webp = function($url) use ($upload_dir) {
+        if (!$url) return false;
+        $webp_url = preg_replace('/\.(jpe?g|png)$/i', '.webp', $url);
+        $webp_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $webp_url);
+        return file_exists($webp_path) ? $webp_url : false;
+    };
+
+    $mobile_webp = $get_webp($mobile_image);
+    $tablet_webp = $get_webp($tablet_image);
+    $desktop_webp = $get_webp($desktop_image);
+    
     if (!$desktop_image && !$tablet_image && !$mobile_image) {
         return;
     }
@@ -167,11 +180,23 @@ function rvk_display_top_banner() {
                     
                     <picture class="top-banner__picture">
                         <?php if ($mobile_image): ?>
+                            <?php if ($mobile_webp): ?>
+                                <source media="(max-width: 767px)" srcset="<?php echo esc_url($mobile_webp); ?>" type="image/webp">
+                            <?php endif; ?>
                             <source media="(max-width: 767px)" srcset="<?php echo esc_url($mobile_image); ?>">
                         <?php endif; ?>
+
                         <?php if ($tablet_image): ?>
+                            <?php if ($tablet_webp): ?>
+                                <source media="(max-width: 1023px)" srcset="<?php echo esc_url($tablet_webp); ?>" type="image/webp">
+                            <?php endif; ?>
                             <source media="(max-width: 1023px)" srcset="<?php echo esc_url($tablet_image); ?>">
                         <?php endif; ?>
+
+                        <?php if ($desktop_webp): ?>
+                            <source srcset="<?php echo esc_url($desktop_webp); ?>" type="image/webp">
+                        <?php endif; ?>
+
                         <img src="<?php echo esc_url($desktop_image); ?>" 
                             alt="<?php echo esc_attr($alt_text); ?>" 
                             class="top-banner__image"
@@ -267,13 +292,15 @@ function rvk_display_small_banners($limit = null) {
                        aria-label="<?php echo esc_attr($alt_text); ?>">
                 <?php endif; ?>
                 
-                <img src="<?php echo esc_url($image_url); ?>" 
-                     alt="<?php echo esc_attr($alt_text); ?>" 
-                     class="small-banner__image"
-                     loading="lazy"
-                     decoding="async"
-                     width="320"
-                     height="auto">
+                <?php 
+                echo get_responsive_image($attachment_id, 'medium', [
+                    'class' => 'small-banner__image',
+                    'loading' => 'lazy',
+                    'alt' => $alt_text,
+                    'width' => 320, // Explicit width for layout stability
+                    'height' => 'auto'
+                ]); 
+                ?>
                 
                 <?php if ($link): ?>
                     </a>

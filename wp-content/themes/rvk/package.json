@@ -41,6 +41,8 @@
 		"react-dom": "^18.3.1",
 		"rimraf": "6.0.1",
 		"sass": "1.90.0",
+		"ttf2woff": "^3.0.0",
+		"ttf2woff2": "^8.0.0",
 		"typescript": "^5.9.3",
 		"vite": "7.1.2",
 		"vite-plugin-purgecss": "^0.2.13",
@@ -55,6 +57,7 @@
 		"@tanstack/react-query": "^5.90.10",
 		"bootstrap": "5.3.7",
 		"photoswipe": "^5.4.4",
+		"sortablejs": "^1.15.6",
 		"swup": "^4.8.2"
 	}
 }
