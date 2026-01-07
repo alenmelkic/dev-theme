@@ -1,1 +1,1 @@
-.post-featured-image{overflow:hidden;border-radius:4px}.post-featured-image img{width:100%;height:auto;display:block;transition:transform .3s ease}.post-featured-image:hover img{transform:scale(1.05)}
+.post-featured-image{overflow:hidden}@media (min-width: 768px){.post-featured-image{height:32.5rem}}.post-featured-image img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .3s ease}.post-featured-image:hover img{transform:scale(1.02)}

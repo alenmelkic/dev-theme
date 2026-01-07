@@ -1,35 +1,16 @@
 @use "sass:math";
+@use "variables" as *;
 
 // Responsive breakpoints
 @mixin respond-to($breakpoint) {
-    @if $breakpoint =='sm' {
-        @media (min-width: $breakpoint-sm) {
+    @if map-has-key($grid-breakpoints, $breakpoint) {
+        @media (min-width: map-get($grid-breakpoints, $breakpoint)) {
             @content;
         }
     }
 
-    @else if $breakpoint =='md' {
-        @media (min-width: $breakpoint-md) {
-            @content;
-        }
-    }
-
-    @else if $breakpoint =='lg' {
-        @media (min-width: $breakpoint-lg) {
-            @content;
-        }
-    }
-
-    @else if $breakpoint =='xl' {
-        @media (min-width: $breakpoint-xl) {
-            @content;
-        }
-    }
-
-    @else if $breakpoint =='xxl' {
-        @media (min-width: $breakpoint-xxl) {
-            @content;
-        }
+    @else {
+        @warn "Unknown breakpoint: #{$breakpoint}.";
     }
 }
 
@@ -75,17 +56,20 @@
 // Usage: @include rem(margin, 10px 20px);
 // Usage: @include rem(font-size, 18px);
 @mixin rem($property, $values) {
-	$rem-values: ();
+    $rem-values: (
+    );
 
-	@each $value in $values {
-		@if type-of($value) == 'number' and unit($value) == 'px' {
-			$rem-values: append($rem-values, math.div($value, 16px) * 1rem);
-		} @else {
-			$rem-values: append($rem-values, $value);
-		}
-	}
+@each $value in $values {
+    @if type-of($value)=='number' and unit($value)=='px' {
+        $rem-values: append($rem-values, math.div($value, 16px) * 1rem);
+    }
 
-	#{$property}: $rem-values;
+    @else {
+        $rem-values: append($rem-values, $value);
+    }
+}
+
+#{$property}: $rem-values;
 }
 
 // ============================================
@@ -95,45 +79,55 @@
 // Calculate fluid font size using clamp()
 // Scales smoothly between min and max viewport widths
 @mixin fluid-type($min-size, $max-size, $min-vw: 375px, $max-vw: 1440px) {
-	// Convert px to rem for accessibility
-	$min-size-rem: math.div($min-size, 16px) * 1rem;
-	$max-size-rem: math.div($max-size, 16px) * 1rem;
+    // Convert px to rem for accessibility
+    $min-size-rem: math.div($min-size, 16px) * 1rem;
+    $max-size-rem: math.div($max-size, 16px) * 1rem;
 
-	// Calculate linear interpolation values
-	$slope: math.div($max-size - $min-size, $max-vw - $min-vw);
-	$intercept-px: $min-size - ($slope * $min-vw);
-	$intercept-rem: math.div($intercept-px, 16px) * 1rem;
-	$slope-vw: $slope * 100;
+    // Calculate linear interpolation values
+    $slope: math.div($max-size - $min-size, $max-vw - $min-vw);
+    $intercept-px: $min-size - ($slope * $min-vw);
+    $intercept-rem: math.div($intercept-px, 16px) * 1rem;
+    $slope-vw: $slope * 100;
 
-	font-size: clamp(#{$min-size-rem}, #{$intercept-rem} + #{$slope-vw}vw, #{$max-size-rem});
+    font-size: clamp(#{$min-size-rem}, #{$intercept-rem} + #{$slope-vw}vw, #{$max-size-rem});
 }
 
 // Fluid typography for headings with weight and line-height
 @mixin fluid-heading($min-size, $max-size, $weight: 700, $line-height: 1.2) {
-	@include fluid-type($min-size, $max-size);
-	font-weight: $weight;
-	line-height: $line-height;
+    @include fluid-type($min-size, $max-size);
+    font-weight: $weight;
+    line-height: $line-height;
 }
 
 // Fluid typography for body text with line-height
 @mixin fluid-body($min-size, $max-size, $line-height: 1.5) {
-	@include fluid-type($min-size, $max-size);
-	line-height: $line-height;
+    @include fluid-type($min-size, $max-size);
+    line-height: $line-height;
 }
 
 // Simplified mixin using predefined heading sizes
 @mixin heading-size($level) {
-	@if $level == 'h1' {
-		@include fluid-heading(28px, 40px);
-	} @else if $level == 'h2' {
-		@include fluid-heading(24px, 32px);
-	} @else if $level == 'h3' {
-		@include fluid-heading(22px, 28px);
-	} @else if $level == 'h4' {
-		@include fluid-heading(20px, 24px);
-	} @else if $level == 'h5' {
-		@include fluid-heading(18px, 20px);
-	} @else if $level == 'h6' {
-		@include fluid-heading(16px, 16px);
-	}
+    @if $level =='h1' {
+        @include fluid-heading(28px, 40px);
+    }
+
+    @else if $level =='h2' {
+        @include fluid-heading(24px, 32px);
+    }
+
+    @else if $level =='h3' {
+        @include fluid-heading(22px, 28px);
+    }
+
+    @else if $level =='h4' {
+        @include fluid-heading(20px, 24px);
+    }
+
+    @else if $level =='h5' {
+        @include fluid-heading(18px, 20px);
+    }
+
+    @else if $level =='h6' {
+        @include fluid-heading(16px, 16px);
+    }
 }

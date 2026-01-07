@@ -59,9 +59,8 @@ $icons = array(
 ?>
 
 <div class="rvk-social-share-buttons rvk-social-share-<?php echo esc_attr($args['style']); ?> rvk-social-share-<?php echo esc_attr($args['size']); ?>">
-    <h3 class="share-title">Podijeli članak</h3>
-
-    <div class="share-buttons">
+    
+    <div class="share-buttons d-flex gap-2">
         <?php if (in_array('facebook', $args['platforms'])): ?>
         <a href="<?php echo esc_url($facebook_url); ?>"
            class="share-button share-facebook"
@@ -70,7 +69,7 @@ $icons = array(
            aria-label="Podijeli na Facebooku"
            data-platform="facebook">
             <span class="share-icon"><?php echo $icons['facebook']; ?></span>
-            <span class="share-label">Facebook</span>
+            <span class="share-label d-none">Facebook</span>
         </a>
         <?php endif; ?>
 
@@ -82,7 +81,7 @@ $icons = array(
            aria-label="Podijeli na Twitter/X"
            data-platform="twitter">
             <span class="share-icon"><?php echo $icons['twitter']; ?></span>
-            <span class="share-label">Twitter/X</span>
+            <span class="share-label d-none">Twitter/X</span>
         </a>
         <?php endif; ?>
 
@@ -94,7 +93,7 @@ $icons = array(
            aria-label="Podijeli na LinkedInu"
            data-platform="linkedin">
             <span class="share-icon"><?php echo $icons['linkedin']; ?></span>
-            <span class="share-label">LinkedIn</span>
+            <span class="share-label d-none">LinkedIn</span>
         </a>
         <?php endif; ?>
 
@@ -106,7 +105,7 @@ $icons = array(
            aria-label="Podijeli na WhatsAppu"
            data-platform="whatsapp">
             <span class="share-icon"><?php echo $icons['whatsapp']; ?></span>
-            <span class="share-label">WhatsApp</span>
+            <span class="share-label d-none">WhatsApp</span>
         </a>
         <?php endif; ?>
 
@@ -116,11 +115,11 @@ $icons = array(
            aria-label="Podijeli emailom"
            data-platform="email">
             <span class="share-icon"><?php echo $icons['email']; ?></span>
-            <span class="share-label">Email</span>
+            <span class="share-label d-none">Email</span>
         </a>
         <?php endif; ?>
 
-        <button class="share-button share-copy"
+        <button class="share-button share-copy bg-transparent border-0"
                 data-url="<?php echo esc_url($post_url); ?>"
                 aria-label="Kopiraj link">
             <span class="share-icon">
@@ -128,14 +127,26 @@ $icons = array(
                     <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
                 </svg>
             </span>
-            <span class="share-label">Kopiraj Link</span>
+            <span class="share-label d-none">Kopiraj Link</span>
         </button>
     </div>
 
-    <?php if ($args['include_hashtags'] && !empty($hashtags_display)): ?>
+    <?php if ($args['include_hashtags']): ?>
+    <?php
+    // Get post tags for clickable hashtags
+    $post_tags = get_the_tags();
+    if (!empty($post_tags)):
+    ?>
     <div class="share-hashtags">
         <span class="hashtags-label">Tagovi:</span>
-        <span class="hashtags-list"><?php echo esc_html($hashtags_display); ?></span>
+        <span class="hashtags-list">
+            <?php
+            foreach ($post_tags as $tag) {
+                echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '" class="hashtag-link">#' . esc_html($tag->name) . '</a> ';
+            }
+            ?>
+        </span>
     </div>
+    <?php endif; ?>
     <?php endif; ?>
 </div>

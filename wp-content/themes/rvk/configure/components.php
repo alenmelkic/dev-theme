@@ -26,28 +26,59 @@ function register_component_assets($component_name, $has_css = true, $has_js = f
     
     // Register CSS
     if ($has_css) {
-        $css_file = $theme_dir . '/dist/css/components/' . $component_name . '.css';
-        if (file_exists($css_file)) {
-            wp_register_style(
-                'component-' . $component_name,
-                $theme_uri . '/dist/css/components/' . $component_name . '.css',
-                array(),
-                filemtime($css_file)
-            );
+        if (defined('VITE_BUILD') && !VITE_BUILD) {
+            // DEV MODE: Serve SCSS from source via Vite
+            $scss_file = $theme_dir . '/components/' . $component_name . '/' . $component_name . '.scss';
+            if (file_exists($scss_file)) {
+                $css_uri = VITE_SERVER . '/components/' . $component_name . '/' . $component_name . '.scss';
+                wp_register_style(
+                    'component-' . $component_name,
+                    $css_uri,
+                    array(),
+                    time() // Force reload in dev
+                );
+            }
+        } else {
+            // PROD MODE: Serve built CSS from dist
+            $css_file = $theme_dir . '/dist/css/components/' . $component_name . '.css';
+            if (file_exists($css_file)) {
+                wp_register_style(
+                    'component-' . $component_name,
+                    $theme_uri . '/dist/css/components/' . $component_name . '.css',
+                    array(),
+                    filemtime($css_file)
+                );
+            }
         }
     }
     
     // Register JS
     if ($has_js) {
-        $js_file = $theme_dir . '/dist/js/components/' . $component_name . '.js';
-        if (file_exists($js_file)) {
-            wp_register_script(
-                'component-' . $component_name,
-                $theme_uri . '/dist/js/components/' . $component_name . '.js',
-                array(),
-                filemtime($js_file),
-                true // Load in footer
-            );
+        if (defined('VITE_BUILD') && !VITE_BUILD) {
+            // DEV MODE: Serve JS from source via Vite
+            $js_source = $theme_dir . '/components/' . $component_name . '/' . $component_name . '.js';
+            if (file_exists($js_source)) {
+                $js_uri = VITE_SERVER . '/components/' . $component_name . '/' . $component_name . '.js';
+                wp_register_script(
+                    'component-' . $component_name,
+                    $js_uri,
+                    array(),
+                    time(),
+                    true
+                );
+            }
+        } else {
+            // PROD MODE: Serve built JS from dist
+            $js_file = $theme_dir . '/dist/js/components/' . $component_name . '.js';
+            if (file_exists($js_file)) {
+                wp_register_script(
+                    'component-' . $component_name,
+                    $theme_uri . '/dist/js/components/' . $component_name . '.js',
+                    array(),
+                    filemtime($js_file),
+                    true // Load in footer
+                );
+            }
         }
     }
 }

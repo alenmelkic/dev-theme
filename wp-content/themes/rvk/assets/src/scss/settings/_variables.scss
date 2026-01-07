@@ -27,6 +27,8 @@ $secondary-color: #f6921e;
 $black-color: #231f20;
 
 // Secondary Colors
+$dark-grey: #343a40;
+$medium-grey: #6c757d;
 $gray-color: #f8f9fc;
 $white: #fff;
 $white-off: #f6f7f8;
@@ -76,7 +78,7 @@ $line-height-base: 1.5;
 $line-height-relaxed: 1.75;
 
 // Fluid Typography Viewport Range
-$viewport-min: 375px;  // Mobile (iPhone SE)
+$viewport-min: 375px; // Mobile (iPhone SE)
 $viewport-max: 1440px; // Desktop standard
 
 // Text Color
@@ -121,9 +123,16 @@ $grid-breakpoints: (
 	md: 768px,
 	lg: 992px,
 	xl: 1199px,
-	xxl: 1448px,
 	xxxl: 1600px,
 );
+
+// Standalone variables for mixins
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1199px;
+$breakpoint-xxl: 1448px;
+$breakpoint-xxxl: 1600px;
 
 
 // $spacers : (0: 0,
