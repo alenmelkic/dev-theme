@@ -466,13 +466,20 @@ function rvk_get_share_url($platform, $post_id = null) {
     $title = get_the_title($post_id);
     $excerpt = get_the_excerpt($post_id);
     $hashtags = rvk_get_twitter_hashtags($post_id);
+    $hashtags_display = rvk_get_post_hashtags($post_id);
 
     switch ($platform) {
         case 'facebook':
-            return 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode($url);
+            // Facebook Share Dialog with quote parameter for excerpt and hashtags
+            $quote = $excerpt;
+            if (!empty($hashtags_display)) {
+                $quote .= "\n\n" . $hashtags_display;
+            }
+            return 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode($url) . '&quote=' . urlencode($quote);
 
         case 'twitter':
-            $text = $excerpt . ' ' . rvk_get_post_hashtags($post_id);
+            // Twitter with excerpt and hashtags
+            $text = $excerpt;
             $share_url = 'https://twitter.com/intent/tweet?text=' . urlencode($text) . '&url=' . urlencode($url);
             if (!empty($hashtags)) {
                 $share_url .= '&hashtags=' . urlencode($hashtags);
@@ -480,15 +487,26 @@ function rvk_get_share_url($platform, $post_id = null) {
             return $share_url;
 
         case 'linkedin':
+            // LinkedIn doesn't support description in URL, but we can add it to the URL as a workaround
+            // The excerpt will be shown when LinkedIn scrapes the page's Open Graph tags
             return 'https://www.linkedin.com/sharing/share-offsite/?url=' . urlencode($url);
 
         case 'whatsapp':
-            $text = $title . ' - ' . $excerpt;
-            return 'https://wa.me/?text=' . urlencode($text . ' ' . $url);
+            // WhatsApp with title, excerpt, and hashtags
+            $text = $title . "\n\n" . $excerpt;
+            if (!empty($hashtags_display)) {
+                $text .= "\n\n" . $hashtags_display;
+            }
+            return 'https://wa.me/?text=' . urlencode($text . "\n\n" . $url);
 
         case 'email':
+            // Email with excerpt and hashtags
             $subject = $title;
-            $body = $excerpt . "\n\n" . $url;
+            $body = $excerpt;
+            if (!empty($hashtags_display)) {
+                $body .= "\n\n" . $hashtags_display;
+            }
+            $body .= "\n\n" . $url;
             return 'mailto:?subject=' . rawurlencode($subject) . '&body=' . rawurlencode($body);
 
         default:
