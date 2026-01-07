@@ -3,13 +3,17 @@
 .post-date {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 5px;
     color: #6c757d;
     font-size: 0.875rem;
 
     svg {
-        width: 16px;
-        height: 16px;
+        width: 24px;
+        height: 24px;
         flex-shrink: 0;
+    }
+
+    time {
+        line-height: normal;
     }
 }

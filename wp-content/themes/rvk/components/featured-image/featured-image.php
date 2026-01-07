@@ -19,6 +19,7 @@ $post_id = $component_args['post_id'] ?? get_the_ID();
 $size = $component_args['size'] ?? 'large';
 $variant = $component_args['variant'] ?? 'post';
 $loading = $component_args['loading'] ?? 'lazy';
+$class = $component_args['class'] ?? '';
 
 // Get attachment ID
 $image_id = get_post_thumbnail_id($post_id);
@@ -48,7 +49,7 @@ if ($variant === 'hero' || $variant === 'full') {
 }
 ?>
 
-<div class="<?php echo esc_attr($variant); ?>-featured-image">
+<div class="<?php echo esc_attr($variant); ?>-featured-image <?php echo esc_attr($class); ?>">
     <?php 
     echo get_responsive_image(
         $image_id, 

@@ -69,7 +69,7 @@ function add_module_type_attribute( $tag, $handle, $src ) {
 	// List of scripts that should be loaded as modules
 	$module_scripts = [ 'main', 'navigation', 'bootstrap-components', 'social-share', 'seo-content-panel', 'ai-content-helper', 'adsense-manager' ];
 	
-	if ( in_array( $handle, $module_scripts, true ) ) {
+	if ( in_array( $handle, $module_scripts, true ) || strpos($handle, 'component-') === 0 ) {
 		if ( $handle === 'main' ) {
 			$tag = '<script type="module" data-swup-ignore-script src="' . esc_url( $src ) . '"></script>';
 		} else {

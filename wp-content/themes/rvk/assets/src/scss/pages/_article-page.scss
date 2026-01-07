@@ -1,0 +1,29 @@
+
+.post-meta {
+    border-top: 1px solid rgba($color: $black, $alpha: 0.3);  
+}
+
+.post-categories {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: $medium-grey;
+    // margin-top: 10px;
+
+    svg {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+    }
+
+    .category-link {
+        font-size: 0.9rem;
+        color: $black;
+        text-decoration: none;
+        color: $medium-grey;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

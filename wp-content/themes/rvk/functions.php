@@ -16,6 +16,7 @@ include( 'configure/utilities.php' );
 // CONFIG
 include( 'configure/configure.php' );
 include( 'configure/page-options.php' );
+include( 'configure/hidden-categories.php' );
 
 // JAVASCRIPT & CSS
 include( 'configure/js-css.php' );
