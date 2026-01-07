@@ -185,6 +185,14 @@ function rvk_output_open_graph_tags($post_id, $is_singular, $is_archive, $is_hom
         if (empty($og_description)) {
             $og_description = rvk_get_meta_description($post_id);
         }
+        
+        // Append hashtags for posts (for social media sharing)
+        if (get_post_type() === 'post') {
+            $hashtags = rvk_get_post_hashtags($post_id, 5);
+            if (!empty($hashtags)) {
+                $og_description .= "\n" . $hashtags;
+            }
+        }
     } elseif ($is_archive) {
         if (is_category() || is_tag() || is_tax()) {
             $term = get_queried_object();
@@ -352,6 +360,14 @@ function rvk_output_twitter_card_tags($post_id, $is_singular, $is_archive, $is_h
         $twitter_description = rvk_get_seo_meta($post_id, 'twitter_description');
         if (empty($twitter_description)) {
             $twitter_description = rvk_get_meta_description($post_id);
+        }
+        
+        // Append hashtags for posts (for social media sharing)
+        if (get_post_type() === 'post') {
+            $hashtags = rvk_get_post_hashtags($post_id, 5);
+            if (!empty($hashtags)) {
+                $twitter_description .= "\n" . $hashtags;
+            }
         }
     } elseif ($is_archive) {
         if (is_category() || is_tag() || is_tax()) {
