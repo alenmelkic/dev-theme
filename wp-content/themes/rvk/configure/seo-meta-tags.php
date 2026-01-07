@@ -187,8 +187,13 @@ function rvk_output_open_graph_tags($post_id, $is_singular, $is_archive, $is_hom
         }
         
         // Append hashtags for posts (for social media sharing)
-        if (get_post_type() === 'post') {
-            $hashtags = rvk_get_post_hashtags($post_id, 5);
+        $post_type = get_post_type($post_id);
+        $hashtags = rvk_get_post_hashtags($post_id, 5);
+        
+        // Debug: Output as HTML comment
+        echo '<!-- DEBUG: Post Type: ' . esc_html($post_type) . ', Hashtags: ' . esc_html($hashtags) . ' -->' . "\n";
+        
+        if ($post_type === 'post') {
             if (!empty($hashtags)) {
                 $og_description .= "\n" . $hashtags;
             }
