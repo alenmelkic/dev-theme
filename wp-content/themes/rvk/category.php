@@ -46,7 +46,7 @@ get_header();
                     <article <?php post_class('post-card'); ?> aria-labelledby="post-<?php the_ID(); ?>-title">
                         <?php if (has_post_thumbnail()) : ?>
                             <div class="post-card-image">
-                                <a href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
+                                <a href="<?php the_permalink(); ?>" tabindex="-1">
                                     <?php
                                     get_component('featured-image', array(
                                         'variant' => 'card',

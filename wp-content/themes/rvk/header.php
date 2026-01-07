@@ -41,7 +41,19 @@
 
             if ( $logo_url ) : ?>
               <a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-                <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo( 'name' ); ?>" class="site-logo">
+                <?php 
+                $mime_type = get_post_mime_type($logo_id);
+                if ($mime_type === 'image/svg+xml') {
+                    // SVGs don't need responsiveness or WebP
+                    echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="site-logo" width="150" height="auto" loading="eager">';
+                } else {
+                    echo get_responsive_image($logo_id, 'full', [
+                        'class' => 'site-logo',
+                        'loading' => 'eager', // Logo is LCP, strictly eager
+                        'alt' => get_bloginfo( 'name' )
+                    ]); 
+                }
+                ?>
               </a>
             <?php else : ?>
               <?php if ( is_front_page() || is_home() ) : ?>
