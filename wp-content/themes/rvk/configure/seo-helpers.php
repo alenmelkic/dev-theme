@@ -156,9 +156,19 @@ function rvk_sanitize_meta_description($description) {
  * @return string Space-separated hashtags
  */
 function rvk_get_post_hashtags($post_id, $limit = 5) {
-    $tags = get_the_tags($post_id);
+    // Ensure we have a valid post ID
+    if (empty($post_id)) {
+        $post_id = get_the_ID();
+    }
+    
+    if (empty($post_id)) {
+        return '';
+    }
+    
+    // Use wp_get_post_tags instead of get_the_tags for better reliability in wp_head
+    $tags = wp_get_post_tags($post_id);
 
-    if (!$tags || is_wp_error($tags)) {
+    if (!$tags || is_wp_error($tags) || empty($tags)) {
         return '';
     }
 
