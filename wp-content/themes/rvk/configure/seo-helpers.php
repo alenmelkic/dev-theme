@@ -470,12 +470,8 @@ function rvk_get_share_url($platform, $post_id = null) {
 
     switch ($platform) {
         case 'facebook':
-            // Facebook Share Dialog with quote parameter for excerpt and hashtags
-            $quote = $excerpt;
-            if (!empty($hashtags_display)) {
-                $quote .= "\n\n" . $hashtags_display;
-            }
-            return 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode($url) . '&quote=' . urlencode($quote);
+            // Facebook relies on Open Graph meta tags (og:description includes hashtags)
+            return 'https://www.facebook.com/sharer/sharer.php?u=' . urlencode($url);
 
         case 'twitter':
             // Twitter with excerpt and hashtags
