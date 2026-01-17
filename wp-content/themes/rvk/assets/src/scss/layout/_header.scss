@@ -7,8 +7,10 @@
   .floating-header {
     padding: 5px 20px;
     // background-color: $gray-color;
-    background-color: $white-off;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: $white;
+    border: 1px solid $grey-brand;
+    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 10px 5px #0000001a;
     border-radius: 50px;
 
     @media (min-width: 580px) {

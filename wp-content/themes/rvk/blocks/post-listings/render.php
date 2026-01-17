@@ -149,72 +149,172 @@ switch ($layout) {
 
 <section <?php echo get_block_wrapper_attributes(['class' => "post-listings-block {$layout_classes} my-5"]); ?>>
     <div class="container">
-        <?php if (!empty($title) || !empty($subtitle)) : ?>
-        <div class="post-listings-header mb-4 text-center">
-            <?php if (!empty($title)) : ?>
-                <h2 class="post-listings-title h3 fw-bold mb-2"><?php echo esc_html($title); ?></h2>
+        <div class="col-xl-10 mx-auto">
+            <?php if (!empty($title) || !empty($subtitle)) : ?>
+            <div class="post-listings-header mb-5 text-start">
+                <?php if (!empty($title)) : ?>
+                    <h2 class="post-listings-title h1 mb-2"><?php echo esc_html($title); ?></h2>
+                <?php endif; ?>
+                <?php if (!empty($subtitle)) : ?>
+                    <p class="post-listings-subtitle text-muted mb-0"><?php echo esc_html($subtitle); ?></p>
+                <?php endif; ?>
+            </div>
             <?php endif; ?>
-            <?php if (!empty($subtitle)) : ?>
-                <p class="post-listings-subtitle text-muted mb-0"><?php echo esc_html($subtitle); ?></p>
-            <?php endif; ?>
-        </div>
-        <?php endif; ?>
 
-        <div class="row g-4">
-            <?php
-            while ($query->have_posts()) :
-                $query->the_post();
-                $post_id = get_the_ID();
-                $article_type_slug = get_article_type_slug($post_id);
+            <div class="row g-4">
+                <?php
+                if ($layout === 'cards-1') :
+                    // Cards Layout 1: 2 regular columns + 1 flex column with ALL remaining posts
+                    $all_posts = [];
+                    while ($query->have_posts()) {
+                        $query->the_post();
+                        $all_posts[] = get_post();
+                    }
+                    wp_reset_postdata();
 
-                // Determine if icon should be shown
-                // Show icon for video, audio, galerija
-                // Hide icon for standard OR if layout is cards-2
-                $show_icon = ($layout !== 'cards-2') &&
-                             in_array($article_type_slug, ['video', 'audio', 'galerija']);
-            ?>
+                    $total_posts = count($all_posts);
 
-            <div class="<?php echo esc_attr($col_classes); ?>">
-                <?php if ($layout === 'cards-1') : ?>
-                    <!-- Cards Layout 1: 3-column grid -->
-                    <article class="post-card h-100 position-relative">
-                        <!-- Featured Image with Article Type Overlay -->
+                    // Column 1: First post
+                    if (isset($all_posts[0])) {
+                        global $post;
+                        $post = $all_posts[0];
+                        setup_postdata($post);
+                        $post_id = $post->ID;
+                        $article_type_slug = get_article_type_slug($post_id);
+                        $show_icon = in_array($article_type_slug, ['video', 'audio', 'galerija']);
+                ?>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="post-card mb-4 mb-md-0 position-relative">
                         <div class="post-card-image position-relative">
-                            <?php
-                            get_component('featured-image', array(
-                                'variant' => 'card',
-                                'size' => 'medium',
-                                'loading' => 'lazy',
-                            ));
-                            ?>
-
+                            <a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr('Read more about ' . get_the_title()); ?>">
+                                <?php
+                                get_component('featured-image', array(
+                                    'variant' => 'card',
+                                    'size' => 'mobile-small',
+                                    'loading' => 'lazy',
+                                    'sizes' => '480px',
+                                ));
+                                ?>
+                            </a>
                             <?php if ($show_icon) : ?>
                                 <?php get_component('article-type-overlay'); ?>
                             <?php endif; ?>
                         </div>
-
-                        <!-- Card Content -->
                         <div class="post-card-content">
                             <div class="post-card-header">
                                 <?php get_component('post-title', array('tag' => 'h3', 'link' => true)); ?>
                             </div>
-
-                            <!-- Excerpt -->
                             <div class="post-excerpt">
                                 <p><?php echo wp_trim_words(get_the_excerpt(), 15, '...'); ?></p>
                             </div>
-
-                            <!-- Meta -->
                             <div class="post-card-meta d-flex justify-content-between align-items-center mt-3">
                                 <?php get_component('author', array('size' => 'small')); ?>
                                 <?php get_component('post-date'); ?>
                             </div>
                         </div>
                     </article>
+                </div>
+                <?php
+                    }
 
-                <?php elseif ($layout === 'cards-2') : ?>
-                    <!-- Cards Layout 2: Featured block style (NO ICONS) -->
+                    // Column 2: Second post
+                    if (isset($all_posts[1])) {
+                        global $post;
+                        $post = $all_posts[1];
+                        setup_postdata($post);
+                        $post_id = $post->ID;
+                        $article_type_slug = get_article_type_slug($post_id);
+                        $show_icon = in_array($article_type_slug, ['video', 'audio', 'galerija']);
+                ?>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="post-card mb-4 mb-md-0 position-relative">
+                        <div class="post-card-image position-relative">
+                            <a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr('Read more about ' . get_the_title()); ?>">
+                                <?php
+                                get_component('featured-image', array(
+                                    'variant' => 'card',
+                                    'size' => 'mobile-small',
+                                    'loading' => 'lazy',
+                                    'sizes' => '480px',
+                                ));
+                                ?>
+                            </a>
+                            <?php if ($show_icon) : ?>
+                                <?php get_component('article-type-overlay'); ?>
+                            <?php endif; ?>
+                        </div>
+                        <div class="post-card-content">
+                            <div class="post-card-header">
+                                <?php get_component('post-title', array('tag' => 'h3', 'link' => true)); ?>
+                            </div>
+                            <div class="post-excerpt">
+                                <p><?php echo wp_trim_words(get_the_excerpt(), 15, '...'); ?></p>
+                            </div>
+                            <div class="post-card-meta d-flex justify-content-between align-items-center mt-3">
+                                <?php get_component('author', array('size' => 'small')); ?>
+                                <?php get_component('post-date'); ?>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <?php
+                    }
+
+                    // Column 3: ALL remaining posts (from index 2 onwards) in flex container
+                    if ($total_posts > 2) :
+                ?>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="d-flex flex-column justify-content-between h-100 gap-3">
+                        <?php
+                        for ($i = 2; $i < $total_posts; $i++) :
+                            global $post;
+                            $post = $all_posts[$i];
+                            setup_postdata($post);
+                            $post_id = $post->ID;
+                            $article_type_slug = get_article_type_slug($post_id);
+                            $show_icon = in_array($article_type_slug, ['video', 'audio', 'galerija']);
+                        ?>
+                        <article class="post-card-compact">
+                            <div class="d-flex gap-3">
+                                <?php if (has_post_thumbnail()) : ?>
+                                <div class="post-card-compact-image position-relative flex-shrink-0">
+                                    <a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr('Read more about ' . get_the_title()); ?>">
+                                        <?php
+                                        get_component('featured-image', array(
+                                            'variant' => 'card',
+                                            'size' => 'thumb',
+                                            'loading' => 'lazy',
+                                            'sizes' => '100px',
+                                        ));
+                                        ?>
+                                    </a>
+                                    <?php if ($show_icon) : ?>
+                                        <?php get_component('article-type-overlay'); ?>
+                                    <?php endif; ?>
+                                </div>
+                                <?php endif; ?>
+                                <div class="post-card-compact-content flex-grow-1">
+                                    <?php get_component('post-title', array('tag' => 'h4', 'link' => true, 'class' => 'h6 mb-2')); ?>
+                                    <?php get_component('post-date'); ?>
+                                </div>
+                            </div>
+                        </article>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+                <?php
+                    endif;
+                    wp_reset_postdata();
+
+                elseif ($layout === 'cards-2') :
+                    // Cards Layout 2: Featured style
+                    while ($query->have_posts()) :
+                        $query->the_post();
+                        $post_id = get_the_ID();
+                ?>
+                <div class="<?php echo esc_attr($col_classes); ?>">
                     <article class="post-card-featured h-100 position-relative overflow-hidden rounded-4 shadow-sm">
+                        <a href="<?php the_permalink(); ?>" class="stretched-link" aria-label="<?php echo esc_attr('Read more about ' . get_the_title()); ?>"></a>
                         <?php
                         $featured_img_url = get_the_post_thumbnail_url($post_id, 'large');
                         if ($featured_img_url) : ?>
@@ -222,55 +322,52 @@ switch ($layout) {
                             <div class="h-100 w-100 overlay-subtle"></div>
                         </div>
                         <?php endif; ?>
-
                         <div class="card-img-overlay d-flex flex-column position-absolute bottom-0 w-100 justify-content-end p-4">
                             <div class="content-box p-4 rounded-4 shadow-sm">
                                 <h3 class="h4 fw-bold mb-3">
-                                    <a href="<?php the_permalink(); ?>" class="text-dark text-decoration-none stretched-link" aria-label="<?php echo esc_attr('Read more about ' . get_the_title()); ?>">
-                                        <?php the_title(); ?>
-                                    </a>
+                                    <?php the_title(); ?>
                                 </h3>
-
-                                <!-- Author -->
                                 <div class="d-flex align-items-center mt-3">
                                     <?php get_component('author', array('size' => 'small')); ?>
                                 </div>
                             </div>
                         </div>
                     </article>
+                </div>
+                <?php endwhile;
 
-                <?php else : ?>
-                    <!-- List Layout: Horizontal rows -->
+                else :
+                    // List Layout
+                    while ($query->have_posts()) :
+                        $query->the_post();
+                        $post_id = get_the_ID();
+                        $article_type_slug = get_article_type_slug($post_id);
+                        $show_icon = in_array($article_type_slug, ['video', 'audio', 'galerija']);
+                ?>
+                <div class="<?php echo esc_attr($col_classes); ?>">
                     <article class="post-list-item d-flex align-items-start gap-3 p-3 rounded-3 shadow-sm bg-white position-relative">
-                        <!-- Thumbnail -->
                         <?php if (has_post_thumbnail()) : ?>
                         <div class="post-list-thumbnail flex-shrink-0 position-relative">
                             <a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr('Read more about ' . get_the_title()); ?>">
                                 <?php the_post_thumbnail('medium', ['class' => 'rounded-3', 'loading' => 'lazy']); ?>
                             </a>
-
                             <?php if ($show_icon) : ?>
                                 <?php get_component('article-type-overlay'); ?>
                             <?php endif; ?>
                         </div>
                         <?php endif; ?>
-
-                        <!-- Content -->
                         <div class="post-list-content flex-grow-1">
                             <?php get_component('post-title', array('tag' => 'h3', 'link' => true, 'class' => 'h5 mb-2')); ?>
-
                             <p class="post-excerpt mb-2"><?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?></p>
-
-                            <!-- Meta -->
                             <div class="d-flex gap-3 text-muted small">
                                 <?php get_component('post-date'); ?>
                             </div>
                         </div>
                     </article>
-                <?php endif; ?>
+                </div>
+                <?php endwhile;
+                endif; ?>
             </div>
-
-            <?php endwhile; ?>
         </div>
     </div>
 </section>

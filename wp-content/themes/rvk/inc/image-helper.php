@@ -168,16 +168,27 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
  * @param int $attachment_id Attachment ID
  * @param string $size Base image size
  * @param string $format Format (webp or original)
+ * @param int $max_width Maximum width to include in srcset (0 = no limit)
  * @return string Srcset string
  */
-function dev_theme_build_srcset($attachment_id, $size, $format = 'original') {
+function dev_theme_build_srcset($attachment_id, $size, $format = 'original', $max_width = 0) {
     $srcset = [];
     $file_path = get_attached_file($attachment_id);
     $upload_dir = wp_upload_dir();
     $base_url = dirname(wp_get_attachment_url($attachment_id));
 
-    // Get all available sizes
-    $sizes = ['mobile-small', 'mobile', 'tablet', 'desktop', 'full'];
+    // Determine sizes based on the requested base size
+    if ($size === 'thumb' || $size === 'thumbnail') {
+        // For thumbnails, only use small sizes
+        $sizes = ['thumb', 'thumbnail'];
+    } elseif ($size === 'mobile-small') {
+        // For mobile-small, limit to mobile sizes
+        $sizes = ['mobile-small'];
+    } else {
+        // For larger sizes, use all available sizes
+        $sizes = ['mobile-small', 'mobile', 'tablet', 'desktop', 'full'];
+    }
+
     $image_meta = wp_get_attachment_metadata($attachment_id);
 
     foreach ($sizes as $size_name) {
@@ -186,6 +197,11 @@ function dev_theme_build_srcset($attachment_id, $size, $format = 'original') {
         if ($image_src) {
             $width = $image_src[1];
             $file_url = $image_src[0];
+
+            // Skip sizes larger than max_width if specified
+            if ($max_width > 0 && $width > $max_width) {
+                continue;
+            }
 
             // Check if WebP version exists
             if ($format === 'webp') {

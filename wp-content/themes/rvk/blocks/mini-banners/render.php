@@ -99,7 +99,7 @@ $render_banner_item = function($banner, $original_index) {
 ]); ?>>
 
 	<div class="container position-relative">
-		<div class="px-3 px-lg-5 py-4 py-lg-5 bg-white rounded-4 shadow-sm">
+		<div class="px-3 px-lg-5 py-4 py-lg-5 bg-grey-brand rounded-4">
 
 			<!-- Title & Subtitle -->
 			<div class="carousel-header text-center mb-5">

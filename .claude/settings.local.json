@@ -14,7 +14,8 @@
       "Bash(npm run build:block:post-listings:*)",
       "Bash(npm run build:vite:*)",
       "Bash(\"c:\\xampp\\php\\php.exe\" -r \"require_once ''c:/xampp/htdocs/dev-theme/wp-load.php''; $post_id = 1; if (function_exists(''get_article_type_slug'')) { echo ''Function exists: '' . get_article_type_slug($post_id) . PHP_EOL; } else { echo ''Function does NOT exist'' . PHP_EOL; }\")",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(\"c:\\xampp\\php\\php.exe\" -r \"require_once ''c:/xampp/htdocs/dev-theme/wp-load.php''; $query = new WP_Query([''post_type'' => ''post'', ''posts_per_page'' => 3]); echo ''Found posts: '' . $query->found_posts . PHP_EOL; while ($query->have_posts()) { $query->the_post(); echo get_the_title() . PHP_EOL; } wp_reset_postdata();\")"
     ],
     "deny": [],
     "ask": []
