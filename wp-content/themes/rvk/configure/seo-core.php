@@ -465,9 +465,9 @@ class RVK_SEO_Core {
         // Enqueue SEO content panel JavaScript for Gutenberg
         wp_enqueue_script(
             'rvk-seo-content-panel',
-            get_template_directory_uri() . '/dist/js/seo-content-panel.js',
+            get_template_directory_uri() . '/dist/js/seo-content-panel.min.js',
             array('wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data'),
-            filemtime(get_template_directory() . '/dist/js/seo-content-panel.js'),
+            filemtime(get_template_directory() . '/dist/js/seo-content-panel.min.js'),
             true
         );
 
