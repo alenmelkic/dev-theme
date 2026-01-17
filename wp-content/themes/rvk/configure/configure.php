@@ -249,6 +249,7 @@ function custom_allowed_block_types( $allowed_blocks, $editor_context ) {
         'dev-theme/category-articles' => true,
         'dev-theme/image-gallery' => true,
         'dev-theme/mini-banners' => true,
+        'dev-theme/post-listings' => true,
         
         // === TEXT BLOCKS ===
         'core/code' => false,

@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dev-theme/post-listings",
+    "version": "1.0.0",
+    "title": "Post Listings",
+    "category": "media",
+    "icon": "grid-view",
+    "description": "Display filtered posts with multiple layout options. Pages only.",
+    "keywords": ["posts", "listings", "filter", "cards", "list"],
+    "attributes": {
+        "categoryIds": {
+            "type": "array",
+            "default": [],
+            "items": {
+                "type": "number"
+            }
+        },
+        "tagIds": {
+            "type": "array",
+            "default": [],
+            "items": {
+                "type": "number"
+            }
+        },
+        "taxonomyFilters": {
+            "type": "object",
+            "default": {}
+        },
+        "articleType": {
+            "type": "string",
+            "default": "all",
+            "enum": ["all", "standard", "video", "audio", "galerija"]
+        },
+        "layout": {
+            "type": "string",
+            "default": "cards-1",
+            "enum": ["cards-1", "cards-2", "list"]
+        },
+        "postsPerPage": {
+            "type": "number",
+            "default": 6
+        },
+        "orderBy": {
+            "type": "string",
+            "default": "date",
+            "enum": ["date", "title", "modified"]
+        },
+        "order": {
+            "type": "string",
+            "default": "DESC",
+            "enum": ["DESC", "ASC"]
+        }
+    },
+    "supports": {
+        "align": ["wide", "full"],
+        "html": false,
+        "multiple": true
+    },
+    "render": "file:./render.php"
+}

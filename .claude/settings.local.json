@@ -10,7 +10,10 @@
       "Bash(dir:*)",
       "Bash(cat:*)",
       "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run build:block:post-listings:*)",
+      "Bash(npm run build:vite:*)",
+      "Bash(\"c:\\xampp\\php\\php.exe\" -r \"require_once ''c:/xampp/htdocs/dev-theme/wp-load.php''; $post_id = 1; if (function_exists(''get_article_type_slug'')) { echo ''Function exists: '' . get_article_type_slug($post_id) . PHP_EOL; } else { echo ''Function does NOT exist'' . PHP_EOL; }\")"
     ],
     "deny": [],
     "ask": []

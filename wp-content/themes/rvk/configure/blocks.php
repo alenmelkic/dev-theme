@@ -13,6 +13,7 @@ function dev_theme_register_blocks() {
     register_block_type( get_template_directory() . '/blocks/facebook-video/block.json' );
     register_block_type( get_template_directory() . '/blocks/youtube-video/block.json' );
     register_block_type( get_template_directory() . '/blocks/category-articles/block.json' );
+    register_block_type( get_template_directory() . '/blocks/post-listings/block.json' );
 
     // Image Gallery Block with View Script
     $view_script_handle = 'dev-theme-image-gallery-view';
@@ -120,13 +121,29 @@ function dev_theme_enqueue_block_editor_assets() {
     // Category Articles Block
     $ca_script_handle = 'dev-theme-category-articles-block-editor';
     $ca_asset_file = get_template_directory() . '/dist/blocks/category-articles/index.jsx.asset.php';
-    
+
     if ( file_exists( $ca_asset_file ) ) {
         $asset = require( $ca_asset_file );
-        
+
         wp_enqueue_script(
             $ca_script_handle,
             get_template_directory_uri() . '/dist/blocks/category-articles/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    // Post Listings Block
+    $pl_script_handle = 'dev-theme-post-listings-block-editor';
+    $pl_asset_file = get_template_directory() . '/dist/blocks/post-listings/index.jsx.asset.php';
+
+    if ( file_exists( $pl_asset_file ) ) {
+        $asset = require( $pl_asset_file );
+
+        wp_enqueue_script(
+            $pl_script_handle,
+            get_template_directory_uri() . '/dist/blocks/post-listings/index.jsx.js',
             $asset['dependencies'],
             $asset['version'],
             true
