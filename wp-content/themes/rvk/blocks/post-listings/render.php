@@ -12,6 +12,8 @@ if (!defined('ABSPATH')) {
 }
 
 // Get block attributes
+$title = $attributes['title'] ?? '';
+$subtitle = $attributes['subtitle'] ?? '';
 $category_ids = $attributes['categoryIds'] ?? [];
 $tag_ids = $attributes['tagIds'] ?? [];
 $taxonomy_filters = $attributes['taxonomyFilters'] ?? [];
@@ -20,6 +22,30 @@ $layout = $attributes['layout'] ?? 'cards-1';
 $posts_per_page = $attributes['postsPerPage'] ?? 6;
 $orderby = $attributes['orderBy'] ?? 'date';
 $order = $attributes['order'] ?? 'DESC';
+
+// Conditionally enqueue layout-specific CSS
+$base_handle = 'post-listings-base';
+$layout_handle = 'post-listings-' . $layout;
+
+// Enqueue base styles (always needed)
+if (!wp_style_is($base_handle, 'enqueued')) {
+    wp_enqueue_style(
+        $base_handle,
+        get_template_directory_uri() . '/dist/css/components/post-listings-base.min.css',
+        [],
+        filemtime(get_template_directory() . '/dist/css/components/post-listings-base.min.css')
+    );
+}
+
+// Enqueue layout-specific styles
+if (!wp_style_is($layout_handle, 'enqueued')) {
+    wp_enqueue_style(
+        $layout_handle,
+        get_template_directory_uri() . '/dist/css/components/post-listings-' . $layout . '.min.css',
+        [$base_handle],
+        filemtime(get_template_directory() . '/dist/css/components/post-listings-' . $layout . '.min.css')
+    );
+}
 
 // Build WP_Query arguments
 $args = [
@@ -123,6 +149,17 @@ switch ($layout) {
 
 <section <?php echo get_block_wrapper_attributes(['class' => "post-listings-block {$layout_classes} my-5"]); ?>>
     <div class="container">
+        <?php if (!empty($title) || !empty($subtitle)) : ?>
+        <div class="post-listings-header mb-4 text-center">
+            <?php if (!empty($title)) : ?>
+                <h2 class="post-listings-title h3 fw-bold mb-2"><?php echo esc_html($title); ?></h2>
+            <?php endif; ?>
+            <?php if (!empty($subtitle)) : ?>
+                <p class="post-listings-subtitle text-muted mb-0"><?php echo esc_html($subtitle); ?></p>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
         <div class="row g-4">
             <?php
             while ($query->have_posts()) :

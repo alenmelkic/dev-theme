@@ -6,6 +6,7 @@ import {
     SelectControl,
     RangeControl,
     CheckboxControl,
+    TextControl,
     Placeholder,
     Spinner
 } from '@wordpress/components';
@@ -17,6 +18,8 @@ console.log('Post Listings Block: Script Loaded');
 registerBlockType(metadata.name, {
     edit: ({ attributes, setAttributes }) => {
         const {
+            title,
+            subtitle,
             categoryIds,
             tagIds,
             taxonomyFilters,
@@ -218,6 +221,20 @@ registerBlockType(metadata.name, {
 
                     {/* Layout Settings Panel */}
                     <PanelBody title="Layout Settings" initialOpen={true}>
+                        <TextControl
+                            label="Title"
+                            value={title}
+                            onChange={(val) => setAttributes({ title: val })}
+                            help="Optional title displayed above the posts"
+                        />
+
+                        <TextControl
+                            label="Subtitle"
+                            value={subtitle}
+                            onChange={(val) => setAttributes({ subtitle: val })}
+                            help="Optional subtitle displayed below the title"
+                        />
+
                         <SelectControl
                             label="Layout Style"
                             value={layout}
@@ -271,6 +288,8 @@ registerBlockType(metadata.name, {
                     instructions="Configure post filters and layout in the sidebar."
                 >
                     <div style={{ padding: '20px', textAlign: 'left' }}>
+                        {title && <p><strong>Title:</strong> {title}</p>}
+                        {subtitle && <p><strong>Subtitle:</strong> {subtitle}</p>}
                         <p><strong>Layout:</strong> {
                             layout === 'cards-1' ? 'Cards Layout 1 (3-column)' :
                             layout === 'cards-2' ? 'Cards Layout 2 (Featured)' :

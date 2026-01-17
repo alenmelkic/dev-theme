@@ -40,11 +40,11 @@ function register_component_assets($component_name, $has_css = true, $has_js = f
             }
         } else {
             // PROD MODE: Serve built CSS from dist
-            $css_file = $theme_dir . '/dist/css/components/' . $component_name . '.css';
+            $css_file = $theme_dir . '/dist/css/components/' . $component_name . '.min.css';
             if (file_exists($css_file)) {
                 wp_register_style(
                     'component-' . $component_name,
-                    $theme_uri . '/dist/css/components/' . $component_name . '.css',
+                    $theme_uri . '/dist/css/components/' . $component_name . '.min.css',
                     array(),
                     filemtime($css_file)
                 );

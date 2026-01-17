@@ -33,18 +33,18 @@ function rvk_marketing_admin_scripts($hook) {
     // Enqueue custom admin script (no dependencies - vanilla JS)
     wp_enqueue_script(
         'rvk-marketing-admin',
-        get_template_directory_uri() . '/dist/marketing-admin.js',
+        get_template_directory_uri() . '/dist/admin/js/marketing-admin.min.js',
         array(),
-        filemtime(get_template_directory() . '/dist/marketing-admin.js'),
+        filemtime(get_template_directory() . '/dist/admin/js/marketing-admin.min.js'),
         true
     );
-    
+
     // Enqueue custom admin styles
     wp_enqueue_style(
         'rvk-marketing-admin',
-        get_template_directory_uri() . '/dist/css/admin/marketing.css',
+        get_template_directory_uri() . '/dist/admin/css/marketing.min.css',
         array(),
-        filemtime(get_template_directory() . '/dist/css/admin/marketing.css')
+        filemtime(get_template_directory() . '/dist/admin/css/marketing.min.css')
     );
 }
 add_action('admin_enqueue_scripts', 'rvk_marketing_admin_scripts');

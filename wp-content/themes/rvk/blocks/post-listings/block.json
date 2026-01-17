@@ -9,6 +9,14 @@
     "description": "Display filtered posts with multiple layout options. Pages only.",
     "keywords": ["posts", "listings", "filter", "cards", "list"],
     "attributes": {
+        "title": {
+            "type": "string",
+            "default": ""
+        },
+        "subtitle": {
+            "type": "string",
+            "default": ""
+        },
         "categoryIds": {
             "type": "array",
             "default": [],

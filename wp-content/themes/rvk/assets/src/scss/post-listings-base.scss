@@ -1,0 +1,12 @@
+/**
+ * Post Listings Block - Base Styles Entry Point
+ * Conditionally loaded on pages with Post Listings block
+ */
+
+// Settings (variables, mixins, functions)
+@import "settings/variables";
+@import "settings/mixins";
+@import "settings/functions";
+
+// Import base styles
+@import "components/b.post-listings-base";

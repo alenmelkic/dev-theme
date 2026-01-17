@@ -1,0 +1,12 @@
+/**
+ * Post Listings Block - Cards Layout 2 Entry Point
+ * Conditionally loaded when Cards Layout 2 is selected
+ */
+
+// Settings (variables, mixins, functions)
+@import "settings/variables";
+@import "settings/mixins";
+@import "settings/functions";
+
+// Import Cards 2 layout styles
+@import "components/b.post-listings-cards-2";

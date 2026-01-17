@@ -28,11 +28,11 @@ function rvk_adsense_admin_scripts($hook) {
     }
 
     // Enqueue custom admin script (no dependencies - vanilla JS)
-    $js_file = get_template_directory() . '/dist/adsense-admin.js';
+    $js_file = get_template_directory() . '/dist/admin/js/adsense-admin.min.js';
     if (file_exists($js_file)) {
         wp_enqueue_script(
             'rvk-adsense-admin',
-            get_template_directory_uri() . '/dist/adsense-admin.js',
+            get_template_directory_uri() . '/dist/admin/js/adsense-admin.min.js',
             array(),
             filemtime($js_file),
             true
@@ -40,11 +40,11 @@ function rvk_adsense_admin_scripts($hook) {
     }
 
     // Enqueue custom admin styles
-    $css_file = get_template_directory() . '/dist/css/admin/adsense.css';
+    $css_file = get_template_directory() . '/dist/admin/css/adsense.min.css';
     if (file_exists($css_file)) {
         wp_enqueue_style(
             'rvk-adsense-admin',
-            get_template_directory_uri() . '/dist/css/admin/adsense.css',
+            get_template_directory_uri() . '/dist/admin/css/adsense.min.css',
             array(),
             filemtime($css_file)
         );

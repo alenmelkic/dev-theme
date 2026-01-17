@@ -1,0 +1,76 @@
+/**
+ * Post Listings Block - Base Styles
+ * Shared styles and accessibility features
+ * WCAG 2.1 AA Compliant
+ */
+
+.post-listings-block {
+    // Base block container styles
+    margin: 2rem 0;
+
+    // Header (title and subtitle)
+    .post-listings-header {
+        .post-listings-title {
+            color: $black-color;
+            line-height: 1.3;
+        }
+
+        .post-listings-subtitle {
+            color: $medium-grey;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+    }
+}
+
+// === EDITOR STYLES ===
+.post-listings-editor {
+    .post-listings-checkbox-group {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px;
+        background-color: #f9f9f9;
+
+        .components-checkbox-control {
+            margin-bottom: 4px;
+        }
+    }
+
+    .components-placeholder {
+        min-height: 200px;
+    }
+}
+
+// === ACCESSIBILITY ENHANCEMENTS ===
+
+// High contrast mode support (WCAG 2.1 AA)
+@media (prefers-contrast: high) {
+    .post-listings-block {
+        .post-card,
+        .post-card-featured,
+        .post-list-item {
+            border: 2px solid currentColor;
+        }
+    }
+}
+
+// Reduced motion support (WCAG 2.1 AA)
+@media (prefers-reduced-motion: reduce) {
+    .post-listings-block {
+        * {
+            transition: none !important;
+            animation: none !important;
+        }
+    }
+}
+
+// Focus-visible for better keyboard navigation (WCAG 2.1 AA)
+.post-listings-block {
+    a:focus-visible {
+        outline: 2px solid #007bff;
+        outline-offset: 3px;
+        border-radius: 2px;
+    }
+}

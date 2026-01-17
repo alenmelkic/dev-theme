@@ -9,9 +9,9 @@ function rvk_enqueue_sponsored_meta_box_styles() {
     if ($screen && $screen->post_type === 'post') {
         wp_enqueue_style(
             'rvk-sponsored-meta-box',
-            get_template_directory_uri() . '/dist/css/admin/sponsored-meta-box.css',
+            get_template_directory_uri() . '/dist/admin/css/sponsored-meta-box.min.css',
             [],
-            filemtime(get_template_directory() . '/dist/css/admin/sponsored-meta-box.css')
+            filemtime(get_template_directory() . '/dist/admin/css/sponsored-meta-box.min.css')
         );
     }
 }

@@ -1,0 +1,12 @@
+/**
+ * Post Listings Block - List Layout Entry Point
+ * Conditionally loaded when List Layout is selected
+ */
+
+// Settings (variables, mixins, functions)
+@import "settings/variables";
+@import "settings/mixins";
+@import "settings/functions";
+
+// Import List layout styles
+@import "components/b.post-listings-list";
