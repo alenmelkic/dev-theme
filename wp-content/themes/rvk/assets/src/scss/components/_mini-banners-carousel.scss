@@ -24,7 +24,7 @@
 
 		.carousel-subtitle {
 			position: absolute;
-			top: -45px;
+			top: -35px;
 			left: 50%;
 			transform: translateX(-50%);
 			font-size: 8.5rem;
@@ -284,7 +284,7 @@
 	.carousel-gradient-left {
 		left: 0;
 		background: linear-gradient(to right,
-				rgba(255, 255, 255, 1) 0%,
+				rgba(229, 231, 235, 1) 0%,
 				rgba(255, 255, 255, 0) 100%);
 
 		@media (prefers-color-scheme: dark) {
@@ -297,7 +297,7 @@
 	.carousel-gradient-right {
 		right: 0;
 		background: linear-gradient(to left,
-				rgba(255, 255, 255, 1) 0%,
+				rgba(229, 231, 235, 1) 0%,
 				rgba(255, 255, 255, 0) 100%);
 
 		@media (prefers-color-scheme: dark) {

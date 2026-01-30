@@ -184,7 +184,7 @@ switch ($layout) {
                         $show_icon = in_array($article_type_slug, ['video', 'audio', 'galerija']);
                 ?>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <article class="post-card mb-4 mb-md-0 position-relative">
+                    <article class="post-card mb-4 h-100 mb-md-0 position-relative">
                         <div class="post-card-image position-relative">
                             <a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr('Read more about ' . get_the_title()); ?>">
                                 <?php
@@ -207,7 +207,7 @@ switch ($layout) {
                             <div class="post-excerpt">
                                 <p><?php echo wp_trim_words(get_the_excerpt(), 15, '...'); ?></p>
                             </div>
-                            <div class="post-card-meta d-flex justify-content-between align-items-center mt-3">
+                            <div class="post-card-meta pt-2 d-flex justify-content-between align-items-center">
                                 <?php get_component('author', array('size' => 'small')); ?>
                                 <?php get_component('post-date'); ?>
                             </div>
@@ -227,7 +227,7 @@ switch ($layout) {
                         $show_icon = in_array($article_type_slug, ['video', 'audio', 'galerija']);
                 ?>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <article class="post-card mb-4 mb-md-0 position-relative">
+                    <article class="post-card mb-4 h-100 mb-md-0 position-relative">
                         <div class="post-card-image position-relative">
                             <a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr('Read more about ' . get_the_title()); ?>">
                                 <?php
@@ -247,10 +247,10 @@ switch ($layout) {
                             <div class="post-card-header">
                                 <?php get_component('post-title', array('tag' => 'h3', 'link' => true)); ?>
                             </div>
-                            <div class="post-excerpt">
-                                <p><?php echo wp_trim_words(get_the_excerpt(), 15, '...'); ?></p>
-                            </div>
-                            <div class="post-card-meta d-flex justify-content-between align-items-center mt-3">
+                            <p class="post-excerpt">
+                                <?php echo wp_trim_words(get_the_excerpt(), 15, '...'); ?>
+                            </p>
+                            <div class="post-card-meta pt-2 d-flex justify-content-between align-items-center">
                                 <?php get_component('author', array('size' => 'small')); ?>
                                 <?php get_component('post-date'); ?>
                             </div>

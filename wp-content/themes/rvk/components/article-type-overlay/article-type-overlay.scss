@@ -3,14 +3,14 @@
     top: 5%;
     right: 5%;
     // transform: translate(50%, 50%);
-    width: 3.1rem;
-    height: 3.1rem;
+    @include rem(width, 36px);
+    @include rem(height, 36px);
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(158, 158, 158, 0.9);
+    background-color: rgba(158, 158, 158, 0.1);
     border-radius: 50%;
-    border: 1px solid rgb(145, 145, 145);
+    border: 1px solid $gray-color;
     pointer-events: none;
     transition: all 0.3s ease;
     z-index: 10;
@@ -46,6 +46,7 @@
 
 // Parent hover effect
 .post-card:hover .article-type-overlay {
-    transform: scale(1.05);
-    background-color: rgba(158, 158, 158, .95);
+    // transform: scale(1.05);
+    backdrop-filter: blur(10px);
+    background-color: rgba($color: $gray-color, $alpha: 0.2);
 }

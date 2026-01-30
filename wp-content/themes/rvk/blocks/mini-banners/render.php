@@ -98,7 +98,7 @@ $render_banner_item = function($banner, $original_index) {
 	'aria-label' => 'Marketing mini banners carousel'
 ]); ?>>
 
-	<div class="container position-relative">
+	<div class="container position-relative overflow-hidden">
 		<div class="px-3 px-lg-5 py-4 py-lg-5 bg-grey-brand rounded-4">
 
 			<!-- Title & Subtitle -->
