@@ -4,11 +4,58 @@
         position: relative;
     }
 
-    .card-title a {
+    a {
+        color: $black;
+    }
+
+    .card-title {
+        line-height: 1;
+        a {
         transition: color 0.15s ease-in-out;
+        @include rem(font-size, 34px);
+        letter-spacing: -1px;
 
         &:hover {
             color: var(--bs-primary) !important;
+        }
+    }
+    }
+
+    .avatar-img {
+        @include rem(width, 25px);
+        @include rem(height, 25px);
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+    }
+
+    .author-info {
+        .author-name {
+            @include rem(font-size, 14px);
+            color: $black;
+            line-height: 1;
+        }
+
+        .author-role {
+            @include rem(font-size, 12px);
+        }
+    }
+
+    .card-img-overlay {
+        &__category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+
+            a {
+                font-size: 0.75rem;
+                letter-spacing: 0.5px;
+            }
         }
     }
 
@@ -16,6 +63,13 @@
     .featured-article {
         .card-img {
             min-height: 450px;
+            transition: transform 0.3s ease;
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        &:hover .card-img {
+            transform: scale(1.01);
         }
 
         .overlay-subtle {
@@ -41,10 +95,27 @@
 
     // List Articles (Right Column)
     .list-article {
+        .card-body {
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+        }
+        .thumbnail-wrap {
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+
         .thumbnail {
             width: 100px;
             height: 100px;
             object-fit: cover;
+            transition: transform 0.35s ease;
+            display: block;
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        &:hover .thumbnail {
+            transform: scale(1.07);
         }
 
         .badge-category {

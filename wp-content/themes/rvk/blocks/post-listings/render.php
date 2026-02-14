@@ -287,10 +287,7 @@ switch ($layout) {
                                             'sizes' => '100px',
                                         ));
                                         ?>
-                                    </a>
-                                    <?php if ($show_icon) : ?>
-                                        <?php get_component('article-type-overlay'); ?>
-                                    <?php endif; ?>
+                                    </a>                                    
                                 </div>
                                 <?php endif; ?>
                                 <div class="post-card-compact-content flex-grow-1">
