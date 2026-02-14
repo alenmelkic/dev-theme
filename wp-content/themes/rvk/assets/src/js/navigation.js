@@ -78,6 +78,40 @@ const toggleMenu = () => {
     }
 };
 
+const initStickyHeader = () => {
+    const header = document.getElementById('masthead');
+    if (!header) return;
+
+    let lastScrollY = window.scrollY;
+
+    const onScroll = () => {
+        const currentScrollY = window.scrollY;
+        const isMobile = window.innerWidth < 992;
+
+        // Glass effect on scroll
+        if (currentScrollY > 10) {
+            header.classList.add('is-scrolled');
+        } else {
+            header.classList.remove('is-scrolled');
+        }
+
+        // Mobile hide/show on scroll direction
+        if (isMobile) {
+            if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                header.classList.add('header-hidden');
+            } else {
+                header.classList.remove('header-hidden');
+            }
+        } else {
+            header.classList.remove('header-hidden');
+        }
+
+        lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+};
+
 // Main hamburger functionality
 export const initNavigation = () => {
     // Re-select elements on each init
@@ -89,6 +123,8 @@ export const initNavigation = () => {
         hamburger.removeEventListener("click", toggleMenu);
         hamburger.addEventListener("click", toggleMenu);
     }
+
+    initStickyHeader();
 };
 
 export default initNavigation;
