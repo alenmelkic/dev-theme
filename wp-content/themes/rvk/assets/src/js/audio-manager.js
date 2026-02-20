@@ -89,38 +89,26 @@ const player = {
     updateUI(isPlaying) {
         this.isPlaying = isPlaying;
 
-        // Update Bottom Player UI - Dynamic Lookup
+        // Update Bottom Player UI
+        const playerBar = document.getElementById('radio-player-bar');
         const playBtn = document.getElementById('radio-play-btn');
-        if (playBtn) {
-            const playIcon = playBtn.querySelector('.icon-play');
-            const pauseIcon = playBtn.querySelector('.icon-pause');
-            const indicator = document.querySelector('.live-indicator');
 
-            if (isPlaying) {
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'inline';
-                if (indicator) indicator.style.opacity = '1';
-            } else {
-                playIcon.style.display = 'inline';
-                pauseIcon.style.display = 'none';
-                if (indicator) indicator.style.opacity = '0.5';
-            }
+        if (playerBar) {
+            playerBar.classList.toggle('is-playing', isPlaying);
         }
 
-        // Update Header Button UI - Dynamic Lookup
+        if (playBtn) {
+            playBtn.classList.toggle('is-playing', isPlaying);
+        }
+
+        // Update Header Button UI
         const headerBtn = document.getElementById('header-play-btn');
         if (headerBtn) {
-            const headerText = headerBtn.querySelector('.text');
-            const headerIcon = headerBtn.querySelector('.icon-play');
+            headerBtn.classList.toggle('is-playing', isPlaying);
 
-            if (isPlaying) {
-                if (headerText) headerText.textContent = 'Playing Live';
-                if (headerIcon) headerIcon.textContent = '⏸';
-                headerBtn.classList.add('is-playing');
-            } else {
-                if (headerText) headerText.textContent = 'Listen Live';
-                if (headerIcon) headerIcon.textContent = '▶';
-                headerBtn.classList.remove('is-playing');
+            const headerText = headerBtn.querySelector('.text');
+            if (headerText) {
+                headerText.textContent = isPlaying ? 'Playing Live' : 'RVK Uživo';
             }
         }
 

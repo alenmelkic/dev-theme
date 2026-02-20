@@ -114,8 +114,16 @@
 
               <!-- Header Play Button -->
               <button id="header-play-btn" class="header-play-btn mx-0 d-lg-flex align-items-center" aria-label="Listen Live">
-                  <span class="icon-play me-2">▶</span>
-                  <span class="text">RVK Uživo</span>
+                  <span class="live-status d-flex align-items-center me-2">
+                       <span class="text me-2">RVK Uživo</span>
+                       <div class="equalizer">
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                       </div>
+                  </span>
+                  <svg class="icon-play" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
               </button>
 
               <!-- Mobile Menu Toggle -->

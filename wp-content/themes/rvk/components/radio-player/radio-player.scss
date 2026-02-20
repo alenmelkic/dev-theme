@@ -1,101 +1,241 @@
+@use "../../assets/src/scss/settings/variables" as *;
+
 .radio-player-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background: #1a1a1a;
-    color: #fff;
-    padding: 10px 0;
-    z-index: 9999;
-    transform: translateY(100%);
-    transition: transform 0.3s ease-in-out;
+    z-index: 1080; // Matching $z-index-radio-player
 
-    &.is-visible {
+    // Light Apple-Style Glossy Background
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    color: #1d1d1f; // Apple-style dark text
+    padding: 10px 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.is-visible,
+    &.is-playing {
         transform: translateY(0);
+    }
+
+    &.is-playing {
+        .record-wrapper {
+            animation: spin 3s linear infinite;
+        }
+
+        .play-overlay {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+
+        .equalizer .bar {
+            animation: equalize 1s ease-in-out infinite;
+
+            &:nth-child(1) {
+                animation-delay: -0.2s;
+            }
+
+            &:nth-child(2) {
+                animation-delay: -0.4s;
+            }
+
+            &:nth-child(3) {
+                animation-delay: -0.6s;
+            }
+
+            &:nth-child(4) {
+                animation-delay: -0.8s;
+            }
+        }
     }
 
     .player-content {
         display: flex;
         align-items: center;
         gap: 20px;
+        position: relative;
     }
 
-    .play-btn {
-        background: #fff;
-        color: #000;
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    // Vinyl Record Styling
+    .gramophone-logo {
+        flex-shrink: 0;
         cursor: pointer;
-        font-size: 18px;
-        transition: transform 0.2s;
 
-        &:hover {
-            transform: scale(1.1);
+        .record-wrapper {
+            width: 64px;
+            height: 64px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+
+            // Record grooves effect
+            &::before {
+                content: '';
+                position: absolute;
+                inset: 4px;
+                border-radius: 50%;
+                border: 2px solid rgba(255, 255, 255, 0.05);
+                box-shadow:
+                    0 0 0 4px rgba(255, 255, 255, 0.02),
+                    0 0 0 8px rgba(255, 255, 255, 0.01),
+                    0 0 0 12px rgba(255, 255, 255, 0.02);
+            }
+
+            &.no-logo {
+                background: radial-gradient(circle, #333 0%, #000 70%);
+            }
+        }
+
+        .record-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #fff;
+            padding: 2px;
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+
+        // Play Button Overlay on Record
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 3;
+            color: #fff;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 1;
+
+            svg {
+                width: 28px;
+                height: 28px;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+            }
+
+        }
+
+        &:hover .play-overlay {
+            background: rgba(0, 0, 0, 0.4);
+            transform: scale(1.05);
         }
     }
 
-    .live-indicator {
+    // Live Status & Equalizer
+    .live-status {
         display: flex;
         align-items: center;
-        gap: 5px;
-        color: #ff0000;
-        font-weight: bold;
-        font-size: 12px;
+        gap: 10px;
+        padding: 4px 12px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 20px;
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: currentColor;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
+        .text {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #231f20;
+        }
+
+        .equalizer {
+            .bar {
+                background: #ec1c24; // Brand primary red
+            }
         }
     }
 
+    // Track Information
     .track-info {
         flex: 1;
         display: flex;
         flex-direction: column;
 
         .station-name {
-            font-size: 12px;
-            opacity: 0.7;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.6;
         }
 
         .current-track {
-            font-weight: 500;
+            font-size: 15px;
+            font-weight: 700;
+            color: #000;
         }
     }
 
+    // Volume Control
     .volume-control {
-        width: 100px;
+        align-items: center;
+        gap: 12px;
+        width: 140px;
 
-        input {
+        .volume-icon {
+            width: 18px;
+            height: 18px;
+            opacity: 0.5;
+            color: #231f20;
+        }
+
+        input[type="range"] {
+            appearance: none;
             width: 100%;
-            cursor: pointer;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+
+            &::-webkit-slider-thumb {
+                appearance: none;
+                width: 14px;
+                height: 14px;
+                background: #231f20;
+                border-radius: 50%;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
         }
     }
 }
 
-@keyframes pulse {
+// Global Equalizer Keyframes (already defined in header, but keeping local for safety or specific tweaks)
+@keyframes equalize {
     0% {
-        opacity: 1;
+        height: 4px;
     }
 
     50% {
-        opacity: 0.5;
+        height: 14px;
     }
 
     100% {
-        opacity: 1;
+        height: 4px;
     }
 }
 
-/* Add padding to body so content isn't hidden behind player */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Padding for body */
 body.has-player {
-    padding-bottom: 60px;
+    padding-bottom: 84px;
 }
