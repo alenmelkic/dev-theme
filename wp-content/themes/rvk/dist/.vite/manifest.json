@@ -146,6 +146,14 @@
       "admin/css/sponsored-meta-box.css"
     ]
   },
+  "assets/src/scss/components/_b.hero-slider.scss": {
+    "file": "css/components/hero-slider.min.css",
+    "src": "assets/src/scss/components/_b.hero-slider.scss",
+    "isEntry": true,
+    "names": [
+      "components/hero-slider.css"
+    ]
+  },
   "assets/src/scss/components/_mini-banners-carousel.scss": {
     "file": "css/components/mini-banners-carousel.min.css",
     "src": "assets/src/scss/components/_mini-banners-carousel.scss",

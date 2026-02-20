@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dev-theme/hero-slider",
+    "version": "1.0.0",
+    "title": "Hero Slider",
+    "category": "theme",
+    "icon": "slides",
+    "description": "Full-width hero banner slider with Swiper. Articles cycle from card list into the hero slide.",
+    "attributes": {
+        "categoryId": {
+            "type": "number",
+            "default": 0
+        },
+        "postsCount": {
+            "type": "number",
+            "default": 6
+        },
+        "autoplay": {
+            "type": "boolean",
+            "default": true
+        },
+        "autoplayDelay": {
+            "type": "number",
+            "default": 5000
+        }
+    },
+    "supports": {
+        "align": [
+            "full",
+            "wide"
+        ],
+        "html": false
+    },
+    "editorScript": "dev-theme-hero-slider-block-editor",
+    "viewScript": "dev-theme-hero-slider-view",
+    "style": "dev-theme-hero-slider-style",
+    "render": "file:./render.php"
+}

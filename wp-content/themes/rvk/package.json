@@ -14,7 +14,8 @@
 		"build:block:image-gallery": "wp-scripts build blocks/image-gallery/index.jsx blocks/image-gallery/view.js --output-path=dist/blocks/image-gallery",
 		"build:block:mini-banners": "wp-scripts build blocks/mini-banners/index.jsx blocks/mini-banners/view.js --output-path=dist/blocks/mini-banners",
 		"build:block:post-listings": "wp-scripts build blocks/post-listings/index.jsx --output-path=dist/blocks/post-listings",
-		"build:blocks": "npm run build:block:soundcloud && npm run build:block:facebook-video && npm run build:block:youtube-video && npm run build:block:category-articles && npm run build:block:image-gallery && npm run build:block:mini-banners && npm run build:block:post-listings",
+		"build:block:hero-slider": "wp-scripts build blocks/hero-slider/index.jsx blocks/hero-slider/view.js --output-path=dist/blocks/hero-slider",
+		"build:blocks": "npm run build:block:soundcloud && npm run build:block:facebook-video && npm run build:block:youtube-video && npm run build:block:category-articles && npm run build:block:image-gallery && npm run build:block:mini-banners && npm run build:block:post-listings && npm run build:block:hero-slider",
 		"build": "npm run build:vite && npm run build:blocks",
 		"build:prod": "npm run build:vite:prod && npm run build:blocks",
 		"preview": "vite preview",
@@ -59,6 +60,7 @@
 		"bootstrap": "5.3.7",
 		"photoswipe": "^5.4.4",
 		"sortablejs": "^1.15.6",
+		"swiper": "^12.1.2",
 		"swup": "^4.8.2"
 	}
 }

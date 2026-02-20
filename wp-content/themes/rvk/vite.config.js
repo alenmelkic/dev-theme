@@ -106,6 +106,13 @@ export default defineConfig({
 					/^position-/,
 					/^display-/,
 					/^site-/,
+					// Swiper classes
+					/^swiper/,
+					// Hero Slider block classes
+					/^hero-slider/,
+					/^hero-slide/,
+					/^hero-card/,
+					/^hero-swiper/,
 				],
 				deep: [
 					// Dynamic classes that might be nested
@@ -214,6 +221,9 @@ export default defineConfig({
 
 				// Mini Banners Carousel
 				'components/mini-banners-carousel': resolve(`${__dirname}/assets/src/scss/components/_mini-banners-carousel.scss`),
+
+				// Hero Slider Block
+				'components/hero-slider': resolve(`${__dirname}/assets/src/scss/components/_b.hero-slider.scss`),
 
 				// Post Listings Block (conditionally loaded)
 				'components/post-listings-base': resolve(`${__dirname}/assets/src/scss/post-listings-base.scss`),

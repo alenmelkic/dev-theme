@@ -250,6 +250,7 @@ function custom_allowed_block_types( $allowed_blocks, $editor_context ) {
         'dev-theme/image-gallery' => true,
         'dev-theme/mini-banners' => true,
         'dev-theme/post-listings' => true,
+        'dev-theme/hero-slider' => true,
         
         // === TEXT BLOCKS ===
         'core/code' => false,
