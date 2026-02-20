@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Get responsive image with WCAG 2.1 AA accessibility
+ * Get responsive image with WCAG 2.1 AA accessibility and performance optimizations
  * 
  * @param int $attachment_id Attachment ID
  * @param string $size Image size (thumbnail, medium, large, full, or custom)
@@ -30,6 +30,10 @@ if (!defined('ABSPATH')) {
  *   - string 'fetchpriority' Fetch priority (high, low, auto)
  *   - string 'decoding' Decoding attribute (async, sync, auto)
  *   - string 'role' ARIA role (presentation for decorative images)
+ *   - bool   'is_lcp' If true, optimizes for Largest Contentful Paint (sets priority high, loading eager)
+ *   - string 'aspect_ratio' CSS aspect-ratio value (e.g., '16/9')
+ *   - string 'object_fit' CSS object-fit value (e.g., 'cover')
+ *   - string 'style' Additional inline styles
  * @return string HTML picture element
  */
 function get_responsive_image($attachment_id, $size = 'full', $args = []) {
@@ -55,8 +59,20 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
         'fetchpriority' => 'auto',
         'decoding' => 'async',
         'role' => '',
+        'is_lcp' => false,
+        'aspect_ratio' => '',
+        'object_fit' => '',
+        'style' => '',
+        'wrapper_class' => '',
     ];
     $args = wp_parse_args($args, $defaults);
+
+    // Apply LCP optimizations
+    if ($args['is_lcp']) {
+        $args['loading'] = 'eager';
+        $args['fetchpriority'] = 'high';
+        $args['decoding'] = 'sync';
+    }
     
     // Get alt text - WCAG 2.1 AA requirement
     $alt_text = $args['alt'];
@@ -87,6 +103,19 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
     // Get mime type
     $mime_type = get_post_mime_type($attachment_id);
 
+    // Build inline styles
+    $styles = [];
+    if (!empty($args['aspect_ratio'])) {
+        $styles[] = 'aspect-ratio: ' . $args['aspect_ratio'];
+    }
+    if (!empty($args['object_fit'])) {
+        $styles[] = 'object-fit: ' . $args['object_fit'];
+    }
+    if (!empty($args['style'])) {
+        $styles[] = $args['style'];
+    }
+    $style_attr = !empty($styles) ? implode('; ', $styles) . ';' : '';
+
     // FIX: If image is SVG, return simple img tag without picture/srcset
     if ($mime_type === 'image/svg+xml') {
         $attrs = [
@@ -96,6 +125,10 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
             'loading' => esc_attr($args['loading']),
             'decoding' => esc_attr($args['decoding']),
         ];
+
+        if (!empty($style_attr)) {
+            $attrs['style'] = esc_attr($style_attr);
+        }
         
         $html = '<img';
         foreach ($attrs as $attr => $value) {
@@ -111,7 +144,7 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
     $original_srcset = dev_theme_build_srcset($attachment_id, $size, 'original');
 
     // Build picture element
-    $html = '<picture>';
+    $html = sprintf('<picture%s>', !empty($args['wrapper_class']) ? ' class="' . esc_attr($args['wrapper_class']) . '"' : '');
 
     // WebP source (modern browsers)
     if (!empty($webp_srcset) && DEV_THEME_ENABLE_WEBP) {
@@ -131,6 +164,10 @@ function get_responsive_image($attachment_id, $size = 'full', $args = []) {
         'loading' => esc_attr($args['loading']),
         'decoding' => esc_attr($args['decoding']),
     ];
+
+    if (!empty($style_attr)) {
+        $img_attrs['style'] = esc_attr($style_attr);
+    }
     
     // Add optional attributes
     if (!empty($args['class'])) {

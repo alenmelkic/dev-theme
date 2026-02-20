@@ -50,8 +50,16 @@ $transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 .hero-slide__bg {
     position: absolute;
     inset: 0;
-    background-size: cover;
-    background-position: center;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none; // Ensure background doesn't block clicks
+}
+
+.hero-slide__bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     // transform: scale(1.08);
     transition: transform 1.5s $transition-smooth;
     will-change: transform;
@@ -73,6 +81,7 @@ $transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
             rgba(0, 0, 0, 0.4) 40%,
             rgba(0, 0, 0, 0.1) 100%);
     z-index: 2;
+    pointer-events: none; // Ensure overlay doesn't block clicks
 }
 
 // ─── Content Layer ───────────────────────────────────────
@@ -186,6 +195,7 @@ $transition-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     right: 0;
     z-index: 10;
     padding-bottom: 3.5rem;
+    pointer-events: none; // Allow clicks to pass through to content layer
 
     @media (max-width: 767px) {
         display: none;

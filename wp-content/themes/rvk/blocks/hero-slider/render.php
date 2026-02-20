@@ -56,7 +56,19 @@ $align_class = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] 
                 $cat = $cats ? $cats[0] : null;
                 ?>
                 <div class="swiper-slide hero-slide">
-                    <div class="hero-slide__bg" <?php echo $bg_url ? 'style="background-image: url(' . esc_url( $bg_url ) . ');"' : 'class="hero-slide__bg--placeholder"'; ?>></div>
+                    <?php 
+                    $attachment_id = get_post_thumbnail_id( $post->ID );
+                    if ( $attachment_id ) :
+                        echo get_responsive_image( $attachment_id, 'full', [
+                            'wrapper_class' => 'hero-slide__bg',
+                            'class' => 'hero-slide__bg-img',
+                            'is_lcp' => ( $post === $posts[0] ),
+                            'object_fit' => 'cover',
+                            'sizes' => '100vw'
+                        ] );
+                    else : ?>
+                        <div class="hero-slide__bg hero-slide__bg--placeholder"></div>
+                    <?php endif; ?>
                     <div class="hero-slide__overlay"></div>
 
                     <div class="container hero-slide__container">
@@ -113,9 +125,16 @@ $align_class = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] 
                                 <article class="hero-card">
                                     <a href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" class="hero-card__inner">
                                         <div class="hero-card__thumb">
-                                            <?php if ( $img_url ) : ?>
-                                                <img src="<?php echo esc_url( $img_url ); ?>" alt="" class="hero-card__img" loading="lazy">
-                                            <?php else : ?>
+                                            <?php 
+                                            $card_attachment_id = get_post_thumbnail_id( $post->ID );
+                                            if ( $card_attachment_id ) :
+                                                echo get_responsive_image( $card_attachment_id, 'medium_large', [
+                                                    'class' => 'hero-card__img',
+                                                    'aspect_ratio' => '16/9',
+                                                    'object_fit' => 'cover',
+                                                    'sizes' => '(max-width: 768px) 100vw, 280px'
+                                                ] );
+                                            else : ?>
                                                 <div class="hero-card__img-placeholder"></div>
                                             <?php endif; ?>
                                         </div>

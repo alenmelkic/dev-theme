@@ -58,9 +58,7 @@ if ($variant === 'hero' || $variant === 'full') {
             'class' => 'featured-image',
             'sizes' => $sizes_attr,
             'alt' => $image_alt,
-            'loading' => $loading,
-            'fetchpriority' => $fetchpriority,
-            'decoding' => 'async'
+            'is_lcp' => ( $loading === 'eager' ),
         ]
     ); 
     ?>
