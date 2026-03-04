@@ -1,28 +1,28 @@
 /**
  * Facebook Video Player Styles
+ * Modern, responsive design with smooth animations
  * Lazy loading with Intersection Observer
  */
 
 .fb-video-player {
-    margin: 2rem auto;
+    margin: 3rem auto;
     max-width: 100%;
+    width: 100%;
+    position: relative;
 
     &.align-left {
         margin-left: 0;
         margin-right: auto;
-        max-width: 640px;
     }
 
     &.align-center {
         margin-left: auto;
         margin-right: auto;
-        max-width: 640px;
     }
 
     &.align-right {
         margin-left: auto;
         margin-right: 0;
-        max-width: 640px;
     }
 }
 
@@ -31,10 +31,37 @@
     position: relative;
     width: 100%;
     padding-bottom: 56.25%;
-    /* 16:9 aspect ratio */
-    background: #f0f0f0;
-    border-radius: 12px;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    border-radius: 16px;
     overflow: hidden;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    isolation: isolate;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            -45deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 100%
+        );
+        animation: shimmer 2s infinite;
+        pointer-events: none;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 .fb-video-loading-state {
@@ -46,15 +73,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 1.25rem;
 }
 
 .fb-loading-spinner {
-    width: 48px;
-    height: 48px;
-    border: 4px solid #e0e0e0;
+    width: 56px;
+    height: 56px;
+    border: 4px solid rgba(24, 119, 242, 0.1);
     border-top-color: #1877F2;
     border-radius: 50%;
-    animation: fb-spin 0.8s linear infinite;
+    animation: fb-spin 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    filter: drop-shadow(0 2px 8px rgba(24, 119, 242, 0.2));
 }
 
 @keyframes fb-spin {
@@ -64,34 +93,79 @@
 }
 
 .fb-loading-text {
-    margin-top: 1rem;
-    color: #666;
-    font-size: 14px;
-    font-weight: 500;
+    color: #606770;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
 }
 
 /* Video embed container */
 .fb-video-embed {
     display: none;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+    animation: fadeInScale 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #000;
 
     .fb-video {
         width: 100%;
+        min-height: 300px;
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
 /* Caption */
 .fb-video-caption {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
     text-align: center;
-    font-size: 14px;
+    font-size: 0.875rem;
+    line-height: 1.5;
     color: #666;
     font-style: italic;
+    transition: color 0.3s ease;
 }
 
-/* Responsive */
+/* Tablet and below */
+@media (max-width: 1024px) {
+    .fb-video-player {
+        max-width: 700px;
+        margin: 2.5rem auto;
+    }
+
+    .fb-loading-spinner {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
     .fb-video-player {
-        margin: 1.5rem auto;
+        margin: 2rem auto;
+        max-width: 100%;
 
         &.align-left,
         &.align-right {
@@ -99,19 +173,137 @@
             margin-right: auto;
         }
     }
+
+    .fb-video-placeholder-container {
+        border-radius: 12px;
+    }
+
+    .fb-loading-spinner {
+        width: 48px;
+        height: 48px;
+        border-width: 3px;
+    }
+
+    .fb-loading-text {
+        font-size: 0.875rem;
+    }
+
+    .fb-video-embed {
+        border-radius: 12px;
+
+        .fb-video {
+            min-height: 250px;
+        }
+    }
+
+    .fb-video-caption {
+        font-size: 0.8125rem;
+        margin-top: 0.875rem;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+    .fb-video-player {
+        margin: 1.5rem auto;
+    }
+
+    .fb-video-placeholder-container {
+        border-radius: 10px;
+    }
+
+    .fb-loading-spinner {
+        width: 44px;
+        height: 44px;
+    }
+
+    .fb-loading-text {
+        font-size: 0.8125rem;
+    }
+
+    .fb-video-embed {
+        border-radius: 10px;
+
+        .fb-video {
+            min-height: 200px;
+        }
+    }
+
+    .fb-video-caption {
+        font-size: 0.75rem;
+    }
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
     .fb-video-placeholder-container {
-        background: #2a2a2a;
+        background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+        box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.4),
+            0 2px 8px rgba(0, 0, 0, 0.3);
+
+        &::before {
+            background: linear-gradient(
+                -45deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                transparent 100%
+            );
+        }
+    }
+
+    .fb-loading-spinner {
+        border-color: rgba(66, 133, 244, 0.15);
+        border-top-color: #4285f4;
+        filter: drop-shadow(0 2px 8px rgba(66, 133, 244, 0.3));
     }
 
     .fb-loading-text {
-        color: #ccc;
+        color: #b0b3b8;
     }
 
     .fb-video-caption {
         color: #aaa;
+    }
+
+    .fb-video-embed {
+        box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.4),
+            0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .fb-video-placeholder-container,
+    .fb-loading-spinner,
+    .fb-loading-text,
+    .fb-video-caption {
+        transition: none;
+        animation: none;
+    }
+
+    .fb-video-placeholder-container::before {
+        animation: none;
+        opacity: 0;
+    }
+
+    .fb-video-embed {
+        animation: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .fb-video-placeholder-container {
+        border: 2px solid currentColor;
+    }
+
+    .fb-loading-spinner {
+        border-width: 5px;
+    }
+
+    .fb-loading-text {
+        font-weight: 700;
     }
 }

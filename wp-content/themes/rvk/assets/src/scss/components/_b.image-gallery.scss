@@ -1,6 +1,7 @@
 /**
  * Image Gallery Component Styles
  * PhotoSwipe 5.4 Integration
+ * Modern, touch-friendly mobile UX
  */
 
 // Import Core PhotoSwipe Styles (Bundler will resolve from node_modules)
@@ -17,12 +18,32 @@
     .gallery-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 8px;
+        padding: 0;
 
-        // Mobile / Tablet 2x2
-        @media (min-width: 576px) {
+        // Small Mobile - 2 images only (1 per row)
+        @media (max-width: 479px) {
+            gap: 10px;
+            grid-template-columns: 1fr;
+        }
+
+        // Mobile - 2 images side by side
+        @media (min-width: 480px) and (max-width: 575px) {
             grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 200px);
+            gap: 10px;
+        }
+
+        // Small Tablet - Show up to 4 images
+        @media (min-width: 576px) and (max-width: 767px) {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        // Tablet - Show up to 5 images (2x2 grid)
+        @media (min-width: 768px) and (max-width: 991px) {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 220px);
+            gap: 12px;
         }
 
         // Desktop High Fidelity Grid (matching library homepage)
@@ -38,70 +59,265 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        border-radius: 8px;
+        border-radius: 12px;
         position: relative;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        box-shadow:
+            0 2px 8px rgba(0, 0, 0, 0.08),
+            0 1px 4px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+
+        // Mobile-specific height for single column (items 0-1 visible)
+        @media (max-width: 479px) {
+            min-height: 220px;
+            border-radius: 10px;
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.1),
+                0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        // Mobile 2-column height (items 0-1 visible)
+        @media (min-width: 480px) and (max-width: 575px) {
+            height: 200px;
+            border-radius: 10px;
+        }
+
+        // Small tablet (items 0-3 visible)
+        @media (min-width: 576px) and (max-width: 767px) {
+            height: 200px;
+            border-radius: 10px;
+        }
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        // Desktop hover effects
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow:
+                    0 8px 24px rgba(0, 0, 0, 0.12),
+                    0 4px 12px rgba(0, 0, 0, 0.08);
+
+                img {
+                    transform: scale(1.05);
+                    filter: brightness(0.95);
+                }
+            }
+        }
+
+        // Touch device active state
+        @media (hover: none) and (pointer: coarse) {
+            &:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
         }
 
         &:focus-visible {
-            outline: 3px solid #007cba; // WordPress blue or theme primary
+            outline: 3px solid #007cba;
             outline-offset: 3px;
-            box-shadow: 0 0 0 6px rgba(0, 124, 186, 0.3);
-            border-radius: 8px;
-        }
+            box-shadow:
+                0 0 0 6px rgba(0, 124, 186, 0.2),
+                0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            z-index: 10;
 
-        &:hover img {
-            transform: scale(1.08);
-            filter: brightness(0.9);
+            @media (max-width: 479px) {
+                border-radius: 10px;
+            }
         }
 
         // The "Hero" image on the left
         &.item-0 {
-            @media (min-width: 576px) {
+            @media (min-width: 768px) {
                 grid-row: span 2;
+            }
+
+            // Full width hero on small mobile
+            @media (max-width: 479px) {
+                min-height: 280px;
             }
         }
 
-        // More Images Overlay
-        &.has-more-overlay {
+        // More Images Overlay - Mobile version (on item-1)
+        &.has-more-overlay-mobile {
+            .more-overlay.mobile-overlay {
+                display: flex;
+
+                @media (min-width: 576px) {
+                    display: none;
+                }
+            }
+        }
+
+        // More Images Overlay - Desktop version (on item-4)
+        &.has-more-overlay-desktop {
+            .more-overlay.desktop-overlay {
+                display: none;
+
+                @media (min-width: 576px) {
+                    display: flex;
+                }
+            }
+        }
+
+        // More Images Overlay - General styles
+        &.has-more-overlay-mobile,
+        &.has-more-overlay-desktop {
             .more-overlay {
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.4);
-                backdrop-filter: blur(2px);
+                background: linear-gradient(
+                    135deg,
+                    rgba(0, 0, 0, 0.55) 0%,
+                    rgba(0, 0, 0, 0.45) 100%
+                );
+                backdrop-filter: blur(3px);
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 z-index: 2;
-                transition: background 0.3s ease;
-                pointer-events: none; // Allow click through to the link
+                transition: all 0.3s ease;
+                pointer-events: none;
 
                 span {
                     color: #fff;
-                    font-size: 2.5rem;
-                    font-weight: 700;
-                    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                    font-size: 3rem;
+                    font-weight: 800;
+                    text-shadow:
+                        0 2px 12px rgba(0, 0, 0, 0.4),
+                        0 1px 4px rgba(0, 0, 0, 0.3);
+                    letter-spacing: -0.02em;
+
+                    // Mobile adjustments
+                    @media (max-width: 767px) {
+                        font-size: 2.5rem;
+                    }
+
+                    @media (max-width: 479px) {
+                        font-size: 2.25rem;
+                    }
                 }
             }
 
-            &:hover .more-overlay {
-                background: rgba(0, 0, 0, 0.2);
+            // Desktop hover effect
+            @media (hover: hover) and (pointer: fine) {
+                &:hover .more-overlay {
+                    background: linear-gradient(
+                        135deg,
+                        rgba(0, 0, 0, 0.35) 0%,
+                        rgba(0, 0, 0, 0.25) 100%
+                    );
+                    backdrop-filter: blur(4px);
+                }
+            }
+
+            // Touch device active state
+            @media (hover: none) and (pointer: coarse) {
+                &:active .more-overlay {
+                    background: linear-gradient(
+                        135deg,
+                        rgba(0, 0, 0, 0.65) 0%,
+                        rgba(0, 0, 0, 0.55) 100%
+                    );
+                }
             }
         }
     }
 }
 
 // Lightbox Customization (ensure PurgeCSS keeps these)
+.pswp {
+    // Better mobile lightbox experience
+    @media (max-width: 767px) {
+        background: rgba(0, 0, 0, 0.95);
+    }
+}
+
 .pswp__img {
     border-radius: 4px;
+
+    @media (max-width: 767px) {
+        border-radius: 2px;
+    }
+}
+
+// Improve PhotoSwipe UI on mobile
+.pswp__button {
+    @media (max-width: 767px) {
+        // Larger touch targets
+        width: 50px !important;
+        height: 50px !important;
+        opacity: 0.9;
+    }
+}
+
+.pswp__button--close {
+    @media (max-width: 767px) {
+        top: 10px !important;
+        right: 10px !important;
+    }
+}
+
+.pswp__button--arrow {
+    @media (max-width: 767px) {
+        // Make arrows more prominent on mobile
+        opacity: 0.8;
+    }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+    .rvk-image-gallery .gallery-item,
+    .rvk-image-gallery .gallery-item img,
+    .rvk-image-gallery .more-overlay {
+        transition: none;
+        animation: none;
+    }
+
+    .rvk-image-gallery .gallery-item:hover,
+    .rvk-image-gallery .gallery-item:active {
+        transform: none;
+    }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+    .rvk-image-gallery .gallery-item {
+        box-shadow:
+            0 4px 16px rgba(0, 0, 0, 0.3),
+            0 2px 8px rgba(0, 0, 0, 0.2);
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                box-shadow:
+                    0 8px 32px rgba(0, 0, 0, 0.4),
+                    0 4px 16px rgba(0, 0, 0, 0.3);
+            }
+        }
+    }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+    .rvk-image-gallery .gallery-item {
+        border: 2px solid currentColor;
+
+        &:focus-visible {
+            outline-width: 4px;
+            outline-offset: 2px;
+        }
+    }
 }

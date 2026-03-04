@@ -43,21 +43,48 @@ $unique_id = 'pswp-gallery-' . wp_generate_password(6, false);
             $caption = $img_attr['caption'] ?? '';
             
             // Visibility and Overlay Logic
-            $is_hidden = ($index >= 5);
-            $has_more = ($index === 4 && count($images) > 5);
-            $remaining_count = count($images) - 5;
+            // Mobile: Show 2 images (0, 1), hide rest (2+)
+            // Desktop: Show 5 images (0-4), hide rest (5+)
+            $is_hidden_mobile = ($index >= 2);
+            $is_hidden_desktop = ($index >= 5);
+            $has_more_mobile = ($index === 1 && count($images) > 2);
+            $has_more_desktop = ($index === 4 && count($images) > 5);
+            $remaining_count_mobile = count($images) - 2;
+            $remaining_count_desktop = count($images) - 5;
             ?>
-            <?php 
+            <?php
+            // CSS Classes
+            $css_classes = ['gallery-item', 'item-' . $index];
+
+            // Mobile visibility: hide items 2+ on mobile
+            if ($is_hidden_mobile) {
+                $css_classes[] = 'd-none d-sm-block';
+            }
+
+            // Desktop visibility: hide items 5+ on desktop
+            if ($is_hidden_desktop) {
+                $css_classes[] = 'd-sm-none';
+            }
+
+            // More overlay classes
+            if ($has_more_mobile) {
+                $css_classes[] = 'has-more-overlay-mobile';
+            }
+            if ($has_more_desktop) {
+                $css_classes[] = 'has-more-overlay-desktop';
+            }
+
             // Accessibility labels
             $aria_label = sprintf('Prikaži sliku %d u punoj veličini', $index + 1);
-            if ($has_more) {
-                $aria_label = sprintf('Prikaži sve slike. Još %d fotografija dostupno.', $remaining_count + 1);
+            if ($has_more_mobile || $has_more_desktop) {
+                $count = $has_more_mobile ? ($remaining_count_mobile + 1) : ($remaining_count_desktop + 1);
+                $aria_label = sprintf('Prikaži sve slike. Još %d fotografija dostupno.', $count);
             }
             ?>
-            <a href="<?php echo esc_url($full_desktop[0]); ?>" 
-               class="gallery-item item-<?php echo $index; ?> <?php echo $is_hidden ? 'd-none' : ''; ?> <?php echo $has_more ? 'has-more-overlay' : ''; ?>"
-               data-pswp-src="<?php echo esc_url($full_desktop[0]); ?>" 
-               data-pswp-width="<?php echo $full_desktop[1]; ?>" 
+            <a href="<?php echo esc_url($full_desktop[0]); ?>"
+               class="<?php echo esc_attr(implode(' ', $css_classes)); ?>"
+               data-pswp-src="<?php echo esc_url($full_desktop[0]); ?>"
+               data-pswp-width="<?php echo $full_desktop[1]; ?>"
                data-pswp-height="<?php echo $full_desktop[2]; ?>"
                data-mobile-src="<?php echo esc_url($full_mobile[0]); ?>"
                data-mobile-width="<?php echo $full_mobile[1]; ?>"
@@ -65,12 +92,17 @@ $unique_id = 'pswp-gallery-' . wp_generate_password(6, false);
                target="_blank"
                role="listitem"
                aria-label="<?php echo esc_attr($aria_label); ?>"
-               <?php echo $is_hidden ? 'tabindex="-1" aria-hidden="true"' : ''; ?>>
+               <?php echo ($is_hidden_mobile || $is_hidden_desktop) ? 'tabindex="-1" aria-hidden="true"' : ''; ?>>
                 <img src="<?php echo esc_url($thumb[0]); ?>" alt="<?php echo esc_attr($alt); ?>" loading="lazy" class="rounded-3 shadow-sm">
-                
-                <?php if ($has_more): ?>
-                    <div class="more-overlay">
-                        <span>+<?php echo $remaining_count + 1; // +1 because we are on the 5th image which also counts towards the total ?></span>
+
+                <?php if ($has_more_mobile || $has_more_desktop): ?>
+                    <div class="more-overlay <?php echo $has_more_mobile ? 'mobile-overlay' : ''; ?> <?php echo $has_more_desktop ? 'desktop-overlay' : ''; ?>">
+                        <?php if ($has_more_mobile): ?>
+                            <span class="d-sm-none">+<?php echo $remaining_count_mobile + 1; ?></span>
+                        <?php endif; ?>
+                        <?php if ($has_more_desktop): ?>
+                            <span class="d-none d-sm-inline">+<?php echo $remaining_count_desktop + 1; ?></span>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
 
