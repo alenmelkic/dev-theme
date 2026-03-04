@@ -47,12 +47,12 @@ add_action('init', 'rvk_register_article_types');
 
 // Enqueue Gutenberg panel script
 function rvk_enqueue_article_type_panel() {
-    $asset_file = get_template_directory() . '/dist/js/article-type-panel.js';
+    $asset_file = get_template_directory() . '/dist/js/article-type-panel.min.js';
 
     if (file_exists($asset_file)) {
         wp_enqueue_script(
             'article-type-panel',
-            get_template_directory_uri() . '/dist/js/article-type-panel.js',
+            get_template_directory_uri() . '/dist/js/article-type-panel.min.js',
             ['wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data'],
             filemtime($asset_file),
             true

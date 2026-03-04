@@ -94,6 +94,9 @@ export default defineConfig({
 					/^post-type-/,
 					/^article-type-/,
 					/^sponsored-/,
+					// Article page specific
+					/^single-post-page/,
+					/category-link/,
 					// Common utility classes
 					/^d-/,
 					/^text-/,
@@ -102,6 +105,14 @@ export default defineConfig({
 					/^(p|m)(x|y|t|b|l|r)?-/,
 					/^position-/,
 					/^display-/,
+					/^site-/,
+					// Swiper classes
+					/^swiper/,
+					// Hero Slider block classes
+					/^hero-slider/,
+					/^hero-slide/,
+					/^hero-card/,
+					/^hero-swiper/,
 				],
 				deep: [
 					// Dynamic classes that might be nested
@@ -177,10 +188,12 @@ export default defineConfig({
 				'js/article-type-panel': resolve(`${__dirname}/assets/src/js/article-type-panel.js`),
 				'js/social-share': resolve(`${__dirname}/assets/src/js/social-share.js`),
 				'js/adsense-manager': resolve(`${__dirname}/assets/src/js/adsense-manager.js`),
-				'marketing-admin': resolve(`${__dirname}/assets/js/marketing-admin.js`),
-				'adsense-admin': resolve(`${__dirname}/assets/js/adsense-admin.js`),
-				'analytics-admin': resolve(`${__dirname}/assets/src/js/analytics-admin.js`),
-				'custom-scripts-admin': resolve(`${__dirname}/assets/src/js/custom-scripts-admin.js`),
+
+				// Admin JS (protected)
+				'admin/js/marketing-admin': resolve(`${__dirname}/assets/js/marketing-admin.js`),
+				'admin/js/adsense-admin': resolve(`${__dirname}/assets/js/adsense-admin.js`),
+				'admin/js/analytics-admin': resolve(`${__dirname}/assets/src/js/analytics-admin.js`),
+				'admin/js/custom-scripts-admin': resolve(`${__dirname}/assets/src/js/custom-scripts-admin.js`),
 
 				// Main CSS bundles
 				'main': resolve(`${__dirname}/assets/src/scss/main.scss`),
@@ -209,18 +222,35 @@ export default defineConfig({
 				// Mini Banners Carousel
 				'components/mini-banners-carousel': resolve(`${__dirname}/assets/src/scss/components/_mini-banners-carousel.scss`),
 
-				// Admin CSS
-				'admin/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
-				'admin/marketing': resolve(`${__dirname}/assets/scss/marketing-admin.scss`),
-				'admin/adsense': resolve(`${__dirname}/assets/scss/adsense-admin.scss`),
-				'admin/analytics': resolve(`${__dirname}/assets/src/scss/admin/analytics.scss`),
-				'admin/custom-scripts': resolve(`${__dirname}/assets/src/scss/admin/custom-scripts.scss`),
+				// Hero Slider Block
+				'components/hero-slider': resolve(`${__dirname}/assets/src/scss/components/_b.hero-slider.scss`),
+
+				// Post Listings Block (conditionally loaded)
+				'components/post-listings-base': resolve(`${__dirname}/assets/src/scss/post-listings-base.scss`),
+				'components/post-listings-cards-1': resolve(`${__dirname}/assets/src/scss/post-listings-cards-1.scss`),
+				'components/post-listings-cards-2': resolve(`${__dirname}/assets/src/scss/post-listings-cards-2.scss`),
+				'components/post-listings-list': resolve(`${__dirname}/assets/src/scss/post-listings-list.scss`),
+
+				// Admin CSS (protected)
+				'admin/css/sponsored-meta-box': resolve(`${__dirname}/assets/src/scss/admin/sponsored-meta-box.scss`),
+				'admin/css/marketing': resolve(`${__dirname}/assets/scss/marketing-admin.scss`),
+				'admin/css/adsense': resolve(`${__dirname}/assets/scss/adsense-admin.scss`),
+				'admin/css/analytics': resolve(`${__dirname}/assets/src/scss/admin/analytics.scss`),
+				'admin/css/custom-scripts': resolve(`${__dirname}/assets/src/scss/admin/custom-scripts.scss`),
 			},
 			output: {
-				entryFileNames: '[name].js',
-				chunkFileNames: '[name].js',
+				entryFileNames: (chunkInfo) => {
+					// Admin JS files go to admin/js/
+					if (chunkInfo.name.startsWith('admin/js/')) {
+						return '[name].min.js';
+					}
+					// All other JS files go to their specified paths
+					return '[name].min.js';
+				},
+				chunkFileNames: '[name].min.js',
 				assetFileNames: (assetInfo) => {
 					const extType = assetInfo.name.split('.');
+					const name = assetInfo.name;
 
 					// group fonts in a folder
 					if (
@@ -241,9 +271,15 @@ export default defineConfig({
 						return 'img/[name].[ext]';
 					}
 
-					// CSS files go directly in css folder
+					// CSS files with .min.css extension
 					if (extType[1] === 'css') {
-						return 'css/[name].[ext]';
+						// Admin CSS files go to admin/css/
+						if (name.includes('admin/css/')) {
+							// Extract just the filename from admin/css/filename
+							const filename = name.split('/').pop().replace('.css', '');
+							return `admin/css/${filename}.min.css`;
+						}
+						return 'css/[name].min.[ext]';
 					}
 
 					return '[ext]/[name].[ext]';

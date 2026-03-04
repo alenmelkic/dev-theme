@@ -1,16 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(\"c:\\xampp\\php\\php.exe\" -r \"require_once ''c:/xampp/htdocs/dev-theme/wp-load.php''; $url = get_sitemap_url(''index''); echo ''Sitemap URL: '' . ($url ? $url : ''Not available'') . PHP_EOL; echo ''blog_public: '' . get_option(''blog_public'') . PHP_EOL;\")",
-      "Bash(\"c:\\xampp\\php\\php.exe\" -r \"require_once ''c:/xampp/htdocs/dev-theme/wp-load.php''; echo ''blog_public: '' . get_option(''blog_public'') . PHP_EOL; echo ''Site visibility: '' . (get_option(''blog_public'') == 1 ? ''Public'' : ''Discouraged'') . PHP_EOL;\")",
-      "Bash(\"c:\\xampp\\php\\php.exe\":*)",
-      "Bash(\"c:\\xampp\\php\\php.exe\" c:xampphtdocsdev-themeqa-seo-test.php)",
-      "Bash(\"c:\\xampp\\php\\php.exe\" \"c:\\xampp\\htdocs\\dev-theme\\qa-final-report.php\")",
-      "Bash(ls:*)",
-      "Bash(dir:*)",
-      "Bash(cat:*)",
-      "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

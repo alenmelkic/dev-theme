@@ -69,12 +69,12 @@ get_header();
                                 get_component('sponsored-badge');
                                 ?>
  
-                                <div class="post-card-excerpt">
+                                <p class="post-card-excerpt">
                                     <?php echo get_trimmed_excerpt(); ?>
-                                </div>
+                                </p>
                             </header>
                             
-                            <div class="post-card-meta mt-3 d-flex justify-content-between align-items-center">                                    
+                            <div class="post-card-meta pt-2 d-flex justify-content-between align-items-center">
                                     <?php get_component('author', array('size' => 'small')); ?>
                                     <?php get_component('post-date'); ?>
                             </div>

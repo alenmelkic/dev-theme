@@ -13,6 +13,7 @@ function dev_theme_register_blocks() {
     register_block_type( get_template_directory() . '/blocks/facebook-video/block.json' );
     register_block_type( get_template_directory() . '/blocks/youtube-video/block.json' );
     register_block_type( get_template_directory() . '/blocks/category-articles/block.json' );
+    register_block_type( get_template_directory() . '/blocks/post-listings/block.json' );
 
     // Image Gallery Block with View Script
     $view_script_handle = 'dev-theme-image-gallery-view';
@@ -65,6 +66,45 @@ function dev_theme_register_blocks() {
     }
 
     register_block_type( get_template_directory() . '/blocks/mini-banners/block.json' );
+
+    // Hero Slider Block - Register editor script BEFORE block registration
+    $hs_editor_script_handle = 'dev-theme-hero-slider-block-editor';
+    $hs_editor_asset_file = get_template_directory() . '/dist/blocks/hero-slider/index.jsx.asset.php';
+
+    if ( file_exists( $hs_editor_asset_file ) ) {
+        $asset = require( $hs_editor_asset_file );
+        wp_register_script(
+            $hs_editor_script_handle,
+            get_template_directory_uri() . '/dist/blocks/hero-slider/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    // Hero Slider Block - View Script
+    $hs_view_script_handle = 'dev-theme-hero-slider-view';
+    $hs_view_asset_file = get_template_directory() . '/dist/blocks/hero-slider/view.asset.php';
+
+    if ( file_exists( $hs_view_asset_file ) ) {
+        $asset = require( $hs_view_asset_file );
+        wp_register_script(
+            $hs_view_script_handle,
+            get_template_directory_uri() . '/dist/blocks/hero-slider/view.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    wp_register_style(
+        'dev-theme-hero-slider-style',
+        get_template_directory_uri() . '/dist/css/components/hero-slider.min.css',
+        [],
+        null
+    );
+
+    register_block_type( get_template_directory() . '/blocks/hero-slider/block.json' );
 }
 add_action( 'init', 'dev_theme_register_blocks' );
 
@@ -120,13 +160,29 @@ function dev_theme_enqueue_block_editor_assets() {
     // Category Articles Block
     $ca_script_handle = 'dev-theme-category-articles-block-editor';
     $ca_asset_file = get_template_directory() . '/dist/blocks/category-articles/index.jsx.asset.php';
-    
+
     if ( file_exists( $ca_asset_file ) ) {
         $asset = require( $ca_asset_file );
-        
+
         wp_enqueue_script(
             $ca_script_handle,
             get_template_directory_uri() . '/dist/blocks/category-articles/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
+    // Post Listings Block
+    $pl_script_handle = 'dev-theme-post-listings-block-editor';
+    $pl_asset_file = get_template_directory() . '/dist/blocks/post-listings/index.jsx.asset.php';
+
+    if ( file_exists( $pl_asset_file ) ) {
+        $asset = require( $pl_asset_file );
+
+        wp_enqueue_script(
+            $pl_script_handle,
+            get_template_directory_uri() . '/dist/blocks/post-listings/index.jsx.js',
             $asset['dependencies'],
             $asset['version'],
             true
@@ -165,6 +221,22 @@ function dev_theme_enqueue_block_editor_assets() {
         );
     }
 
+    // Hero Slider Block
+    $hs_script_handle = 'dev-theme-hero-slider-block-editor';
+    $hs_asset_file = get_template_directory() . '/dist/blocks/hero-slider/index.jsx.asset.php';
+
+    if ( file_exists( $hs_asset_file ) ) {
+        $asset = require( $hs_asset_file );
+
+        wp_enqueue_script(
+            $hs_script_handle,
+            get_template_directory_uri() . '/dist/blocks/hero-slider/index.jsx.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
+    }
+
     // Enqueue styles for the editor
     wp_enqueue_style(
         'soundcloud-custom-player-editor',
@@ -186,6 +258,7 @@ function dev_theme_enqueue_block_editor_assets() {
         [],
         null
     );
+
 }
 add_action( 'enqueue_block_editor_assets', 'dev_theme_enqueue_block_editor_assets' );
 

@@ -28,11 +28,11 @@ function rvk_analytics_admin_scripts($hook) {
     }
 
     // Enqueue custom admin script (no dependencies - vanilla JS)
-    $js_file = get_template_directory() . '/dist/analytics-admin.js';
+    $js_file = get_template_directory() . '/dist/admin/js/analytics-admin.min.js';
     if (file_exists($js_file)) {
         wp_enqueue_script(
             'rvk-analytics-admin',
-            get_template_directory_uri() . '/dist/analytics-admin.js',
+            get_template_directory_uri() . '/dist/admin/js/analytics-admin.min.js',
             array(),
             filemtime($js_file),
             true
@@ -40,11 +40,11 @@ function rvk_analytics_admin_scripts($hook) {
     }
 
     // Enqueue custom admin styles
-    $css_file = get_template_directory() . '/dist/css/admin/analytics.css';
+    $css_file = get_template_directory() . '/dist/admin/css/analytics.min.css';
     if (file_exists($css_file)) {
         wp_enqueue_style(
             'rvk-analytics-admin',
-            get_template_directory_uri() . '/dist/css/admin/analytics.css',
+            get_template_directory_uri() . '/dist/admin/css/analytics.min.css',
             array(),
             filemtime($css_file)
         );

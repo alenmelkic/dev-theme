@@ -28,11 +28,11 @@ function rvk_custom_scripts_admin_scripts($hook) {
     }
 
     // Enqueue custom admin script (no dependencies - vanilla JS with Sortable.js)
-    $js_file = get_template_directory() . '/dist/custom-scripts-admin.js';
+    $js_file = get_template_directory() . '/dist/admin/js/custom-scripts-admin.min.js';
     if (file_exists($js_file)) {
         wp_enqueue_script(
             'rvk-custom-scripts-admin',
-            get_template_directory_uri() . '/dist/custom-scripts-admin.js',
+            get_template_directory_uri() . '/dist/admin/js/custom-scripts-admin.min.js',
             array(),
             filemtime($js_file),
             true
@@ -40,11 +40,11 @@ function rvk_custom_scripts_admin_scripts($hook) {
     }
 
     // Enqueue custom admin styles
-    $css_file = get_template_directory() . '/dist/css/admin/custom-scripts.css';
+    $css_file = get_template_directory() . '/dist/admin/css/custom-scripts.min.css';
     if (file_exists($css_file)) {
         wp_enqueue_style(
             'rvk-custom-scripts-admin',
-            get_template_directory_uri() . '/dist/css/admin/custom-scripts.css',
+            get_template_directory_uri() . '/dist/admin/css/custom-scripts.min.css',
             array(),
             filemtime($css_file)
         );

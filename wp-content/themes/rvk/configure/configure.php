@@ -249,6 +249,8 @@ function custom_allowed_block_types( $allowed_blocks, $editor_context ) {
         'dev-theme/category-articles' => true,
         'dev-theme/image-gallery' => true,
         'dev-theme/mini-banners' => true,
+        'dev-theme/post-listings' => true,
+        'dev-theme/hero-slider' => true,
         
         // === TEXT BLOCKS ===
         'core/code' => false,
@@ -274,15 +276,22 @@ function custom_allowed_block_types( $allowed_blocks, $editor_context ) {
     // Get all registered blocks
     $registered_blocks = WP_Block_Type_Registry::get_instance()->get_all_registered();
     $allowed = array();
-    
+
+    // Get current post type from editor context
+    $post_type = $editor_context->post->post_type ?? '';
+
     // Loop through all registered blocks
     foreach ( $registered_blocks as $block_name => $block_type ) {
         // Only allow blocks that are explicitly set to true
         if ( isset( $disabled_blocks[ $block_name ] ) && $disabled_blocks[ $block_name ] === true ) {
+            // Restrict Post Listings block to pages only
+            if ( $block_name === 'dev-theme/post-listings' && $post_type !== 'page' ) {
+                continue;
+            }
             $allowed[] = $block_name;
         }
     }
-    
+
     return $allowed;
 }
 add_filter( 'allowed_block_types_all', 'custom_allowed_block_types', 10, 2 );

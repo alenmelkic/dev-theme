@@ -38,7 +38,7 @@ add_action('after_setup_theme', 'dev_theme_register_image_sizes');
 /**
  * Image optimization quality settings
  */
-define('DEV_THEME_WEBP_QUALITY', 85);      // WebP quality (85 is good balance)
+define('DEV_THEME_WEBP_QUALITY', 95);      // WebP quality (95 for high quality/light files)
 define('DEV_THEME_JPEG_QUALITY', 80);      // JPEG fallback quality
 define('DEV_THEME_PNG_QUALITY', 80);       // PNG fallback quality
 

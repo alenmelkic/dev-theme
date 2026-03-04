@@ -1,153 +1,161 @@
 {
-  "_collapse.js": {
-    "file": "collapse.js",
+  "_collapse.min.js": {
+    "file": "collapse.min.js",
     "name": "collapse"
   },
   "assets/js/adsense-admin.js": {
-    "file": "adsense-admin.js",
-    "name": "adsense-admin",
+    "file": "admin/js/adsense-admin.min.js",
+    "name": "admin/js/adsense-admin",
     "src": "assets/js/adsense-admin.js",
     "isEntry": true
   },
   "assets/js/marketing-admin.js": {
-    "file": "marketing-admin.js",
-    "name": "marketing-admin",
+    "file": "admin/js/marketing-admin.min.js",
+    "name": "admin/js/marketing-admin",
     "src": "assets/js/marketing-admin.js",
     "isEntry": true
   },
   "assets/scss/adsense-admin.scss": {
-    "file": "css/admin/adsense.css",
+    "file": "admin/css/adsense.min.css",
     "src": "assets/scss/adsense-admin.scss",
     "isEntry": true,
     "names": [
-      "admin/adsense.css"
+      "admin/css/adsense.css"
     ]
   },
   "assets/scss/marketing-admin.scss": {
-    "file": "css/admin/marketing.css",
+    "file": "admin/css/marketing.min.css",
     "src": "assets/scss/marketing-admin.scss",
     "isEntry": true,
     "names": [
-      "admin/marketing.css"
+      "admin/css/marketing.css"
     ]
   },
   "assets/src/js/adsense-manager.js": {
-    "file": "js/adsense-manager.js",
+    "file": "js/adsense-manager.min.js",
     "name": "js/adsense-manager",
     "src": "assets/src/js/adsense-manager.js",
     "isEntry": true
   },
   "assets/src/js/ai-content-helper.js": {
-    "file": "js/ai-content-helper.js",
+    "file": "js/ai-content-helper.min.js",
     "name": "js/ai-content-helper",
     "src": "assets/src/js/ai-content-helper.js",
     "isEntry": true
   },
   "assets/src/js/analytics-admin.js": {
-    "file": "analytics-admin.js",
-    "name": "analytics-admin",
+    "file": "admin/js/analytics-admin.min.js",
+    "name": "admin/js/analytics-admin",
     "src": "assets/src/js/analytics-admin.js",
     "isEntry": true
   },
   "assets/src/js/article-type-panel.js": {
-    "file": "js/article-type-panel.js",
+    "file": "js/article-type-panel.min.js",
     "name": "js/article-type-panel",
     "src": "assets/src/js/article-type-panel.js",
     "isEntry": true
   },
   "assets/src/js/bootstrap-components.js": {
-    "file": "js/bootstrap-components.js",
+    "file": "js/bootstrap-components.min.js",
     "name": "js/bootstrap-components",
     "src": "assets/src/js/bootstrap-components.js",
     "isEntry": true,
     "imports": [
-      "_collapse.js"
+      "_collapse.min.js"
     ]
   },
   "assets/src/js/custom-scripts-admin.js": {
-    "file": "custom-scripts-admin.js",
-    "name": "custom-scripts-admin",
+    "file": "admin/js/custom-scripts-admin.min.js",
+    "name": "admin/js/custom-scripts-admin",
     "src": "assets/src/js/custom-scripts-admin.js",
     "isEntry": true
   },
   "assets/src/js/facebook-video-player.js": {
-    "file": "js/facebook-video-player.js",
+    "file": "js/facebook-video-player.min.js",
     "name": "js/facebook-video-player",
     "src": "assets/src/js/facebook-video-player.js",
     "isEntry": true
   },
   "assets/src/js/main.js": {
-    "file": "js/main.js",
+    "file": "js/main.min.js",
     "name": "js/main",
     "src": "assets/src/js/main.js",
     "isEntry": true,
     "imports": [
-      "_collapse.js",
+      "_collapse.min.js",
       "assets/src/js/soundcloud-custom-player.js",
       "assets/src/js/facebook-video-player.js",
       "assets/src/js/youtube-video-player.js",
       "assets/src/js/navigation.js"
     ],
     "css": [
-      "css/main.css"
+      "css/main.min.css"
     ]
   },
   "assets/src/js/navigation.js": {
-    "file": "js/navigation.js",
+    "file": "js/navigation.min.js",
     "name": "js/navigation",
     "src": "assets/src/js/navigation.js",
     "isEntry": true
   },
   "assets/src/js/seo-content-panel.js": {
-    "file": "js/seo-content-panel.js",
+    "file": "js/seo-content-panel.min.js",
     "name": "js/seo-content-panel",
     "src": "assets/src/js/seo-content-panel.js",
     "isEntry": true
   },
   "assets/src/js/social-share.js": {
-    "file": "js/social-share.js",
+    "file": "js/social-share.min.js",
     "name": "js/social-share",
     "src": "assets/src/js/social-share.js",
     "isEntry": true
   },
   "assets/src/js/soundcloud-custom-player.js": {
-    "file": "js/soundcloud-custom-player.js",
+    "file": "js/soundcloud-custom-player.min.js",
     "name": "js/soundcloud-custom-player",
     "src": "assets/src/js/soundcloud-custom-player.js",
     "isEntry": true
   },
   "assets/src/js/youtube-video-player.js": {
-    "file": "js/youtube-video-player.js",
+    "file": "js/youtube-video-player.min.js",
     "name": "js/youtube-video-player",
     "src": "assets/src/js/youtube-video-player.js",
     "isEntry": true
   },
   "assets/src/scss/admin/analytics.scss": {
-    "file": "css/admin/analytics.css",
+    "file": "admin/css/analytics.min.css",
     "src": "assets/src/scss/admin/analytics.scss",
     "isEntry": true,
     "names": [
-      "admin/analytics.css"
+      "admin/css/analytics.css"
     ]
   },
   "assets/src/scss/admin/custom-scripts.scss": {
-    "file": "css/admin/custom-scripts.css",
+    "file": "admin/css/custom-scripts.min.css",
     "src": "assets/src/scss/admin/custom-scripts.scss",
     "isEntry": true,
     "names": [
-      "admin/custom-scripts.css"
+      "admin/css/custom-scripts.css"
     ]
   },
   "assets/src/scss/admin/sponsored-meta-box.scss": {
-    "file": "css/admin/sponsored-meta-box.css",
+    "file": "admin/css/sponsored-meta-box.min.css",
     "src": "assets/src/scss/admin/sponsored-meta-box.scss",
     "isEntry": true,
     "names": [
-      "admin/sponsored-meta-box.css"
+      "admin/css/sponsored-meta-box.css"
+    ]
+  },
+  "assets/src/scss/components/_b.hero-slider.scss": {
+    "file": "css/components/hero-slider.min.css",
+    "src": "assets/src/scss/components/_b.hero-slider.scss",
+    "isEntry": true,
+    "names": [
+      "components/hero-slider.css"
     ]
   },
   "assets/src/scss/components/_mini-banners-carousel.scss": {
-    "file": "css/components/mini-banners-carousel.css",
+    "file": "css/components/mini-banners-carousel.min.css",
     "src": "assets/src/scss/components/_mini-banners-carousel.scss",
     "isEntry": true,
     "names": [
@@ -155,7 +163,7 @@
     ]
   },
   "assets/src/scss/components/ai-content-helper.scss": {
-    "file": "css/components/ai-content-helper.css",
+    "file": "css/components/ai-content-helper.min.css",
     "src": "assets/src/scss/components/ai-content-helper.scss",
     "isEntry": true,
     "names": [
@@ -163,15 +171,47 @@
     ]
   },
   "assets/src/scss/main.scss": {
-    "file": "css/main.css",
+    "file": "css/main.min.css",
     "src": "assets/src/scss/main.scss",
     "isEntry": true,
     "names": [
       "main.css"
     ]
   },
+  "assets/src/scss/post-listings-base.scss": {
+    "file": "css/components/post-listings-base.min.css",
+    "src": "assets/src/scss/post-listings-base.scss",
+    "isEntry": true,
+    "names": [
+      "components/post-listings-base.css"
+    ]
+  },
+  "assets/src/scss/post-listings-cards-1.scss": {
+    "file": "css/components/post-listings-cards-1.min.css",
+    "src": "assets/src/scss/post-listings-cards-1.scss",
+    "isEntry": true,
+    "names": [
+      "components/post-listings-cards-1.css"
+    ]
+  },
+  "assets/src/scss/post-listings-cards-2.scss": {
+    "file": "css/components/post-listings-cards-2.min.css",
+    "src": "assets/src/scss/post-listings-cards-2.scss",
+    "isEntry": true,
+    "names": [
+      "components/post-listings-cards-2.css"
+    ]
+  },
+  "assets/src/scss/post-listings-list.scss": {
+    "file": "css/components/post-listings-list.min.css",
+    "src": "assets/src/scss/post-listings-list.scss",
+    "isEntry": true,
+    "names": [
+      "components/post-listings-list.css"
+    ]
+  },
   "components/article-type-badge/article-type-badge.scss": {
-    "file": "css/components/article-type-badge.css",
+    "file": "css/components/article-type-badge.min.css",
     "src": "components/article-type-badge/article-type-badge.scss",
     "isEntry": true,
     "names": [
@@ -179,7 +219,7 @@
     ]
   },
   "components/article-type-overlay/article-type-overlay.scss": {
-    "file": "css/components/article-type-overlay.css",
+    "file": "css/components/article-type-overlay.min.css",
     "src": "components/article-type-overlay/article-type-overlay.scss",
     "isEntry": true,
     "names": [
@@ -187,7 +227,7 @@
     ]
   },
   "components/author/author.scss": {
-    "file": "css/components/author.css",
+    "file": "css/components/author.min.css",
     "src": "components/author/author.scss",
     "isEntry": true,
     "names": [
@@ -195,7 +235,7 @@
     ]
   },
   "components/facebook-video-player/facebook-video-player.scss": {
-    "file": "css/components/facebook-video-player.css",
+    "file": "css/components/facebook-video-player.min.css",
     "src": "components/facebook-video-player/facebook-video-player.scss",
     "isEntry": true,
     "names": [
@@ -203,7 +243,7 @@
     ]
   },
   "components/featured-image/featured-image.scss": {
-    "file": "css/components/featured-image.css",
+    "file": "css/components/featured-image.min.css",
     "src": "components/featured-image/featured-image.scss",
     "isEntry": true,
     "names": [
@@ -211,7 +251,7 @@
     ]
   },
   "components/post-date/post-date.scss": {
-    "file": "css/components/post-date.css",
+    "file": "css/components/post-date.min.css",
     "src": "components/post-date/post-date.scss",
     "isEntry": true,
     "names": [
@@ -219,7 +259,7 @@
     ]
   },
   "components/post-terms/post-terms.scss": {
-    "file": "css/components/post-terms.css",
+    "file": "css/components/post-terms.min.css",
     "src": "components/post-terms/post-terms.scss",
     "isEntry": true,
     "names": [
@@ -227,7 +267,7 @@
     ]
   },
   "components/post-title/post-title.scss": {
-    "file": "css/components/post-title.css",
+    "file": "css/components/post-title.min.css",
     "src": "components/post-title/post-title.scss",
     "isEntry": true,
     "names": [
@@ -235,7 +275,7 @@
     ]
   },
   "components/radio-player/radio-player.scss": {
-    "file": "css/components/radio-player.css",
+    "file": "css/components/radio-player.min.css",
     "src": "components/radio-player/radio-player.scss",
     "isEntry": true,
     "names": [
@@ -243,7 +283,7 @@
     ]
   },
   "components/social-share-buttons/social-share-buttons.scss": {
-    "file": "css/components/social-share-buttons.css",
+    "file": "css/components/social-share-buttons.min.css",
     "src": "components/social-share-buttons/social-share-buttons.scss",
     "isEntry": true,
     "names": [
@@ -251,7 +291,7 @@
     ]
   },
   "components/soundcloud-custom-player/soundcloud-custom-player.scss": {
-    "file": "css/components/soundcloud-custom-player.css",
+    "file": "css/components/soundcloud-custom-player.min.css",
     "src": "components/soundcloud-custom-player/soundcloud-custom-player.scss",
     "isEntry": true,
     "names": [
@@ -259,7 +299,7 @@
     ]
   },
   "components/sponsored-badge/sponsored-badge.scss": {
-    "file": "css/components/sponsored-badge.css",
+    "file": "css/components/sponsored-badge.min.css",
     "src": "components/sponsored-badge/sponsored-badge.scss",
     "isEntry": true,
     "names": [
@@ -267,7 +307,7 @@
     ]
   },
   "components/sponsored-disclaimer/sponsored-disclaimer.scss": {
-    "file": "css/components/sponsored-disclaimer.css",
+    "file": "css/components/sponsored-disclaimer.min.css",
     "src": "components/sponsored-disclaimer/sponsored-disclaimer.scss",
     "isEntry": true,
     "names": [
@@ -275,7 +315,7 @@
     ]
   },
   "components/youtube-video-player/youtube-video-player.scss": {
-    "file": "css/components/youtube-video-player.css",
+    "file": "css/components/youtube-video-player.min.css",
     "src": "components/youtube-video-player/youtube-video-player.scss",
     "isEntry": true,
     "names": [
