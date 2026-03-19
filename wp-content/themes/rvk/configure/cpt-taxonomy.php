@@ -273,3 +273,32 @@ function add_days_remaining_to_rest_api() {
     );
 }
 add_action('rest_api_init', 'add_days_remaining_to_rest_api');
+
+// Register custom fields in GraphQL schema
+function register_servicne_graphql_fields() {
+    if (!function_exists('register_graphql_field')) {
+        return;
+    }
+
+    register_graphql_field('ServicnaInformacija', 'daysRemaining', array(
+        'type'        => 'Int',
+        'description' => __('Broj dana preostalih prije automatskog brisanja', 'dev-theme'),
+        'resolve'     => function($post) {
+            $publish_date = strtotime(get_post_field('post_date', $post->databaseId));
+            $days_elapsed = floor((time() - $publish_date) / DAY_IN_SECONDS);
+            return max(0, 15 - $days_elapsed);
+        },
+    ));
+
+    register_graphql_field('ServicnaInformacija', 'isExpiringSoon', array(
+        'type'        => 'Boolean',
+        'description' => __('Da li informacija uskoro ističe (3 dana ili manje)', 'dev-theme'),
+        'resolve'     => function($post) {
+            $publish_date   = strtotime(get_post_field('post_date', $post->databaseId));
+            $days_elapsed   = floor((time() - $publish_date) / DAY_IN_SECONDS);
+            $days_remaining = 15 - $days_elapsed;
+            return $days_remaining <= 3 && $days_remaining > 0;
+        },
+    ));
+}
+add_action('graphql_register_types', 'register_servicne_graphql_fields');
