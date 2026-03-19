@@ -63,6 +63,9 @@ function register_obavijesti_o_smrti_cpt() {
         'show_in_rest'          => true,
         'rest_base'             => 'obavijesti-o-smrti',
         'rest_controller_class' => 'WP_REST_Posts_Controller',
+        'show_in_graphql'       => true,
+        'graphql_single_name'   => 'ObavijestOSmrti',
+        'graphql_plural_name'   => 'ObavijestOSmrtiItems',
         'rewrite'               => array(
             'slug'       => 'obavijesti-o-smrti',
             'with_front' => false,
@@ -109,6 +112,9 @@ function register_obavijest_tag_taxonomy() {
         'show_in_rest'               => true,
         'rest_base'                  => 'obavijest-oznake',
         'rest_controller_class'      => 'WP_REST_Terms_Controller',
+        'show_in_graphql'            => true,
+        'graphql_single_name'        => 'ObavijestOznaka',
+        'graphql_plural_name'        => 'ObavijestOznake',
         'rewrite'                    => array(
             'slug' => 'obavijest-oznaka',
         ),

@@ -67,6 +67,9 @@ function register_servicne_informacije_cpt() {
         'show_in_rest'          => true,
         'rest_base'             => 'servicne-informacije',
         'rest_controller_class' => 'WP_REST_Posts_Controller',
+        'show_in_graphql'       => true,
+        'graphql_single_name'   => 'ServicnaInformacija',
+        'graphql_plural_name'   => 'ServicneInformacije',
         'rewrite'               => array(
             'slug'       => 'servicne-informacije',
             'with_front' => false,
@@ -113,6 +116,9 @@ function register_servicne_tag_taxonomy() {
         'show_in_rest'               => true,
         'rest_base'                  => 'servicne-oznake',
         'rest_controller_class'      => 'WP_REST_Terms_Controller',
+        'show_in_graphql'            => true,
+        'graphql_single_name'        => 'ServicnaOznaka',
+        'graphql_plural_name'        => 'ServicneOznake',
         'rewrite'                    => array(
             'slug' => 'servicne-oznaka',
         ),
